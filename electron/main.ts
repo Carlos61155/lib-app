@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import { AuthService } from "./auth/auth.service";
+import { prisma } from "./database";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
@@ -7,10 +8,11 @@ const authService = new AuthService();
 
 type UserSession = {
   userId: string;
-  mustChangePassword: boolean;
+  lastActivityAt: number;
 };
 
 const sessions = new Map<number, UserSession>();
+const SESSION_IDLE_TIMEOUT_MS = 15 * 60 * 1000;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // The built directory structure
@@ -84,14 +86,51 @@ app.on("activate", () => {
 });
 
 ipcMain.handle("auth:login", async (event, input) => {
+  if (event.senderFrame !== event.sender.mainFrame) throw new Error("UNAUTHORIZED");
   const result = await authService.login(input);
 
   sessions.set(event.sender.id, {
     userId: result.user.id,
-    mustChangePassword: result.user.mustChangePassword,
+    lastActivityAt: Date.now(),
   });
 
   return result;
+});
+
+ipcMain.handle("auth:get-session", async (event) => {
+  if (event.senderFrame !== event.sender.mainFrame) throw new Error("UNAUTHORIZED");
+  const session = sessions.get(event.sender.id);
+  if (!session) return null;
+  if (Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
+    sessions.delete(event.sender.id);
+    return null;
+  }
+  const user = await prisma.user.findUnique({ where: { id: session.userId } });
+  if (!user || !user.isActive) {
+    sessions.delete(event.sender.id);
+    return null;
+  }
+  session.lastActivityAt = Date.now();
+  return {
+    user: { id: user.id, name: user.name, role: user.role, mustChangePassword: user.mustChangePassword },
+    idleTimeoutMs: SESSION_IDLE_TIMEOUT_MS,
+  };
+});
+
+ipcMain.handle("auth:logout", (event) => {
+  sessions.delete(event.sender.id);
+  return { success: true };
+});
+
+ipcMain.handle("auth:activity", (event) => {
+  if (event.senderFrame !== event.sender.mainFrame) throw new Error("UNAUTHORIZED");
+  const session = sessions.get(event.sender.id);
+  if (!session || Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
+    sessions.delete(event.sender.id);
+    return false;
+  }
+  session.lastActivityAt = Date.now();
+  return true;
 });
 
 ipcMain.handle(
@@ -103,10 +142,16 @@ ipcMain.handle(
       newPassword: string;
     },
   ) => {
+    if (event.senderFrame !== event.sender.mainFrame) throw new Error("UNAUTHORIZED");
     const session = sessions.get(event.sender.id);
 
     if (!session) {
       throw new Error("NOT_AUTHENTICATED");
+    }
+
+    if (Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
+      sessions.delete(event.sender.id);
+      throw new Error("SESSION_EXPIRED");
     }
 
     await authService.changePassword(
@@ -115,7 +160,7 @@ ipcMain.handle(
       input.newPassword,
     );
 
-    session.mustChangePassword = false;
+    session.lastActivityAt = Date.now();
 
     return { success: true };
   },

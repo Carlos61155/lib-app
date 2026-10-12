@@ -9,6 +9,8 @@ var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot
 var __privateMethod = (obj, member, method) => (__accessCheck(obj, member, "access private method"), method);
 var _a2, _b, _c2, _d2, _e, _f2, _g, _h, _i, _j, _k, _l2, _m2, _n2, _o2, _p2, _q, _r2, _s2, _t2, _u, _v, _w, _x, _y, _z, _A, _B, _e2, _C, _e3, _D, _e4, _E, _Un_instances, e_fn, _F;
 import { app, BrowserWindow, ipcMain } from "electron";
+import require$$0 from "fs";
+import require$$1 from "path";
 import * as process$1 from "node:process";
 import process__default from "node:process";
 import * as M from "node:path";
@@ -24,6 +26,103 @@ import { promisify } from "node:util";
 import { AsyncResource } from "node:async_hooks";
 import { EventEmitter } from "node:events";
 import bcrypt from "bcrypt";
+var main = {};
+const fs$1 = require$$0;
+const path = require$$1;
+function log(message) {
+  console.log(`[dotenv][DEBUG] ${message}`);
+}
+const NEWLINE = "\n";
+const RE_INI_KEY_VAL = /^\s*([\w.-]+)\s*=\s*(.*)?\s*$/;
+const RE_NEWLINES = /\\n/g;
+const NEWLINES_MATCH = /\r\n|\n|\r/;
+function parse(src, options2) {
+  const debug = Boolean(options2 && options2.debug);
+  const obj = {};
+  src.toString().split(NEWLINES_MATCH).forEach(function(line, idx) {
+    const keyValueArr = line.match(RE_INI_KEY_VAL);
+    if (keyValueArr != null) {
+      const key = keyValueArr[1];
+      let val = keyValueArr[2] || "";
+      const end = val.length - 1;
+      const isDoubleQuoted = val[0] === '"' && val[end] === '"';
+      const isSingleQuoted = val[0] === "'" && val[end] === "'";
+      if (isSingleQuoted || isDoubleQuoted) {
+        val = val.substring(1, end);
+        if (isDoubleQuoted) {
+          val = val.replace(RE_NEWLINES, NEWLINE);
+        }
+      } else {
+        val = val.trim();
+      }
+      obj[key] = val;
+    } else if (debug) {
+      log(`did not match key and value when parsing line ${idx + 1}: ${line}`);
+    }
+  });
+  return obj;
+}
+function config$1(options2) {
+  let dotenvPath = path.resolve(process.cwd(), ".env");
+  let encoding = "utf8";
+  let debug = false;
+  if (options2) {
+    if (options2.path != null) {
+      dotenvPath = options2.path;
+    }
+    if (options2.encoding != null) {
+      encoding = options2.encoding;
+    }
+    if (options2.debug != null) {
+      debug = true;
+    }
+  }
+  try {
+    const parsed = parse(fs$1.readFileSync(dotenvPath, { encoding }), { debug });
+    Object.keys(parsed).forEach(function(key) {
+      if (!Object.prototype.hasOwnProperty.call(process.env, key)) {
+        process.env[key] = parsed[key];
+      } else if (debug) {
+        log(`"${key}" is already defined in \`process.env\` and will not be overwritten`);
+      }
+    });
+    return { parsed };
+  } catch (e10) {
+    return { error: e10 };
+  }
+}
+main.config = config$1;
+main.parse = parse;
+const options = {};
+if (process.env.DOTENV_CONFIG_ENCODING != null) {
+  options.encoding = process.env.DOTENV_CONFIG_ENCODING;
+}
+if (process.env.DOTENV_CONFIG_PATH != null) {
+  options.path = process.env.DOTENV_CONFIG_PATH;
+}
+if (process.env.DOTENV_CONFIG_DEBUG != null) {
+  options.debug = process.env.DOTENV_CONFIG_DEBUG;
+}
+var envOptions = options;
+const re = /^dotenv_config_(encoding|path|debug)=(.+)$/;
+var cliOptions = function optionMatcher(args) {
+  return args.reduce(function(acc, cur) {
+    const matches = cur.match(re);
+    if (matches) {
+      acc[matches[1]] = matches[2];
+    }
+    return acc;
+  }, {});
+};
+(function() {
+  main.config(
+    Object.assign(
+      {},
+      envOptions,
+      cliOptions(process.argv)
+    )
+  );
+})();
 const __filename$1 = __banner_node_url.fileURLToPath(import.meta.url);
 globalThis["__dirname"] = M.dirname(__filename$1);
 const require$1 = __banner_node_module.createRequire(import.meta.url);
@@ -1584,20 +1683,20 @@ var _ = /* @__PURE__ */ function() {
     for (; !n[0] && n.length > 1; ) n.shift();
   }
   return function(n, i, o, s, a, l) {
-    var u, c, p, d, f, h, g, I, T, S, b, D, me, ie, Wr, V, re, Ae, J, mr, Mt = n.constructor, Jn = n.s == i.s ? 1 : -1, K = n.d, O = i.d;
+    var u, c, p, d, f, h, g, I, T, S, b, D, me, ie, Wr, V, re2, Ae, J, mr, Mt = n.constructor, Jn = n.s == i.s ? 1 : -1, K = n.d, O = i.d;
     if (!K || !K[0] || !O || !O[0]) return new Mt(!n.s || !i.s || (K ? O && K[0] == O[0] : !O) ? NaN : K && K[0] == 0 || !O ? Jn * 0 : Jn / 0);
-    for (l ? (f = 1, c = n.e - i.e) : (l = fe, f = E, c = Y(n.e / f) - Y(i.e / f)), J = O.length, re = K.length, T = new Mt(Jn), S = T.d = [], p = 0; O[p] == (K[p] || 0); p++) ;
+    for (l ? (f = 1, c = n.e - i.e) : (l = fe, f = E, c = Y(n.e / f) - Y(i.e / f)), J = O.length, re2 = K.length, T = new Mt(Jn), S = T.d = [], p = 0; O[p] == (K[p] || 0); p++) ;
     if (O[p] > (K[p] || 0) && c--, o == null ? (ie = o = Mt.precision, s = Mt.rounding) : a ? ie = o + (n.e - i.e) + 1 : ie = o, ie < 0) S.push(1), h = true;
     else {
       if (ie = ie / f + 2 | 0, p = 0, J == 1) {
-        for (d = 0, O = O[0], ie++; (p < re || d) && ie--; p++) Wr = d * l + (K[p] || 0), S[p] = Wr / O | 0, d = Wr % O | 0;
-        h = d || p < re;
+        for (d = 0, O = O[0], ie++; (p < re2 || d) && ie--; p++) Wr = d * l + (K[p] || 0), S[p] = Wr / O | 0, d = Wr % O | 0;
+        h = d || p < re2;
       } else {
-        for (d = l / (O[0] + 1) | 0, d > 1 && (O = e10(O, d, l), K = e10(K, d, l), J = O.length, re = K.length), V = J, b = K.slice(0, J), D = b.length; D < J; ) b[D++] = 0;
+        for (d = l / (O[0] + 1) | 0, d > 1 && (O = e10(O, d, l), K = e10(K, d, l), J = O.length, re2 = K.length), V = J, b = K.slice(0, J), D = b.length; D < J; ) b[D++] = 0;
         mr = O.slice(), mr.unshift(0), Ae = O[0], O[1] >= l / 2 && ++Ae;
         do
           d = 0, u = r(O, b, J, D), u < 0 ? (me = b[0], J != D && (me = me * l + (b[1] || 0)), d = me / Ae | 0, d > 1 ? (d >= l && (d = l - 1), g = e10(O, d, l), I = g.length, D = b.length, u = r(g, b, I, D), u == 1 && (d--, t(g, J < I ? mr : O, I, l))) : (d == 0 && (u = d = 1), g = O.slice()), I = g.length, I < D && g.unshift(0), t(b, g, D, l), u == -1 && (D = b.length, u = r(O, b, J, D), u < 1 && (d++, t(b, J < D ? mr : O, D, l))), D = b.length) : u === 0 && (d++, b = [0]), S[p++] = d, u && b[0] ? b[D++] = K[V] || 0 : (b = [K[V]], D = 1);
-        while ((V++ < re || b[0] !== void 0) && ie--);
+        while ((V++ < re2 || b[0] !== void 0) && ie--);
         h = b[0] !== void 0;
       }
       S[0] || S.shift();
@@ -2075,18 +2174,18 @@ var Zp = (e10) => e10, bn = {}, Xp = 0, v = { manual: bn.Prism && bn.Prism.manua
         S.pattern = RegExp(S.pattern.source, V + "g");
       }
       S = S.pattern || S;
-      for (let V = n, re = i; V < r.length; re += r[V].length, ++V) {
+      for (let V = n, re2 = i; V < r.length; re2 += r[V].length, ++V) {
         let Ae = r[V];
         if (r.length > e10.length) return;
         if (Ae instanceof ge) continue;
         if (me && V != r.length - 1) {
-          S.lastIndex = re;
+          S.lastIndex = re2;
           var p = S.exec(e10);
           if (!p) break;
-          var c = p.index + (D ? p[1].length : 0), d = p.index + p[0].length, a = V, l = re;
-          for (let O = r.length; a < O && (l < d || !r[a].type && !r[a - 1].greedy); ++a) l += r[a].length, c >= l && (++V, re = l);
+          var c = p.index + (D ? p[1].length : 0), d = p.index + p[0].length, a = V, l = re2;
+          for (let O = r.length; a < O && (l < d || !r[a].type && !r[a - 1].greedy); ++a) l += r[a].length, c >= l && (++V, re2 = l);
           if (r[V] instanceof ge) continue;
-          u = a - V, Ae = e10.slice(re, l), p.index -= re;
+          u = a - V, Ae = e10.slice(re2, l), p.index -= re2;
         } else {
           S.lastIndex = 0;
           var p = S.exec(Ae), u = 1;
@@ -2098,9 +2197,9 @@ var Zp = (e10) => e10, bn = {}, Xp = 0, v = { manual: bn.Prism && bn.Prism.manua
         D && (ie = p[1] ? p[1].length : 0);
         var c = p.index + ie, p = p[0].slice(ie), d = c + p.length, f = Ae.slice(0, c), h = Ae.slice(d);
         let J = [V, u];
-        f && (++V, re += f.length, J.push(f));
+        f && (++V, re2 += f.length, J.push(f));
         let mr = new ge(g, b ? v.tokenize(p, b) : p, Wr, p, me);
-        if (J.push(mr), h && J.push(h), Array.prototype.splice.apply(r, J), u != 1 && v.matchGrammar(e10, r, t, V, re, true, g), o) break;
+        if (J.push(mr), h && J.push(h), Array.prototype.splice.apply(r, J), u != 1 && v.matchGrammar(e10, r, t, V, re2, true, g), o) break;
       }
     }
   }
@@ -5648,81 +5747,67 @@ async function verifyPassword(password, passwordHash) {
 }
 const MAX_FAILED_ATTEMPTS = 3;
 const LOCK_DURATION_MINUTES = 15;
+function validateLoginInput(input) {
+  if (!input || typeof input !== "object") throw new Error("INVALID_INPUT");
+  if (typeof input.accessCode !== "string" || !input.accessCode.trim()) {
+    throw new Error("ACCESS_CODE_REQUIRED");
+  }
+  if (typeof input.password !== "string" || !input.password) {
+    throw new Error("PASSWORD_REQUIRED");
+  }
+}
 class AuthService {
   async login(input) {
-    const { accessCode, password } = input;
-    const user = await prisma.user.findUnique({
-      where: {
-        accessCode
-      }
-    });
+    validateLoginInput(input);
+    const accessCode = input.accessCode.trim();
+    const password = input.password;
+    const user = await prisma.user.findUnique({ where: { accessCode } });
     if (!user) {
       await prisma.accessLog.create({
-        data: {
-          attemptedAccessCode: accessCode,
-          success: false,
-          failureReason: "INVALID_CREDENTIALS"
-        }
+        data: { attemptedAccessCode: accessCode, success: false, failureReason: "INVALID_CREDENTIALS" }
       });
+      if (await prisma.user.count() === 0) throw new Error("NO_CREDENTIALS_CONFIGURED");
       throw new Error("INVALID_CREDENTIALS");
     }
     const now = /* @__PURE__ */ new Date();
     if (user.lockedUntil && user.lockedUntil > now) {
       await prisma.accessLog.create({
-        data: {
-          userId: user.id,
-          attemptedAccessCode: accessCode,
-          success: false,
-          failureReason: "ACCOUNT_LOCKED"
-        }
+        data: { userId: user.id, attemptedAccessCode: accessCode, success: false, failureReason: "ACCOUNT_LOCKED" }
       });
-      throw new Error("ACCOUNT_LOCKED");
-    }
-    const lockExpired = user.lockedUntil !== null && user.lockedUntil <= now;
-    if (lockExpired) {
-      await prisma.user.update({
-        where: { id: user.id },
-        data: {
-          failedLoginAttempts: 0,
-          lockedUntil: null
-        }
-      });
+      throw new Error(`ACCOUNT_LOCKED:${user.lockedUntil.toISOString()}`);
     }
     if (!user.isActive) {
       await prisma.accessLog.create({
-        data: {
-          userId: user.id,
-          attemptedAccessCode: accessCode,
-          success: false,
-          failureReason: "ACCOUNT_INACTIVE"
-        }
+        data: { userId: user.id, attemptedAccessCode: accessCode, success: false, failureReason: "ACCOUNT_INACTIVE" }
       });
-      throw new Error("ACCOUNT_INACTIVE");
+      throw new Error("ACCOUNT_UNAVAILABLE");
     }
-    const passwordMatches = await verifyPassword(password, user.passwordHash);
-    if (!passwordMatches) {
-      const currentAttempts = lockExpired ? 0 : user.failedLoginAttempts;
-      const failedAttempts = currentAttempts + 1;
-      const shouldLock = failedAttempts >= MAX_FAILED_ATTEMPTS;
-      const lockedUntil = shouldLock ? new Date(Date.now() + LOCK_DURATION_MINUTES * 60 * 1e3) : null;
-      await prisma.$transaction([
-        prisma.user.update({
-          where: { id: user.id },
-          data: {
-            failedLoginAttempts: failedAttempts,
-            lockedUntil
-          }
-        }),
-        prisma.accessLog.create({
-          data: {
-            userId: user.id,
-            attemptedAccessCode: accessCode,
-            success: false,
-            failureReason: "INVALID_CREDENTIALS"
-          }
-        })
-      ]);
-      throw new Error("INVALID_CREDENTIALS");
+    if (!await verifyPassword(password, user.passwordHash)) {
+      for (let attempt = 0; attempt < 5; attempt += 1) {
+        const latest = await prisma.user.findUnique({ where: { id: user.id } });
+        if (!latest) throw new Error("ACCOUNT_UNAVAILABLE");
+        const currentTime = /* @__PURE__ */ new Date();
+        if (latest.lockedUntil && latest.lockedUntil > currentTime) {
+          await prisma.accessLog.create({
+            data: { userId: user.id, attemptedAccessCode: accessCode, success: false, failureReason: "ACCOUNT_LOCKED" }
+          });
+          throw new Error(`ACCOUNT_LOCKED:${latest.lockedUntil.toISOString()}`);
+        }
+        const currentAttempts = latest.lockedUntil && latest.lockedUntil <= currentTime ? 0 : latest.failedLoginAttempts;
+        const failedAttempts = currentAttempts + 1;
+        const lockedUntil = failedAttempts >= MAX_FAILED_ATTEMPTS ? new Date(currentTime.getTime() + LOCK_DURATION_MINUTES * 6e4) : null;
+        const changed = await prisma.user.updateMany({
+          where: { id: user.id, failedLoginAttempts: latest.failedLoginAttempts, lockedUntil: latest.lockedUntil },
+          data: { failedLoginAttempts: failedAttempts, lastFailedLoginAt: currentTime, lockedUntil }
+        });
+        if (changed.count === 1) {
+          await prisma.accessLog.create({
+            data: { userId: user.id, attemptedAccessCode: accessCode, success: false, failureReason: "INVALID_CREDENTIALS" }
+          });
+          throw new Error(lockedUntil ? `ACCOUNT_LOCKED:${lockedUntil.toISOString()}` : "INVALID_CREDENTIALS");
+        }
+      }
+      throw new Error("LOGIN_RETRY_REQUIRED");
     }
     const authenticatedUser = {
       id: user.id,
@@ -5732,60 +5817,36 @@ class AuthService {
       mustChangePassword: user.mustChangePassword
     };
     await prisma.$transaction([
-      prisma.user.update({
-        where: { id: user.id },
-        data: {
-          failedLoginAttempts: 0,
-          lockedUntil: null
-        }
-      }),
+      prisma.user.update({ where: { id: user.id }, data: { failedLoginAttempts: 0, lockedUntil: null } }),
       prisma.accessLog.create({
-        data: {
-          userId: user.id,
-          attemptedAccessCode: accessCode,
-          success: true,
-          failureReason: null
-        }
+        data: { userId: user.id, attemptedAccessCode: accessCode, success: true, failureReason: null }
       })
     ]);
-    return {
-      user: authenticatedUser
-    };
+    return { user: authenticatedUser };
   }
   async changePassword(userId, currentPassword, newPassword) {
-    if (!newPassword || newPassword.length < 12) {
-      throw new Error("PASSWORD_TOO_SHORT");
+    if (typeof currentPassword !== "string" || !currentPassword || typeof newPassword !== "string" || !newPassword) {
+      throw new Error("PASSWORD_REQUIRED");
     }
-    if (currentPassword === newPassword) {
-      throw new Error("PASSWORD_MUST_BE_DIFFERENT");
-    }
-    const user = await prisma.user.findUnique({
-      where: { id: userId }
-    });
-    if (!user || !user.isActive) {
-      throw new Error("ACCOUNT_UNAVAILABLE");
-    }
-    const currentPasswordMatches = await verifyPassword(
-      currentPassword,
-      user.passwordHash
-    );
-    if (!currentPasswordMatches) {
+    if (newPassword.length < 12) throw new Error("PASSWORD_TOO_SHORT");
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user || !user.isActive) throw new Error("ACCOUNT_UNAVAILABLE");
+    if (!await verifyPassword(currentPassword, user.passwordHash)) {
       throw new Error("INVALID_CURRENT_PASSWORD");
+    }
+    if (await verifyPassword(newPassword, user.passwordHash)) {
+      throw new Error("PASSWORD_MUST_BE_DIFFERENT");
     }
     const newPasswordHash = await hashPassword(newPassword);
     await prisma.user.update({
       where: { id: user.id },
-      data: {
-        passwordHash: newPasswordHash,
-        mustChangePassword: false,
-        failedLoginAttempts: 0,
-        lockedUntil: null
-      }
+      data: { passwordHash: newPasswordHash, mustChangePassword: false, failedLoginAttempts: 0, lockedUntil: null }
     });
   }
 }
 const authService = new AuthService();
 const sessions = /* @__PURE__ */ new Map();
+const SESSION_IDLE_TIMEOUT_MS = 15 * 60 * 1e3;
 const __dirname$1 = M__default.dirname(fileURLToPath(import.meta.url));
 process.env.APP_ROOT = M__default.join(__dirname$1, "..");
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
@@ -5829,26 +5890,65 @@ app.on("activate", () => {
   }
 });
 ipcMain.handle("auth:login", async (event, input) => {
+  if (event.senderFrame !== event.sender.mainFrame) throw new Error("UNAUTHORIZED");
   const result = await authService.login(input);
   sessions.set(event.sender.id, {
     userId: result.user.id,
-    mustChangePassword: result.user.mustChangePassword
+    lastActivityAt: Date.now()
   });
   return result;
+});
+ipcMain.handle("auth:get-session", async (event) => {
+  if (event.senderFrame !== event.sender.mainFrame) throw new Error("UNAUTHORIZED");
+  const session = sessions.get(event.sender.id);
+  if (!session) return null;
+  if (Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
+    sessions.delete(event.sender.id);
+    return null;
+  }
+  const user = await prisma.user.findUnique({ where: { id: session.userId } });
+  if (!user || !user.isActive) {
+    sessions.delete(event.sender.id);
+    return null;
+  }
+  session.lastActivityAt = Date.now();
+  return {
+    user: { id: user.id, name: user.name, role: user.role, mustChangePassword: user.mustChangePassword },
+    idleTimeoutMs: SESSION_IDLE_TIMEOUT_MS
+  };
+});
+ipcMain.handle("auth:logout", (event) => {
+  sessions.delete(event.sender.id);
+  return { success: true };
+});
+ipcMain.handle("auth:activity", (event) => {
+  if (event.senderFrame !== event.sender.mainFrame) throw new Error("UNAUTHORIZED");
+  const session = sessions.get(event.sender.id);
+  if (!session || Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
+    sessions.delete(event.sender.id);
+    return false;
+  }
+  session.lastActivityAt = Date.now();
+  return true;
 });
 ipcMain.handle(
   "auth:change-password",
   async (event, input) => {
+    if (event.senderFrame !== event.sender.mainFrame) throw new Error("UNAUTHORIZED");
     const session = sessions.get(event.sender.id);
     if (!session) {
       throw new Error("NOT_AUTHENTICATED");
+    }
+    if (Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
+      sessions.delete(event.sender.id);
+      throw new Error("SESSION_EXPIRED");
     }
     await authService.changePassword(
       session.userId,
       input.currentPassword,
       input.newPassword
     );
-    session.mustChangePassword = false;
+    session.lastActivityAt = Date.now();
     return { success: true };
   }
 );

@@ -5,5 +5,8 @@ electron.contextBridge.exposeInMainWorld("authAPI", {
   changePassword: (currentPassword, newPassword) => electron.ipcRenderer.invoke("auth:change-password", {
     currentPassword,
     newPassword
-  })
+  }),
+  getSession: () => electron.ipcRenderer.invoke("auth:get-session"),
+  logout: () => electron.ipcRenderer.invoke("auth:logout"),
+  activity: () => electron.ipcRenderer.invoke("auth:activity")
 });

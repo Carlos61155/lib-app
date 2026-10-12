@@ -16,7 +16,10 @@ async function main() {
     );
   }
 
-  if (password === "TROQUE_POR_UMA_SENHA_TEMPORARIA_FORTE") {
+  if (
+    password === "TROQUE_POR_UMA_SENHA_TEMPORARIA_FORTE" ||
+    password.includes("CHANGE_ME")
+  ) {
     throw new Error(
       "Defina uma senha temporária forte antes de executar o seed.",
     );

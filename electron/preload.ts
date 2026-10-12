@@ -9,4 +9,7 @@ contextBridge.exposeInMainWorld("authAPI", {
       currentPassword,
       newPassword,
     }),
+  getSession: () => ipcRenderer.invoke("auth:get-session"),
+  logout: () => ipcRenderer.invoke("auth:logout"),
+  activity: () => ipcRenderer.invoke("auth:activity"),
 });
