@@ -76,6 +76,18 @@ INITIAL_LIBRARIAN_PASSWORD="TROQUE_POR_UMA_SENHA_TEMPORARIA_FORTE"
 
 The seed user must change their password through the application on first access. The login uses the librarian **access code** and password.
 
+## Build and packaged app configuration
+
+Build the installer for the current operating system with:
+
+```bash
+npm run build
+```
+
+Build on each target operating system so Prisma generates the matching native query engine and Electron rebuilds native dependencies for that platform. Installers are written to `release/0.0.0/`.
+
+The packaged app needs access to the PostgreSQL database. For an installed app, place a `.env` file in Electron's user data directory (the `libapp` folder under the operating system's application data directory) and set `DATABASE_URL` there. The app checks this file before the current working directory's `.env`. Do not package database credentials in the installer. The database server and schema migrations must be provisioned separately from the desktop app.
+
 ## Available scripts
 
 - `npm run dev` — start the Vite/Electron development app

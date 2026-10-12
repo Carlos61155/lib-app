@@ -9,13 +9,14 @@ var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot
 var __privateMethod = (obj, member, method) => (__accessCheck(obj, member, "access private method"), method);
 var _a2, _b, _c2, _d2, _e, _f2, _g, _h, _i, _j, _k, _l2, _m2, _n2, _o2, _p2, _q, _r2, _s2, _t2, _u, _v, _w, _x, _y, _z, _A, _B, _e2, _C, _e3, _D, _e4, _E, _Un_instances, e_fn, _F;
 import { app, BrowserWindow, ipcMain } from "electron";
-import * as process$1 from "node:process";
-import process__default from "node:process";
+import * as __banner_node_module from "node:module";
+import { createRequire } from "node:module";
 import * as M from "node:path";
 import M__default from "node:path";
+import * as process$1 from "node:process";
+import process__default from "node:process";
 import * as __banner_node_url from "node:url";
 import { fileURLToPath } from "node:url";
-import * as __banner_node_module from "node:module";
 import Ci from "node:fs";
 import ku from "node:child_process";
 import Bo from "node:fs/promises";
@@ -26,14 +27,14 @@ import { EventEmitter } from "node:events";
 import bcrypt from "bcrypt";
 const __filename$1 = __banner_node_url.fileURLToPath(import.meta.url);
 globalThis["__dirname"] = M.dirname(__filename$1);
-const require$1 = __banner_node_module.createRequire(import.meta.url);
+const require$2 = __banner_node_module.createRequire(import.meta.url);
 var Xl = Object.create;
 var Kn = Object.defineProperty;
 var eu = Object.getOwnPropertyDescriptor;
 var ru = Object.getOwnPropertyNames;
 var tu = Object.getPrototypeOf, nu = Object.prototype.hasOwnProperty;
-var fr = ((e10) => typeof require$1 < "u" ? require$1 : typeof Proxy < "u" ? new Proxy(e10, { get: (r, t) => (typeof require$1 < "u" ? require$1 : r)[t] }) : e10)(function(e10) {
-  if (typeof require$1 < "u") return require$1.apply(this, arguments);
+var fr = ((e10) => typeof require$2 < "u" ? require$2 : typeof Proxy < "u" ? new Proxy(e10, { get: (r, t) => (typeof require$2 < "u" ? require$2 : r)[t] }) : e10)(function(e10) {
+  if (typeof require$2 < "u") return require$2.apply(this, arguments);
   throw Error('Dynamic require of "' + e10 + '" is not supported');
 });
 var To = (e10, r) => () => (e10 && (r = e10(e10 = 0)), r);
@@ -5577,7 +5578,7 @@ const config = {
       "value": "prisma-client"
     },
     "output": {
-      "value": "/home/carlos/Documentos/PRINT/lib-app/electron/generated/prisma",
+      "value": "/home/marcosv/lib-app/electron/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -5591,7 +5592,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/carlos/Documentos/PRINT/lib-app/prisma/schema.prisma",
+    "sourceFilePath": "/home/marcosv/lib-app/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativePath": "../../../prisma",
@@ -5601,6 +5602,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -5638,6 +5640,10 @@ globalThis["__dirname"] = M.dirname(fileURLToPath(import.meta.url));
 const PrismaClient = getPrismaClientClass(__dirname);
 M.join(__dirname, "libquery_engine-debian-openssl-3.0.x.so.node");
 M.join(process$1.cwd(), "electron/generated/prisma/libquery_engine-debian-openssl-3.0.x.so.node");
+const require$1 = createRequire(import.meta.url);
+const { config: loadEnv } = require$1("dotenv");
+loadEnv({ path: M__default.join(app.getPath("userData"), ".env") });
+loadEnv();
 const prisma = new PrismaClient();
 const SALT_ROUNDS = 12;
 async function hashPassword(password) {
@@ -5648,81 +5654,67 @@ async function verifyPassword(password, passwordHash) {
 }
 const MAX_FAILED_ATTEMPTS = 3;
 const LOCK_DURATION_MINUTES = 15;
+function validateLoginInput(input) {
+  if (!input || typeof input !== "object") throw new Error("INVALID_INPUT");
+  if (typeof input.accessCode !== "string" || !input.accessCode.trim()) {
+    throw new Error("ACCESS_CODE_REQUIRED");
+  }
+  if (typeof input.password !== "string" || !input.password) {
+    throw new Error("PASSWORD_REQUIRED");
+  }
+}
 class AuthService {
   async login(input) {
-    const { accessCode, password } = input;
-    const user = await prisma.user.findUnique({
-      where: {
-        accessCode
-      }
-    });
+    validateLoginInput(input);
+    const accessCode = input.accessCode.trim();
+    const password = input.password;
+    const user = await prisma.user.findUnique({ where: { accessCode } });
     if (!user) {
       await prisma.accessLog.create({
-        data: {
-          attemptedAccessCode: accessCode,
-          success: false,
-          failureReason: "INVALID_CREDENTIALS"
-        }
+        data: { attemptedAccessCode: accessCode, success: false, failureReason: "INVALID_CREDENTIALS" }
       });
+      if (await prisma.user.count() === 0) throw new Error("NO_CREDENTIALS_CONFIGURED");
       throw new Error("INVALID_CREDENTIALS");
     }
     const now = /* @__PURE__ */ new Date();
     if (user.lockedUntil && user.lockedUntil > now) {
       await prisma.accessLog.create({
-        data: {
-          userId: user.id,
-          attemptedAccessCode: accessCode,
-          success: false,
-          failureReason: "ACCOUNT_LOCKED"
-        }
+        data: { userId: user.id, attemptedAccessCode: accessCode, success: false, failureReason: "ACCOUNT_LOCKED" }
       });
-      throw new Error("ACCOUNT_LOCKED");
-    }
-    const lockExpired = user.lockedUntil !== null && user.lockedUntil <= now;
-    if (lockExpired) {
-      await prisma.user.update({
-        where: { id: user.id },
-        data: {
-          failedLoginAttempts: 0,
-          lockedUntil: null
-        }
-      });
+      throw new Error(`ACCOUNT_LOCKED:${user.lockedUntil.toISOString()}`);
     }
     if (!user.isActive) {
       await prisma.accessLog.create({
-        data: {
-          userId: user.id,
-          attemptedAccessCode: accessCode,
-          success: false,
-          failureReason: "ACCOUNT_INACTIVE"
-        }
+        data: { userId: user.id, attemptedAccessCode: accessCode, success: false, failureReason: "ACCOUNT_INACTIVE" }
       });
-      throw new Error("ACCOUNT_INACTIVE");
+      throw new Error("ACCOUNT_UNAVAILABLE");
     }
-    const passwordMatches = await verifyPassword(password, user.passwordHash);
-    if (!passwordMatches) {
-      const currentAttempts = lockExpired ? 0 : user.failedLoginAttempts;
-      const failedAttempts = currentAttempts + 1;
-      const shouldLock = failedAttempts >= MAX_FAILED_ATTEMPTS;
-      const lockedUntil = shouldLock ? new Date(Date.now() + LOCK_DURATION_MINUTES * 60 * 1e3) : null;
-      await prisma.$transaction([
-        prisma.user.update({
-          where: { id: user.id },
-          data: {
-            failedLoginAttempts: failedAttempts,
-            lockedUntil
-          }
-        }),
-        prisma.accessLog.create({
-          data: {
-            userId: user.id,
-            attemptedAccessCode: accessCode,
-            success: false,
-            failureReason: "INVALID_CREDENTIALS"
-          }
-        })
-      ]);
-      throw new Error("INVALID_CREDENTIALS");
+    if (!await verifyPassword(password, user.passwordHash)) {
+      for (let attempt = 0; attempt < 5; attempt += 1) {
+        const latest = await prisma.user.findUnique({ where: { id: user.id } });
+        if (!latest) throw new Error("ACCOUNT_UNAVAILABLE");
+        const currentTime = /* @__PURE__ */ new Date();
+        if (latest.lockedUntil && latest.lockedUntil > currentTime) {
+          await prisma.accessLog.create({
+            data: { userId: user.id, attemptedAccessCode: accessCode, success: false, failureReason: "ACCOUNT_LOCKED" }
+          });
+          throw new Error(`ACCOUNT_LOCKED:${latest.lockedUntil.toISOString()}`);
+        }
+        const currentAttempts = latest.lockedUntil && latest.lockedUntil <= currentTime ? 0 : latest.failedLoginAttempts;
+        const failedAttempts = currentAttempts + 1;
+        const lockedUntil = failedAttempts >= MAX_FAILED_ATTEMPTS ? new Date(currentTime.getTime() + LOCK_DURATION_MINUTES * 6e4) : null;
+        const changed = await prisma.user.updateMany({
+          where: { id: user.id, failedLoginAttempts: latest.failedLoginAttempts, lockedUntil: latest.lockedUntil },
+          data: { failedLoginAttempts: failedAttempts, lastFailedLoginAt: currentTime, lockedUntil }
+        });
+        if (changed.count === 1) {
+          await prisma.accessLog.create({
+            data: { userId: user.id, attemptedAccessCode: accessCode, success: false, failureReason: "INVALID_CREDENTIALS" }
+          });
+          throw new Error(lockedUntil ? `ACCOUNT_LOCKED:${lockedUntil.toISOString()}` : "INVALID_CREDENTIALS");
+        }
+      }
+      throw new Error("LOGIN_RETRY_REQUIRED");
     }
     const authenticatedUser = {
       id: user.id,
@@ -5732,60 +5724,36 @@ class AuthService {
       mustChangePassword: user.mustChangePassword
     };
     await prisma.$transaction([
-      prisma.user.update({
-        where: { id: user.id },
-        data: {
-          failedLoginAttempts: 0,
-          lockedUntil: null
-        }
-      }),
+      prisma.user.update({ where: { id: user.id }, data: { failedLoginAttempts: 0, lockedUntil: null } }),
       prisma.accessLog.create({
-        data: {
-          userId: user.id,
-          attemptedAccessCode: accessCode,
-          success: true,
-          failureReason: null
-        }
+        data: { userId: user.id, attemptedAccessCode: accessCode, success: true, failureReason: null }
       })
     ]);
-    return {
-      user: authenticatedUser
-    };
+    return { user: authenticatedUser };
   }
   async changePassword(userId, currentPassword, newPassword) {
-    if (!newPassword || newPassword.length < 12) {
-      throw new Error("PASSWORD_TOO_SHORT");
+    if (typeof currentPassword !== "string" || !currentPassword || typeof newPassword !== "string" || !newPassword) {
+      throw new Error("PASSWORD_REQUIRED");
     }
-    if (currentPassword === newPassword) {
-      throw new Error("PASSWORD_MUST_BE_DIFFERENT");
-    }
-    const user = await prisma.user.findUnique({
-      where: { id: userId }
-    });
-    if (!user || !user.isActive) {
-      throw new Error("ACCOUNT_UNAVAILABLE");
-    }
-    const currentPasswordMatches = await verifyPassword(
-      currentPassword,
-      user.passwordHash
-    );
-    if (!currentPasswordMatches) {
+    if (newPassword.length < 12) throw new Error("PASSWORD_TOO_SHORT");
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user || !user.isActive) throw new Error("ACCOUNT_UNAVAILABLE");
+    if (!await verifyPassword(currentPassword, user.passwordHash)) {
       throw new Error("INVALID_CURRENT_PASSWORD");
+    }
+    if (await verifyPassword(newPassword, user.passwordHash)) {
+      throw new Error("PASSWORD_MUST_BE_DIFFERENT");
     }
     const newPasswordHash = await hashPassword(newPassword);
     await prisma.user.update({
       where: { id: user.id },
-      data: {
-        passwordHash: newPasswordHash,
-        mustChangePassword: false,
-        failedLoginAttempts: 0,
-        lockedUntil: null
-      }
+      data: { passwordHash: newPasswordHash, mustChangePassword: false, failedLoginAttempts: 0, lockedUntil: null }
     });
   }
 }
 const authService = new AuthService();
 const sessions = /* @__PURE__ */ new Map();
+const SESSION_IDLE_TIMEOUT_MS = 1 * 60 * 1e3;
 const __dirname$1 = M__default.dirname(fileURLToPath(import.meta.url));
 process.env.APP_ROOT = M__default.join(__dirname$1, "..");
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
@@ -5808,9 +5776,6 @@ function createWindow() {
     sessions.delete(windowId);
     win = null;
   });
-  win.webContents.on("did-finish-load", () => {
-    win == null ? void 0 : win.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
-  });
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
   } else {
@@ -5829,26 +5794,65 @@ app.on("activate", () => {
   }
 });
 ipcMain.handle("auth:login", async (event, input) => {
+  if (event.senderFrame !== event.sender.mainFrame) throw new Error("UNAUTHORIZED");
   const result = await authService.login(input);
   sessions.set(event.sender.id, {
     userId: result.user.id,
-    mustChangePassword: result.user.mustChangePassword
+    lastActivityAt: Date.now()
   });
   return result;
+});
+ipcMain.handle("auth:get-session", async (event) => {
+  if (event.senderFrame !== event.sender.mainFrame) throw new Error("UNAUTHORIZED");
+  const session = sessions.get(event.sender.id);
+  if (!session) return null;
+  if (Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
+    sessions.delete(event.sender.id);
+    return null;
+  }
+  const user = await prisma.user.findUnique({ where: { id: session.userId } });
+  if (!user || !user.isActive) {
+    sessions.delete(event.sender.id);
+    return null;
+  }
+  session.lastActivityAt = Date.now();
+  return {
+    user: { id: user.id, name: user.name, role: user.role, mustChangePassword: user.mustChangePassword },
+    idleTimeoutMs: SESSION_IDLE_TIMEOUT_MS
+  };
+});
+ipcMain.handle("auth:logout", (event) => {
+  sessions.delete(event.sender.id);
+  return { success: true };
+});
+ipcMain.handle("auth:activity", (event) => {
+  if (event.senderFrame !== event.sender.mainFrame) throw new Error("UNAUTHORIZED");
+  const session = sessions.get(event.sender.id);
+  if (!session || Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
+    sessions.delete(event.sender.id);
+    return false;
+  }
+  session.lastActivityAt = Date.now();
+  return true;
 });
 ipcMain.handle(
   "auth:change-password",
   async (event, input) => {
+    if (event.senderFrame !== event.sender.mainFrame) throw new Error("UNAUTHORIZED");
     const session = sessions.get(event.sender.id);
     if (!session) {
       throw new Error("NOT_AUTHENTICATED");
+    }
+    if (Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
+      sessions.delete(event.sender.id);
+      throw new Error("SESSION_EXPIRED");
     }
     await authService.changePassword(
       session.userId,
       input.currentPassword,
       input.newPassword
     );
-    session.mustChangePassword = false;
+    session.lastActivityAt = Date.now();
     return { success: true };
   }
 );

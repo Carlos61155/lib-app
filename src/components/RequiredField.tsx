@@ -15,6 +15,10 @@ type RequiredFieldProps<TFormValues extends FieldValues> = {
   type?: string
   autoComplete?: string
   icon: ReactNode
+  helperText?: string
+  validate?: (value: string) => true | string
+  forceInvalid?: boolean
+  disabled?: boolean
 }
 
 export function RequiredField<TFormValues extends FieldValues>({
@@ -24,18 +28,25 @@ export function RequiredField<TFormValues extends FieldValues>({
   type = 'text',
   autoComplete,
   icon,
+  helperText,
+  validate,
+  forceInvalid = false,
+  disabled = false,
 }: RequiredFieldProps<TFormValues>) {
   const { control } = useFormContext<TFormValues>()
   const { field, fieldState } = useController({
     name,
     control,
     rules: {
-      validate: (value) =>
-        String(value ?? '').trim().length > 0 ||
-        `O campo ${label.toLocaleLowerCase('pt-BR')} é obrigatório`,
+      validate: (value) => {
+        const stringValue = String(value ?? '')
+        if (!stringValue.trim()) return `O campo ${label.toLocaleLowerCase('pt-BR')} é obrigatório`
+        return validate?.(stringValue) ?? true
+      },
     },
   })
   const errorId = `${field.name}-error`
+  const isInvalid = fieldState.invalid || forceInvalid
 
   return (
     <Field className="gap-1.5">
@@ -47,12 +58,13 @@ export function RequiredField<TFormValues extends FieldValues>({
           {...field}
           id={field.name}
           type={type}
+          disabled={disabled}
           autoComplete={autoComplete}
           placeholder={placeholder}
-          aria-invalid={fieldState.invalid}
+          aria-invalid={isInvalid}
           aria-describedby={fieldState.error ? errorId : undefined}
           className={`h-11 rounded-[8px] bg-white px-4 pr-11 text-[14px] font-medium placeholder:text-[#6e7a91] focus-visible:ring-2 ${
-            fieldState.invalid
+            isInvalid
               ? 'border-[#B42331] focus-visible:border-[#B42331] focus-visible:ring-[#B42331]/20'
               : 'border-[#414141] focus-visible:border-[#2e56b2] focus-visible:ring-[#2e56b2]/20'
           }`}
@@ -65,6 +77,9 @@ export function RequiredField<TFormValues extends FieldValues>({
         <p id={errorId} role="alert" className="pl-4 text-[12px] leading-4 text-[#B42331]">
           {fieldState.error.message}
         </p>
+      )}
+      {helperText && !fieldState.error && (
+        <p className="pl-4 text-[12px] leading-4 text-[#718096]">{helperText}</p>
       )}
     </Field>
   )
