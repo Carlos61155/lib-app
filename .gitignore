@@ -6,7 +6,9 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-
+.env
+.env.*
+!.env.example
 node_modules
 dist
 dist-ssr
@@ -25,3 +27,7 @@ dist-ssr
 
 # aux files
 src/utils/
+
+tarefas.md
+/src/generated/prisma
+
