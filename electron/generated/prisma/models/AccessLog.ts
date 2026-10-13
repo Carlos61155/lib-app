@@ -184,8 +184,8 @@ export type AccessLogWhereInput = {
   AND?: Prisma.AccessLogWhereInput | Prisma.AccessLogWhereInput[]
   OR?: Prisma.AccessLogWhereInput[]
   NOT?: Prisma.AccessLogWhereInput | Prisma.AccessLogWhereInput[]
-  id?: Prisma.UuidFilter<"AccessLog"> | string
-  userId?: Prisma.UuidNullableFilter<"AccessLog"> | string | null
+  id?: Prisma.StringFilter<"AccessLog"> | string
+  userId?: Prisma.StringNullableFilter<"AccessLog"> | string | null
   attemptedAccessCode?: Prisma.StringFilter<"AccessLog"> | string
   success?: Prisma.BoolFilter<"AccessLog"> | boolean
   failureReason?: Prisma.StringNullableFilter<"AccessLog"> | string | null
@@ -208,7 +208,7 @@ export type AccessLogWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.AccessLogWhereInput | Prisma.AccessLogWhereInput[]
   OR?: Prisma.AccessLogWhereInput[]
   NOT?: Prisma.AccessLogWhereInput | Prisma.AccessLogWhereInput[]
-  userId?: Prisma.UuidNullableFilter<"AccessLog"> | string | null
+  userId?: Prisma.StringNullableFilter<"AccessLog"> | string | null
   attemptedAccessCode?: Prisma.StringFilter<"AccessLog"> | string
   success?: Prisma.BoolFilter<"AccessLog"> | boolean
   failureReason?: Prisma.StringNullableFilter<"AccessLog"> | string | null
@@ -232,8 +232,8 @@ export type AccessLogScalarWhereWithAggregatesInput = {
   AND?: Prisma.AccessLogScalarWhereWithAggregatesInput | Prisma.AccessLogScalarWhereWithAggregatesInput[]
   OR?: Prisma.AccessLogScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AccessLogScalarWhereWithAggregatesInput | Prisma.AccessLogScalarWhereWithAggregatesInput[]
-  id?: Prisma.UuidWithAggregatesFilter<"AccessLog"> | string
-  userId?: Prisma.UuidNullableWithAggregatesFilter<"AccessLog"> | string | null
+  id?: Prisma.StringWithAggregatesFilter<"AccessLog"> | string
+  userId?: Prisma.StringNullableWithAggregatesFilter<"AccessLog"> | string | null
   attemptedAccessCode?: Prisma.StringWithAggregatesFilter<"AccessLog"> | string
   success?: Prisma.BoolWithAggregatesFilter<"AccessLog"> | boolean
   failureReason?: Prisma.StringNullableWithAggregatesFilter<"AccessLog"> | string | null
@@ -408,7 +408,6 @@ export type AccessLogCreateOrConnectWithoutUserInput = {
 
 export type AccessLogCreateManyUserInputEnvelope = {
   data: Prisma.AccessLogCreateManyUserInput | Prisma.AccessLogCreateManyUserInput[]
-  skipDuplicates?: boolean
 }
 
 export type AccessLogUpsertWithWhereUniqueWithoutUserInput = {
@@ -431,8 +430,8 @@ export type AccessLogScalarWhereInput = {
   AND?: Prisma.AccessLogScalarWhereInput | Prisma.AccessLogScalarWhereInput[]
   OR?: Prisma.AccessLogScalarWhereInput[]
   NOT?: Prisma.AccessLogScalarWhereInput | Prisma.AccessLogScalarWhereInput[]
-  id?: Prisma.UuidFilter<"AccessLog"> | string
-  userId?: Prisma.UuidNullableFilter<"AccessLog"> | string | null
+  id?: Prisma.StringFilter<"AccessLog"> | string
+  userId?: Prisma.StringNullableFilter<"AccessLog"> | string | null
   attemptedAccessCode?: Prisma.StringFilter<"AccessLog"> | string
   success?: Prisma.BoolFilter<"AccessLog"> | boolean
   failureReason?: Prisma.StringNullableFilter<"AccessLog"> | string | null
@@ -1194,7 +1193,6 @@ export type AccessLogCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * The data used to create many AccessLogs.
    */
   data: Prisma.AccessLogCreateManyInput | Prisma.AccessLogCreateManyInput[]
-  skipDuplicates?: boolean
 }
 
 /**
@@ -1213,7 +1211,6 @@ export type AccessLogCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Exten
    * The data used to create many AccessLogs.
    */
   data: Prisma.AccessLogCreateManyInput | Prisma.AccessLogCreateManyInput[]
-  skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */

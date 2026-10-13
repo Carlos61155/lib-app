@@ -1,5 +1,5 @@
 import { prisma } from "../database";
-import { ChangePasswordSchema, LoginSchema } from "./auth.schemas";
+import { ChangePasswordSchema, InitialLibrarianSchema, LoginSchema } from "./auth.schemas";
 import { AuthenticatedUser, LoginResult } from "./auth.types";
 import { hashPassword, verifyPassword } from "./password.service";
 
@@ -7,6 +7,62 @@ const MAX_FAILED_ATTEMPTS = 3;
 const LOCK_DURATION_MINUTES = 15;
 
 export class AuthService {
+  async provisionInitialLibrarian(input: unknown): Promise<boolean> {
+    if ((await prisma.user.count()) > 0) return false;
+
+    const configuration = input as Record<string, unknown>;
+    const requiredFields = ["name", "email", "accessCode", "password"] as const;
+    const missingFields = requiredFields.filter(
+      (field) => typeof configuration?.[field] !== "string" || !configuration[field].trim(),
+    );
+    if (missingFields.length > 0) {
+      const envNames: Record<(typeof requiredFields)[number], string> = {
+        name: "INITIAL_LIBRARIAN_NAME",
+        email: "INITIAL_LIBRARIAN_EMAIL",
+        accessCode: "INITIAL_LIBRARIAN_ACCESS_CODE",
+        password: "INITIAL_LIBRARIAN_PASSWORD",
+      };
+      throw new Error(
+        `INITIAL_LIBRARIAN_CONFIGURATION_MISSING:${missingFields.map((field) => envNames[field]).join(",")}`,
+      );
+    }
+
+    const validate = InitialLibrarianSchema.safeParse(input);
+    if (!validate.success) {
+      const issue = validate.error.issues[0];
+      throw new Error(issue?.message ?? "INVALID_INPUT");
+    }
+
+    const { name, email, accessCode, password } = validate.data;
+    if (
+      email.endsWith(".invalid") ||
+      accessCode.startsWith("CHANGE_ME") ||
+      password.includes("CHANGE_ME") ||
+      password === "TROQUE_POR_UMA_SENHA_TEMPORARIA_FORTE"
+    ) {
+      throw new Error("INITIAL_LIBRARIAN_CONFIGURATION_HAS_PLACEHOLDERS");
+    }
+
+    const passwordHash = await hashPassword(password);
+    const user = await prisma.$transaction(async (transaction) => {
+      if ((await transaction.user.count()) > 0) return null;
+
+      return transaction.user.create({
+        data: {
+          name,
+          email,
+          accessCode,
+          passwordHash,
+          role: "BIBLIOTECARIO",
+          isActive: true,
+          mustChangePassword: true,
+        },
+      });
+    });
+
+    return user !== null;
+  }
+
   async login(input: unknown): Promise<LoginResult> {
     const validate = LoginSchema.safeParse(input);
 

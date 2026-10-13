@@ -1,101 +1,96 @@
-# Biblioteca IFCE
+# Biblioteca IFCE (Libapp)
 
-Desktop application for managing the IFCE library collection, loans, and readers. The current implementation includes the login interface and the initial librarian authentication flow.
+Aplicativo desktop para a biblioteca do IFCE. A implementação atual oferece a tela de login e o fluxo inicial de autenticação do bibliotecário. As funções de catálogo do acervo, empréstimos e gestão de leitores ainda não foram implementadas.
 
-## Tech stack
+## Tecnologias
 
-- **Desktop:** Electron 30 with a Vite development workflow
-- **Frontend:** React 18, TypeScript, and React Router
-- **UI:** Tailwind CSS 4, shadcn-style components built on Base UI, and Lucide icons
-- **Forms:** React Hook Form
-- **Database:** PostgreSQL 17, run locally with Docker Compose
-- **ORM and migrations:** Prisma 6
-- **Password hashing:** bcrypt
+- **Aplicativo desktop:** Electron 30 com Vite
+- **Interface:** React 18, TypeScript e React Router
+- **Componentes visuais:** Tailwind CSS 4, Base UI e ícones Lucide
+- **Formulários:** React Hook Form
+- **Banco de dados:** SQLite
+- **ORM e migrações:** Prisma 6
+- **Hash de senhas:** bcrypt
 
-Authentication runs in the Electron main process through IPC. The preload script exposes the login and password-change methods to the renderer.
+A autenticação é executada no processo principal do Electron e se comunica com a interface por IPC. A janela se chama **Libapp** e não exibe o menu padrão do Electron. O aplicativo empacotado guarda o banco SQLite no diretório de dados do usuário e aplica as migrações ao iniciar. Se o banco ainda não tiver usuários, o aplicativo cria o bibliotecário inicial usando as configurações `INITIAL_LIBRARIAN_*`. A senha inicial é temporária e deve ser alterada no primeiro acesso.
 
-## Requirements
+## Requisitos
 
-- Node.js and npm
-- Docker with Docker Compose
+- Node.js e npm
 
-## Environment configuration
+Docker e um servidor de banco de dados não são necessários.
 
-Create a root `.env` file (or copy `.env.example`) with these variables:
+## Configuração do ambiente
 
-```dotenv
-# Password used by Docker Compose to create the local PostgreSQL database.
-POSTGRES_PASSWORD=replace_with_a_local_database_password
+Instale as dependências e copie o arquivo de exemplo:
 
-# Use the same password as POSTGRES_PASSWORD. PostgreSQL is exposed on localhost:5433.
-DATABASE_URL="postgresql://lib_app_user:replace_with_a_local_database_password@localhost:5433/lib_app?schema=public"
-
-# Initial librarian account created by the seed script.
-INITIAL_LIBRARIAN_NAME="Library Administrator"
-INITIAL_LIBRARIAN_EMAIL="admin@example.com"
-INITIAL_LIBRARIAN_ACCESS_CODE="replace_with_an_access_code"
-INITIAL_LIBRARIAN_PASSWORD="TROQUE_POR_UMA_SENHA_TEMPORARIA_FORTE"
+```bash
+npm install
+cp .env.example .env
 ```
 
-`DATABASE_URL` must use the same password as `POSTGRES_PASSWORD`. The seed script requires all four `INITIAL_LIBRARIAN_*` values and refuses to run with the example placeholder password. Keep `.env` private; it is excluded from version control.
+O exemplo configura o banco de desenvolvimento em `file:./dev.db` e mostra as variáveis para criar o bibliotecário inicial:
 
-## Local development
+```dotenv
+DATABASE_URL="file:./dev.db"
 
-1. Install dependencies:
+INITIAL_LIBRARIAN_NAME="Bibliotecário responsável"
+INITIAL_LIBRARIAN_EMAIL="bibliotecario@example.invalid"
+INITIAL_LIBRARIAN_ACCESS_CODE="CHANGE_ME_ACCESS_CODE"
+INITIAL_LIBRARIAN_PASSWORD="CHANGE_ME_WITH_A_STRONG_TEMPORARY_PASSWORD"
+```
 
-   ```bash
-   npm install
-   ```
+Antes de iniciar o aplicativo, substitua todos os valores de exemplo pelas credenciais desejadas. Use um e-mail válido, um código de acesso e uma senha temporária forte. O arquivo `.env` é ignorado pelo Git; mantenha-o privado.
 
-2. Create and configure `.env` as described above.
+## Desenvolvimento local
 
-3. Start the local PostgreSQL database:
-
-   ```bash
-   docker compose up -d postgres
-   ```
-
-4. Apply database migrations and generate the Prisma client:
+1. Gere o cliente Prisma e aplique as migrações ao banco SQLite:
 
    ```bash
-   npx prisma migrate dev
    npx prisma generate
+   npm run db:migrate
    ```
 
-5. Create the initial librarian account:
-
-   ```bash
-   npm run db:seed
-   ```
-
-6. Start the Electron app with Vite:
+2. Inicie o aplicativo com Vite:
 
    ```bash
    npm run dev
    ```
 
-The seed user must change their password through the application on first access. The login uses the librarian **access code** and password.
+O aplicativo também verifica e aplica migrações pendentes ao iniciar. Se o banco de desenvolvimento não tiver usuários, o bibliotecário inicial é criado automaticamente com os valores do `.env` na raiz do projeto. Entre usando o **código de acesso** e a senha temporária e, em seguida, defina uma nova senha. O comando `npm run db:seed` também está disponível para desenvolvimento e automação.
 
-## Build and packaged app configuration
+## Banco de dados
 
-Build the installer for the current operating system with:
+O esquema Prisma e as migrações estão em `prisma/`. No desenvolvimento, o caminho do banco SQLite é definido por `DATABASE_URL`; no exemplo, `file:./dev.db` corresponde a `prisma/dev.db`.
+
+Na versão empacotada, o banco se chama `lib-app.db` e fica no diretório de dados do usuário do Electron. Antes da primeira execução, coloque nesse diretório um arquivo `.env` com estas quatro variáveis:
+
+```dotenv
+INITIAL_LIBRARIAN_NAME="Nome do bibliotecário"
+INITIAL_LIBRARIAN_EMAIL="bibliotecario@ifce.edu.br"
+INITIAL_LIBRARIAN_ACCESS_CODE="codigo-de-acesso"
+INITIAL_LIBRARIAN_PASSWORD="senha-temporaria-forte"
+```
+
+O instalador não inclui o `.env` do projeto; assim, as credenciais não ficam gravadas no instalador. O aplicativo informa o caminho esperado do arquivo se não conseguir criar o usuário inicial. Depois que o bibliotecário for criado, o `.env` não é mais necessário para iniciar o aplicativo.
+
+O projeto não usa mais PostgreSQL. A migração SQLite cria um esquema novo e não transfere os dados de um banco PostgreSQL existente.
+
+## Compilação e empacotamento
+
+Gere um instalador para o sistema operacional atual:
 
 ```bash
 npm run build
 ```
 
-Build on each target operating system so Prisma generates the matching native query engine and Electron rebuilds native dependencies for that platform. Installers are written to `release/0.0.0/`.
+O comando gera o cliente Prisma, verifica os tipos, compila a interface e os processos do Electron, copia o mecanismo de consulta do Prisma e empacota o aplicativo. Gere o pacote em cada sistema operacional de destino para que as dependências nativas e o mecanismo do Prisma correspondam à plataforma. Os instaladores são salvos em `release/`.
 
-The packaged app needs access to the PostgreSQL database. For an installed app, place a `.env` file in Electron's user data directory (the `libapp` folder under the operating system's application data directory) and set `DATABASE_URL` there. The app checks this file before the current working directory's `.env`. Do not package database credentials in the installer. The database server and schema migrations must be provisioned separately from the desktop app.
+## Scripts disponíveis
 
-## Available scripts
-
-- `npm run dev` — start the Vite/Electron development app
-- `npm run build` — type-check, build the renderer and package the Electron app
-- `npm run lint` — run ESLint
-- `npm run db:seed` — create the initial librarian account if the email/access code are unused
-- `npm run preview` — preview the built Vite renderer
-
-## Database
-
-The Compose service is named `postgres`, uses PostgreSQL 17, and maps host port `5433` to container port `5432`. Prisma schema and migrations are in `prisma/`.
+- `npm run dev` — inicia o aplicativo de desenvolvimento com Vite e Electron
+- `npm run build` — gera os artefatos Prisma, verifica os tipos, compila e empacota o aplicativo
+- `npm run lint` — executa o ESLint
+- `npm run db:migrate` — aplica as migrações pendentes ao banco configurado
+- `npm run db:seed` — cria o bibliotecário inicial se o e-mail e o código de acesso ainda não estiverem em uso
+- `npm run preview` — exibe uma prévia da interface compilada pelo Vite

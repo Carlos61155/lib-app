@@ -12,7 +12,9 @@
   },
   "files": [
     "dist",
-    "dist-electron"
+    "dist-electron",
+    "electron/generated/prisma/**/*",
+    "prisma/migrations/**/*"
   ],
   "mac": {
     "target": [

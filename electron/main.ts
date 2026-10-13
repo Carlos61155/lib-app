@@ -1,8 +1,14 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, dialog, ipcMain, Menu } from "electron";
 import { AuthService } from "./auth/auth.service";
-import { prisma } from "./database";
-import { fileURLToPath } from "node:url";
+import { applySqliteMigrations, initializeDatabase, prisma } from "./database";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { createRequire } from "node:module";
 import path from "node:path";
+
+const require = createRequire(import.meta.url);
+const { config: loadDotEnv } = require("dotenv") as {
+  config: (options: { path: string }) => { error?: Error };
+};
 
 const authService = new AuthService();
 
@@ -14,6 +20,20 @@ type UserSession = {
 const sessions = new Map<number, UserSession>();
 const SESSION_IDLE_TIMEOUT_MS = 15 * 60 * 1000;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+function resolveDevelopmentDatabaseUrl(databaseUrl: string): string {
+  if (!databaseUrl.startsWith("file:")) return databaseUrl;
+
+  const fileUrl = databaseUrl.slice("file:".length);
+  const queryIndex = fileUrl.indexOf("?");
+  const databasePath = queryIndex === -1 ? fileUrl : fileUrl.slice(0, queryIndex);
+  const query = queryIndex === -1 ? "" : fileUrl.slice(queryIndex);
+  const absolutePath = path.isAbsolute(databasePath)
+    ? databasePath
+    : path.resolve(app.getAppPath(), "prisma", databasePath);
+
+  return `${pathToFileURL(absolutePath).href}${query}`;
+}
 
 // The built directory structure
 //
@@ -39,6 +59,8 @@ let win: BrowserWindow | null;
 
 function createWindow() {
   win = new BrowserWindow({
+    title: "Libapp",
+    autoHideMenuBar: true,
     icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
       preload: path.join(__dirname, "preload.mjs"),
@@ -160,4 +182,52 @@ ipcMain.handle("auth:change-password", async (event, input: unknown) => {
   return { success: true };
 });
 
-app.whenReady().then(createWindow);
+app.whenReady().then(async () => {
+  Menu.setApplicationMenu(null);
+
+  const provisioningEnvPath = app.isPackaged
+    ? path.join(app.getPath("userData"), ".env")
+    : path.join(app.getAppPath(), ".env");
+  loadDotEnv({ path: provisioningEnvPath });
+
+  const configuredDatabaseUrl = process.env.DATABASE_URL;
+  const databaseUrl = app.isPackaged
+    ? pathToFileURL(path.join(app.getPath("userData"), "lib-app.db")).href
+    : configuredDatabaseUrl
+      ? resolveDevelopmentDatabaseUrl(configuredDatabaseUrl)
+      : configuredDatabaseUrl;
+
+  if (!databaseUrl) {
+    throw new Error("DATABASE_URL is required while running in development.");
+  }
+
+  await initializeDatabase(databaseUrl);
+
+  const migrationsDirectory = app.isPackaged
+    ? path.join(app.getAppPath(), "prisma", "migrations")
+    : path.resolve(app.getAppPath(), "prisma", "migrations");
+  await applySqliteMigrations(migrationsDirectory);
+
+  const librarianCreated = await authService.provisionInitialLibrarian({
+    name: process.env.INITIAL_LIBRARIAN_NAME,
+    email: process.env.INITIAL_LIBRARIAN_EMAIL,
+    accessCode: process.env.INITIAL_LIBRARIAN_ACCESS_CODE,
+    password: process.env.INITIAL_LIBRARIAN_PASSWORD,
+  });
+  if (librarianCreated) {
+    console.info("Created the initial librarian account from the provisioning environment.");
+  }
+
+  createWindow();
+}).catch((error: unknown) => {
+  console.error("Failed to initialize the SQLite database:", error);
+  const message = error instanceof Error ? error.message : String(error);
+  const configurationError = message.startsWith("INITIAL_LIBRARIAN_");
+  dialog.showErrorBox(
+    "Biblioteca IFCE",
+    configurationError
+      ? `The database is empty and the initial librarian could not be created. Configure INITIAL_LIBRARIAN_NAME, INITIAL_LIBRARIAN_EMAIL, INITIAL_LIBRARIAN_ACCESS_CODE, and INITIAL_LIBRARIAN_PASSWORD in ${app.isPackaged ? path.join(app.getPath("userData"), ".env") : path.join(app.getAppPath(), ".env")}. Restart the app after saving the file. (${message})`
+      : `The application could not initialize its SQLite database. (${message})`,
+  );
+  app.quit();
+});
