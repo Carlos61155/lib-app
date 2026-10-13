@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import { AuthService } from "./auth/auth.service";
-import { prisma } from "./database";
-import { fileURLToPath } from "node:url";
+import { applySqliteMigrations, initializeDatabase, prisma } from "./database";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import path from "node:path";
 
 const authService = new AuthService();
@@ -165,4 +165,24 @@ ipcMain.handle("auth:change-password", async (event, input: unknown) => {
   return { success: true };
 });
 
-app.whenReady().then(createWindow);
+app.whenReady().then(async () => {
+  const databaseUrl = app.isPackaged
+    ? pathToFileURL(path.join(app.getPath("userData"), "lib-app.db")).href
+    : process.env.DATABASE_URL;
+
+  if (!databaseUrl) {
+    throw new Error("DATABASE_URL is required while running in development.");
+  }
+
+  await initializeDatabase(databaseUrl);
+
+  const migrationsDirectory = app.isPackaged
+    ? path.join(app.getAppPath(), "prisma", "migrations")
+    : path.resolve(process.cwd(), "prisma", "migrations");
+  await applySqliteMigrations(migrationsDirectory);
+
+  createWindow();
+}).catch((error: unknown) => {
+  console.error("Failed to initialize the SQLite database:", error);
+  app.quit();
+});

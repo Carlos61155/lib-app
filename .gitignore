@@ -9,6 +9,10 @@ lerna-debug.log*
 .env
 .env.*
 !.env.example
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
 node_modules
 dist
 dist-ssr
