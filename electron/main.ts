@@ -81,7 +81,8 @@ app.on("activate", () => {
 });
 
 ipcMain.handle("auth:login", async (event, input) => {
-  if (event.senderFrame !== event.sender.mainFrame) throw new Error("UNAUTHORIZED");
+  if (event.senderFrame !== event.sender.mainFrame)
+    throw new Error("UNAUTHORIZED");
   const result = await authService.login(input);
 
   sessions.set(event.sender.id, {
@@ -93,7 +94,8 @@ ipcMain.handle("auth:login", async (event, input) => {
 });
 
 ipcMain.handle("auth:get-session", async (event) => {
-  if (event.senderFrame !== event.sender.mainFrame) throw new Error("UNAUTHORIZED");
+  if (event.senderFrame !== event.sender.mainFrame)
+    throw new Error("UNAUTHORIZED");
   const session = sessions.get(event.sender.id);
   if (!session) return null;
   if (Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
@@ -107,7 +109,12 @@ ipcMain.handle("auth:get-session", async (event) => {
   }
   session.lastActivityAt = Date.now();
   return {
-    user: { id: user.id, name: user.name, role: user.role, mustChangePassword: user.mustChangePassword },
+    user: {
+      id: user.id,
+      name: user.name,
+      role: user.role,
+      mustChangePassword: user.mustChangePassword,
+    },
     idleTimeoutMs: SESSION_IDLE_TIMEOUT_MS,
   };
 });
@@ -118,9 +125,13 @@ ipcMain.handle("auth:logout", (event) => {
 });
 
 ipcMain.handle("auth:activity", (event) => {
-  if (event.senderFrame !== event.sender.mainFrame) throw new Error("UNAUTHORIZED");
+  if (event.senderFrame !== event.sender.mainFrame)
+    throw new Error("UNAUTHORIZED");
   const session = sessions.get(event.sender.id);
-  if (!session || Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
+  if (
+    !session ||
+    Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS
+  ) {
     sessions.delete(event.sender.id);
     return false;
   }
@@ -128,37 +139,25 @@ ipcMain.handle("auth:activity", (event) => {
   return true;
 });
 
-ipcMain.handle(
-  "auth:change-password",
-  async (
-    event,
-    input: {
-      currentPassword: string;
-      newPassword: string;
-    },
-  ) => {
-    if (event.senderFrame !== event.sender.mainFrame) throw new Error("UNAUTHORIZED");
-    const session = sessions.get(event.sender.id);
+ipcMain.handle("auth:change-password", async (event, input: unknown) => {
+  if (event.senderFrame !== event.sender.mainFrame)
+    throw new Error("UNAUTHORIZED");
+  const session = sessions.get(event.sender.id);
 
-    if (!session) {
-      throw new Error("NOT_AUTHENTICATED");
-    }
+  if (!session) {
+    throw new Error("NOT_AUTHENTICATED");
+  }
 
-    if (Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
-      sessions.delete(event.sender.id);
-      throw new Error("SESSION_EXPIRED");
-    }
+  if (Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
+    sessions.delete(event.sender.id);
+    throw new Error("SESSION_EXPIRED");
+  }
 
-    await authService.changePassword(
-      session.userId,
-      input.currentPassword,
-      input.newPassword,
-    );
+  await authService.changePassword(session.userId, input);
 
-    session.lastActivityAt = Date.now();
+  session.lastActivityAt = Date.now();
 
-    return { success: true };
-  },
-);
+  return { success: true };
+});
 
 app.whenReady().then(createWindow);

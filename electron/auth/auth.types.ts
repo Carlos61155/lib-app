@@ -1,8 +1,3 @@
-export interface LoginInput {
-  accessCode: string;
-  password: string;
-}
-
 export interface AuthenticatedUser {
   id: string;
   name: string;
