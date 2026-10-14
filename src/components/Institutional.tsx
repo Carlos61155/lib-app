@@ -1,7 +1,7 @@
 import { BookOpen } from 'lucide-react'
 
-const backgroundImage = './images/background.svg'
-const booksImage = './images/livros.svg'
+const backgroundImage = './images/background.png'
+const booksImage = './images/livros.png'
 
 export function Institutional() {
   return (
