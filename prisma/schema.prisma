@@ -1,0 +1,48 @@
+generator client {
+  provider      = "prisma-client"
+  output        = "../electron/generated/prisma"
+  // Keep native for development/build-host use and include engines for Mint 20.x and 21.x/22.x.
+  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String    @id @default(uuid())
+  name                String
+  email               String    @unique
+  accessCode          String    @unique
+  passwordHash        String    @map("password_hash")
+  role                Role      @default(BIBLIOTECARIO)
+  isActive            Boolean   @default(true) @map("is_active")
+  mustChangePassword  Boolean   @default(true) @map("must_change_password")
+  failedLoginAttempts Int       @default(0) @map("failed_login_attempts")
+  lastFailedLoginAt   DateTime? @map("last_failed_login_at")
+  lockedUntil         DateTime? @map("locked_until")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+
+  accessLogs AccessLog[]
+
+  @@map("users")
+}
+
+model AccessLog {
+  id                  String   @id @default(uuid())
+  userId              String?  @map("user_id")
+  attemptedAccessCode String   @map("attempted_access_code")
+  success             Boolean
+  failureReason       String?  @map("failure_reason")
+  createdAt           DateTime @default(now()) @map("created_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("access_logs")
+}
+
+enum Role {
+  BIBLIOTECARIO
+}

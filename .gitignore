@@ -6,10 +6,17 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-
+.env
+.env.*
+!.env.example
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
 node_modules
 dist
 dist-ssr
+release
 *.local
 
 # Editor directories and files
@@ -22,3 +29,16 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+**/libquery_engine-*.node
+/scripts
+!/scripts/
+/scripts/*
+!/scripts/copy-prisma-engine.mjs
+
+# aux files
+src/utils/
+
+tarefas.md
+/src/generated/prisma
+
