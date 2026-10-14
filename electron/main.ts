@@ -61,7 +61,7 @@ function createWindow() {
   win = new BrowserWindow({
     title: "Libapp",
     autoHideMenuBar: true,
-    icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
+    icon: path.join(process.env.VITE_PUBLIC, "images/app-icon.svg"),
     webPreferences: {
       preload: path.join(__dirname, "preload.mjs"),
       contextIsolation: true,
