@@ -1,12 +1,1 @@
-"use strict";
-const electron = require("electron");
-electron.contextBridge.exposeInMainWorld("authAPI", {
-  login: (accessCode, password) => electron.ipcRenderer.invoke("auth:login", { accessCode, password }),
-  changePassword: (currentPassword, newPassword) => electron.ipcRenderer.invoke("auth:change-password", {
-    currentPassword,
-    newPassword
-  }),
-  getSession: () => electron.ipcRenderer.invoke("auth:get-session"),
-  logout: () => electron.ipcRenderer.invoke("auth:logout"),
-  activity: () => electron.ipcRenderer.invoke("auth:activity")
-});
+"use strict";const e=require("electron");e.contextBridge.exposeInMainWorld("authAPI",{login:(i,n)=>e.ipcRenderer.invoke("auth:login",{accessCode:i,password:n}),changePassword:(i,n)=>e.ipcRenderer.invoke("auth:change-password",{currentPassword:i,newPassword:n}),getSession:()=>e.ipcRenderer.invoke("auth:get-session"),logout:()=>e.ipcRenderer.invoke("auth:logout"),activity:()=>e.ipcRenderer.invoke("auth:activity")});

@@ -1,7 +1,7 @@
 import { app, BrowserWindow, dialog, ipcMain, Menu } from "electron";
 import { AuthService } from "./auth/auth.service";
 import { applySqliteMigrations, initializeDatabase, prisma } from "./database";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { mkdir } from "node:fs/promises";
@@ -22,6 +22,11 @@ const sessions = new Map<number, UserSession>();
 const SESSION_IDLE_TIMEOUT_MS = 15 * 60 * 1000;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+function toSqliteFileUrl(absolutePath: string): string {
+  // Keep SQLite paths in Prisma connection-string form on both Windows and Linux.
+  return `file:${absolutePath.replace(/\\/g, "/")}`;
+}
+
 function resolveDevelopmentDatabaseUrl(databaseUrl: string): string {
   if (!databaseUrl.startsWith("file:")) return databaseUrl;
 
@@ -33,10 +38,7 @@ function resolveDevelopmentDatabaseUrl(databaseUrl: string): string {
     ? databasePath
     : path.resolve(app.getAppPath(), "prisma", databasePath);
 
-  // Prisma expects an SQLite connection string, not a file:// URL. The latter
-  // becomes file:///C:/... on Windows and can be resolved as an invalid path.
-  const prismaPath = absolutePath.replace(/\\/g, "/");
-  return `file:${prismaPath}${query}`;
+  return `${toSqliteFileUrl(absolutePath)}${query}`;
 }
 
 // The built directory structure
@@ -195,8 +197,9 @@ app.whenReady().then(async () => {
   loadDotEnv({ path: provisioningEnvPath });
 
   const configuredDatabaseUrl = process.env.DATABASE_URL;
+  const packagedDatabasePath = path.join(app.getPath("userData"), "lib-app.db");
   const databaseUrl = app.isPackaged
-    ? pathToFileURL(path.join(app.getPath("userData"), "lib-app.db")).href
+    ? toSqliteFileUrl(packagedDatabasePath)
     : configuredDatabaseUrl
       ? resolveDevelopmentDatabaseUrl(configuredDatabaseUrl)
       : configuredDatabaseUrl;
@@ -205,7 +208,9 @@ app.whenReady().then(async () => {
     throw new Error("DATABASE_URL is required while running in development.");
   }
 
-  if (!app.isPackaged && configuredDatabaseUrl?.startsWith("file:")) {
+  if (app.isPackaged) {
+    await mkdir(path.dirname(packagedDatabasePath), { recursive: true });
+  } else if (configuredDatabaseUrl?.startsWith("file:")) {
     const databasePath = configuredDatabaseUrl.slice("file:".length).split("?")[0];
     const absoluteDatabasePath = path.isAbsolute(databasePath)
       ? databasePath
