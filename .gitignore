@@ -32,6 +32,9 @@ release
 
 **/libquery_engine-*.node
 /scripts
+!/scripts/
+/scripts/*
+!/scripts/copy-prisma-engine.mjs
 
 # aux files
 src/utils/
