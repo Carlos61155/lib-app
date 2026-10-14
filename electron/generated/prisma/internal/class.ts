@@ -23,7 +23,7 @@ const config: runtime.GetPrismaClientConfig = {
       "value": "prisma-client"
     },
     "output": {
-      "value": "/home/marcosv/lib-app/electron/generated/prisma",
+      "value": "C:\\Users\\marcosv\\Documents\\GitHub\\lib-app\\electron\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -32,12 +32,20 @@ const config: runtime.GetPrismaClientConfig = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "debian-openssl-3.0.x",
+        "value": "windows",
         "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "debian-openssl-1.1.x"
+      },
+      {
+        "fromEnvVar": null,
+        "value": "debian-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/marcosv/lib-app/prisma/schema.prisma",
+    "sourceFilePath": "C:\\Users\\marcosv\\Documents\\GitHub\\lib-app\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativePath": "../../../prisma",
@@ -56,8 +64,8 @@ const config: runtime.GetPrismaClientConfig = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"../electron/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id                  String    @id @default(uuid())\n  name                String\n  email               String    @unique\n  accessCode          String    @unique\n  passwordHash        String    @map(\"password_hash\")\n  role                Role      @default(BIBLIOTECARIO)\n  isActive            Boolean   @default(true) @map(\"is_active\")\n  mustChangePassword  Boolean   @default(true) @map(\"must_change_password\")\n  failedLoginAttempts Int       @default(0) @map(\"failed_login_attempts\")\n  lastFailedLoginAt   DateTime? @map(\"last_failed_login_at\")\n  lockedUntil         DateTime? @map(\"locked_until\")\n  createdAt           DateTime  @default(now()) @map(\"created_at\")\n  updatedAt           DateTime  @updatedAt @map(\"updated_at\")\n\n  accessLogs AccessLog[]\n\n  @@map(\"users\")\n}\n\nmodel AccessLog {\n  id                  String   @id @default(uuid())\n  userId              String?  @map(\"user_id\")\n  attemptedAccessCode String   @map(\"attempted_access_code\")\n  success             Boolean\n  failureReason       String?  @map(\"failure_reason\")\n  createdAt           DateTime @default(now()) @map(\"created_at\")\n\n  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)\n\n  @@map(\"access_logs\")\n}\n\nenum Role {\n  BIBLIOTECARIO\n}\n",
-  "inlineSchemaHash": "0d397f27f3b3f5524f5154436367c22d8ead33351cc5501db8dbf3e8a1650d7a",
+  "inlineSchema": "generator client {\n  provider      = \"prisma-client\"\n  output        = \"../electron/generated/prisma\"\n  // Keep native for development/build-host use and include engines for Mint 20.x and 21.x/22.x.\n  binaryTargets = [\"native\", \"debian-openssl-1.1.x\", \"debian-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"sqlite\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id                  String    @id @default(uuid())\n  name                String\n  email               String    @unique\n  accessCode          String    @unique\n  passwordHash        String    @map(\"password_hash\")\n  role                Role      @default(BIBLIOTECARIO)\n  isActive            Boolean   @default(true) @map(\"is_active\")\n  mustChangePassword  Boolean   @default(true) @map(\"must_change_password\")\n  failedLoginAttempts Int       @default(0) @map(\"failed_login_attempts\")\n  lastFailedLoginAt   DateTime? @map(\"last_failed_login_at\")\n  lockedUntil         DateTime? @map(\"locked_until\")\n  createdAt           DateTime  @default(now()) @map(\"created_at\")\n  updatedAt           DateTime  @updatedAt @map(\"updated_at\")\n\n  accessLogs AccessLog[]\n\n  @@map(\"users\")\n}\n\nmodel AccessLog {\n  id                  String   @id @default(uuid())\n  userId              String?  @map(\"user_id\")\n  attemptedAccessCode String   @map(\"attempted_access_code\")\n  success             Boolean\n  failureReason       String?  @map(\"failure_reason\")\n  createdAt           DateTime @default(now()) @map(\"created_at\")\n\n  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)\n\n  @@map(\"access_logs\")\n}\n\nenum Role {\n  BIBLIOTECARIO\n}\n",
+  "inlineSchemaHash": "1a538187140b9a9b722d76ea074d21386fc4f9afe93017f874dc85631dcdc70a",
   "copyEngine": true,
   "runtimeDataModel": {
     "models": {},

@@ -4,6 +4,7 @@ import { applySqliteMigrations, initializeDatabase, prisma } from "./database";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { createRequire } from "node:module";
 import path from "node:path";
+import { mkdir } from "node:fs/promises";
 
 const require = createRequire(import.meta.url);
 const { config: loadDotEnv } = require("dotenv") as {
@@ -32,7 +33,10 @@ function resolveDevelopmentDatabaseUrl(databaseUrl: string): string {
     ? databasePath
     : path.resolve(app.getAppPath(), "prisma", databasePath);
 
-  return `${pathToFileURL(absolutePath).href}${query}`;
+  // Prisma expects an SQLite connection string, not a file:// URL. The latter
+  // becomes file:///C:/... on Windows and can be resolved as an invalid path.
+  const prismaPath = absolutePath.replace(/\\/g, "/");
+  return `file:${prismaPath}${query}`;
 }
 
 // The built directory structure
@@ -199,6 +203,14 @@ app.whenReady().then(async () => {
 
   if (!databaseUrl) {
     throw new Error("DATABASE_URL is required while running in development.");
+  }
+
+  if (!app.isPackaged && configuredDatabaseUrl?.startsWith("file:")) {
+    const databasePath = configuredDatabaseUrl.slice("file:".length).split("?")[0];
+    const absoluteDatabasePath = path.isAbsolute(databasePath)
+      ? databasePath
+      : path.resolve(app.getAppPath(), "prisma", databasePath);
+    await mkdir(path.dirname(absoluteDatabasePath), { recursive: true });
   }
 
   await initializeDatabase(databaseUrl);
