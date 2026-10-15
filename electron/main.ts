@@ -129,7 +129,10 @@ ipcMain.handle("auth:get-session", async (event) => {
     sessions.delete(event.sender.id);
     return null;
   }
-  const user = await prisma.user.findUnique({ where: { id: session.userId } });
+  const user = await prisma.librarian.findUnique({
+    where: { id: session.userId },
+    include: { person: true },
+  });
   if (!user || !user.isActive) {
     sessions.delete(event.sender.id);
     return null;
@@ -138,8 +141,8 @@ ipcMain.handle("auth:get-session", async (event) => {
   return {
     user: {
       id: user.id,
-      name: user.name,
-      role: user.role,
+      name: user.person.name,
+      role: "BIBLIOTECARIO",
       mustChangePassword: user.mustChangePassword,
     },
     idleTimeoutMs: SESSION_IDLE_TIMEOUT_MS,

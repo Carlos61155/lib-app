@@ -10,13 +10,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model Person {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  librarian Librarian?
+  student   Student?
+  professor Professor?
+
+  registrationLogs RegistrationLog[]
+
+  @@map("people")
+}
+
+model Librarian {
   id                  String    @id @default(uuid())
-  name                String
-  email               String    @unique
-  accessCode          String    @unique
+  personId            String    @unique @map("person_id")
+  accessCode          String    @unique @map("access_code")
   passwordHash        String    @map("password_hash")
-  role                Role      @default(BIBLIOTECARIO)
   isActive            Boolean   @default(true) @map("is_active")
   mustChangePassword  Boolean   @default(true) @map("must_change_password")
   failedLoginAttempts Int       @default(0) @map("failed_login_attempts")
@@ -25,24 +39,63 @@ model User {
   createdAt           DateTime  @default(now()) @map("created_at")
   updatedAt           DateTime  @updatedAt @map("updated_at")
 
-  accessLogs AccessLog[]
+  person            Person            @relation(fields: [personId], references: [id], onDelete: Restrict)
+  accessLogs        AccessLog[]
+  registrationsMade RegistrationLog[] @relation("RegistrationCreatedBy")
 
-  @@map("users")
+  @@map("librarians")
+}
+
+model Student {
+  id                 String   @id @default(uuid())
+  personId           String   @unique @map("person_id")
+  registrationNumber String   @unique @map("registration_number")
+  course             String
+  isActive           Boolean  @default(true) @map("is_active")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  person Person @relation(fields: [personId], references: [id], onDelete: Restrict)
+
+  @@map("students")
+}
+
+model Professor {
+  id                 String   @id @default(uuid())
+  personId           String   @unique @map("person_id")
+  registrationNumber String   @unique @map("registration_number")
+  isActive           Boolean  @default(true) @map("is_active")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  person Person @relation(fields: [personId], references: [id], onDelete: Restrict)
+
+  @@map("professors")
 }
 
 model AccessLog {
   id                  String   @id @default(uuid())
-  userId              String?  @map("user_id")
+  librarianId         String?  @map("librarian_id")
   attemptedAccessCode String   @map("attempted_access_code")
   success             Boolean
   failureReason       String?  @map("failure_reason")
   createdAt           DateTime @default(now()) @map("created_at")
 
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  librarian Librarian? @relation(fields: [librarianId], references: [id], onDelete: SetNull)
 
   @@map("access_logs")
 }
 
-enum Role {
-  BIBLIOTECARIO
+model RegistrationLog {
+  id                   String   @id @default(uuid())
+  personId             String   @map("person_id")
+  createdByLibrarianId String?  @map("created_by_librarian_id")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  person             Person     @relation(fields: [personId], references: [id], onDelete: Restrict)
+  createdByLibrarian Librarian? @relation("RegistrationCreatedBy", fields: [createdByLibrarianId], references: [id], onDelete: Restrict)
+
+  @@index([personId])
+  @@index([createdByLibrarianId, createdAt])
+  @@map("registration_logs")
 }

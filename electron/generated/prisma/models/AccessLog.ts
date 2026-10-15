@@ -26,7 +26,7 @@ export type AggregateAccessLog = {
 
 export type AccessLogMinAggregateOutputType = {
   id: string | null
-  userId: string | null
+  librarianId: string | null
   attemptedAccessCode: string | null
   success: boolean | null
   failureReason: string | null
@@ -35,7 +35,7 @@ export type AccessLogMinAggregateOutputType = {
 
 export type AccessLogMaxAggregateOutputType = {
   id: string | null
-  userId: string | null
+  librarianId: string | null
   attemptedAccessCode: string | null
   success: boolean | null
   failureReason: string | null
@@ -44,7 +44,7 @@ export type AccessLogMaxAggregateOutputType = {
 
 export type AccessLogCountAggregateOutputType = {
   id: number
-  userId: number
+  librarianId: number
   attemptedAccessCode: number
   success: number
   failureReason: number
@@ -55,7 +55,7 @@ export type AccessLogCountAggregateOutputType = {
 
 export type AccessLogMinAggregateInputType = {
   id?: true
-  userId?: true
+  librarianId?: true
   attemptedAccessCode?: true
   success?: true
   failureReason?: true
@@ -64,7 +64,7 @@ export type AccessLogMinAggregateInputType = {
 
 export type AccessLogMaxAggregateInputType = {
   id?: true
-  userId?: true
+  librarianId?: true
   attemptedAccessCode?: true
   success?: true
   failureReason?: true
@@ -73,7 +73,7 @@ export type AccessLogMaxAggregateInputType = {
 
 export type AccessLogCountAggregateInputType = {
   id?: true
-  userId?: true
+  librarianId?: true
   attemptedAccessCode?: true
   success?: true
   failureReason?: true
@@ -155,7 +155,7 @@ export type AccessLogGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 
 export type AccessLogGroupByOutputType = {
   id: string
-  userId: string | null
+  librarianId: string | null
   attemptedAccessCode: string
   success: boolean
   failureReason: string | null
@@ -185,22 +185,22 @@ export type AccessLogWhereInput = {
   OR?: Prisma.AccessLogWhereInput[]
   NOT?: Prisma.AccessLogWhereInput | Prisma.AccessLogWhereInput[]
   id?: Prisma.StringFilter<"AccessLog"> | string
-  userId?: Prisma.StringNullableFilter<"AccessLog"> | string | null
+  librarianId?: Prisma.StringNullableFilter<"AccessLog"> | string | null
   attemptedAccessCode?: Prisma.StringFilter<"AccessLog"> | string
   success?: Prisma.BoolFilter<"AccessLog"> | boolean
   failureReason?: Prisma.StringNullableFilter<"AccessLog"> | string | null
   createdAt?: Prisma.DateTimeFilter<"AccessLog"> | Date | string
-  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  librarian?: Prisma.XOR<Prisma.LibrarianNullableScalarRelationFilter, Prisma.LibrarianWhereInput> | null
 }
 
 export type AccessLogOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  userId?: Prisma.SortOrderInput | Prisma.SortOrder
+  librarianId?: Prisma.SortOrderInput | Prisma.SortOrder
   attemptedAccessCode?: Prisma.SortOrder
   success?: Prisma.SortOrder
   failureReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
+  librarian?: Prisma.LibrarianOrderByWithRelationInput
 }
 
 export type AccessLogWhereUniqueInput = Prisma.AtLeast<{
@@ -208,17 +208,17 @@ export type AccessLogWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.AccessLogWhereInput | Prisma.AccessLogWhereInput[]
   OR?: Prisma.AccessLogWhereInput[]
   NOT?: Prisma.AccessLogWhereInput | Prisma.AccessLogWhereInput[]
-  userId?: Prisma.StringNullableFilter<"AccessLog"> | string | null
+  librarianId?: Prisma.StringNullableFilter<"AccessLog"> | string | null
   attemptedAccessCode?: Prisma.StringFilter<"AccessLog"> | string
   success?: Prisma.BoolFilter<"AccessLog"> | boolean
   failureReason?: Prisma.StringNullableFilter<"AccessLog"> | string | null
   createdAt?: Prisma.DateTimeFilter<"AccessLog"> | Date | string
-  user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  librarian?: Prisma.XOR<Prisma.LibrarianNullableScalarRelationFilter, Prisma.LibrarianWhereInput> | null
 }, "id">
 
 export type AccessLogOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  userId?: Prisma.SortOrderInput | Prisma.SortOrder
+  librarianId?: Prisma.SortOrderInput | Prisma.SortOrder
   attemptedAccessCode?: Prisma.SortOrder
   success?: Prisma.SortOrder
   failureReason?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -233,7 +233,7 @@ export type AccessLogScalarWhereWithAggregatesInput = {
   OR?: Prisma.AccessLogScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AccessLogScalarWhereWithAggregatesInput | Prisma.AccessLogScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"AccessLog"> | string
-  userId?: Prisma.StringNullableWithAggregatesFilter<"AccessLog"> | string | null
+  librarianId?: Prisma.StringNullableWithAggregatesFilter<"AccessLog"> | string | null
   attemptedAccessCode?: Prisma.StringWithAggregatesFilter<"AccessLog"> | string
   success?: Prisma.BoolWithAggregatesFilter<"AccessLog"> | boolean
   failureReason?: Prisma.StringNullableWithAggregatesFilter<"AccessLog"> | string | null
@@ -246,12 +246,12 @@ export type AccessLogCreateInput = {
   success: boolean
   failureReason?: string | null
   createdAt?: Date | string
-  user?: Prisma.UserCreateNestedOneWithoutAccessLogsInput
+  librarian?: Prisma.LibrarianCreateNestedOneWithoutAccessLogsInput
 }
 
 export type AccessLogUncheckedCreateInput = {
   id?: string
-  userId?: string | null
+  librarianId?: string | null
   attemptedAccessCode: string
   success: boolean
   failureReason?: string | null
@@ -264,12 +264,12 @@ export type AccessLogUpdateInput = {
   success?: Prisma.BoolFieldUpdateOperationsInput | boolean
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneWithoutAccessLogsNestedInput
+  librarian?: Prisma.LibrarianUpdateOneWithoutAccessLogsNestedInput
 }
 
 export type AccessLogUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  librarianId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attemptedAccessCode?: Prisma.StringFieldUpdateOperationsInput | string
   success?: Prisma.BoolFieldUpdateOperationsInput | boolean
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -278,7 +278,7 @@ export type AccessLogUncheckedUpdateInput = {
 
 export type AccessLogCreateManyInput = {
   id?: string
-  userId?: string | null
+  librarianId?: string | null
   attemptedAccessCode: string
   success: boolean
   failureReason?: string | null
@@ -295,7 +295,7 @@ export type AccessLogUpdateManyMutationInput = {
 
 export type AccessLogUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  librarianId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attemptedAccessCode?: Prisma.StringFieldUpdateOperationsInput | string
   success?: Prisma.BoolFieldUpdateOperationsInput | boolean
   failureReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -314,7 +314,7 @@ export type AccessLogOrderByRelationAggregateInput = {
 
 export type AccessLogCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
+  librarianId?: Prisma.SortOrder
   attemptedAccessCode?: Prisma.SortOrder
   success?: Prisma.SortOrder
   failureReason?: Prisma.SortOrder
@@ -323,7 +323,7 @@ export type AccessLogCountOrderByAggregateInput = {
 
 export type AccessLogMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
+  librarianId?: Prisma.SortOrder
   attemptedAccessCode?: Prisma.SortOrder
   success?: Prisma.SortOrder
   failureReason?: Prisma.SortOrder
@@ -332,52 +332,52 @@ export type AccessLogMaxOrderByAggregateInput = {
 
 export type AccessLogMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  userId?: Prisma.SortOrder
+  librarianId?: Prisma.SortOrder
   attemptedAccessCode?: Prisma.SortOrder
   success?: Prisma.SortOrder
   failureReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
-export type AccessLogCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.AccessLogCreateWithoutUserInput, Prisma.AccessLogUncheckedCreateWithoutUserInput> | Prisma.AccessLogCreateWithoutUserInput[] | Prisma.AccessLogUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AccessLogCreateOrConnectWithoutUserInput | Prisma.AccessLogCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.AccessLogCreateManyUserInputEnvelope
+export type AccessLogCreateNestedManyWithoutLibrarianInput = {
+  create?: Prisma.XOR<Prisma.AccessLogCreateWithoutLibrarianInput, Prisma.AccessLogUncheckedCreateWithoutLibrarianInput> | Prisma.AccessLogCreateWithoutLibrarianInput[] | Prisma.AccessLogUncheckedCreateWithoutLibrarianInput[]
+  connectOrCreate?: Prisma.AccessLogCreateOrConnectWithoutLibrarianInput | Prisma.AccessLogCreateOrConnectWithoutLibrarianInput[]
+  createMany?: Prisma.AccessLogCreateManyLibrarianInputEnvelope
   connect?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
 }
 
-export type AccessLogUncheckedCreateNestedManyWithoutUserInput = {
-  create?: Prisma.XOR<Prisma.AccessLogCreateWithoutUserInput, Prisma.AccessLogUncheckedCreateWithoutUserInput> | Prisma.AccessLogCreateWithoutUserInput[] | Prisma.AccessLogUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AccessLogCreateOrConnectWithoutUserInput | Prisma.AccessLogCreateOrConnectWithoutUserInput[]
-  createMany?: Prisma.AccessLogCreateManyUserInputEnvelope
+export type AccessLogUncheckedCreateNestedManyWithoutLibrarianInput = {
+  create?: Prisma.XOR<Prisma.AccessLogCreateWithoutLibrarianInput, Prisma.AccessLogUncheckedCreateWithoutLibrarianInput> | Prisma.AccessLogCreateWithoutLibrarianInput[] | Prisma.AccessLogUncheckedCreateWithoutLibrarianInput[]
+  connectOrCreate?: Prisma.AccessLogCreateOrConnectWithoutLibrarianInput | Prisma.AccessLogCreateOrConnectWithoutLibrarianInput[]
+  createMany?: Prisma.AccessLogCreateManyLibrarianInputEnvelope
   connect?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
 }
 
-export type AccessLogUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.AccessLogCreateWithoutUserInput, Prisma.AccessLogUncheckedCreateWithoutUserInput> | Prisma.AccessLogCreateWithoutUserInput[] | Prisma.AccessLogUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AccessLogCreateOrConnectWithoutUserInput | Prisma.AccessLogCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.AccessLogUpsertWithWhereUniqueWithoutUserInput | Prisma.AccessLogUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.AccessLogCreateManyUserInputEnvelope
+export type AccessLogUpdateManyWithoutLibrarianNestedInput = {
+  create?: Prisma.XOR<Prisma.AccessLogCreateWithoutLibrarianInput, Prisma.AccessLogUncheckedCreateWithoutLibrarianInput> | Prisma.AccessLogCreateWithoutLibrarianInput[] | Prisma.AccessLogUncheckedCreateWithoutLibrarianInput[]
+  connectOrCreate?: Prisma.AccessLogCreateOrConnectWithoutLibrarianInput | Prisma.AccessLogCreateOrConnectWithoutLibrarianInput[]
+  upsert?: Prisma.AccessLogUpsertWithWhereUniqueWithoutLibrarianInput | Prisma.AccessLogUpsertWithWhereUniqueWithoutLibrarianInput[]
+  createMany?: Prisma.AccessLogCreateManyLibrarianInputEnvelope
   set?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
   disconnect?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
   delete?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
   connect?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
-  update?: Prisma.AccessLogUpdateWithWhereUniqueWithoutUserInput | Prisma.AccessLogUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.AccessLogUpdateManyWithWhereWithoutUserInput | Prisma.AccessLogUpdateManyWithWhereWithoutUserInput[]
+  update?: Prisma.AccessLogUpdateWithWhereUniqueWithoutLibrarianInput | Prisma.AccessLogUpdateWithWhereUniqueWithoutLibrarianInput[]
+  updateMany?: Prisma.AccessLogUpdateManyWithWhereWithoutLibrarianInput | Prisma.AccessLogUpdateManyWithWhereWithoutLibrarianInput[]
   deleteMany?: Prisma.AccessLogScalarWhereInput | Prisma.AccessLogScalarWhereInput[]
 }
 
-export type AccessLogUncheckedUpdateManyWithoutUserNestedInput = {
-  create?: Prisma.XOR<Prisma.AccessLogCreateWithoutUserInput, Prisma.AccessLogUncheckedCreateWithoutUserInput> | Prisma.AccessLogCreateWithoutUserInput[] | Prisma.AccessLogUncheckedCreateWithoutUserInput[]
-  connectOrCreate?: Prisma.AccessLogCreateOrConnectWithoutUserInput | Prisma.AccessLogCreateOrConnectWithoutUserInput[]
-  upsert?: Prisma.AccessLogUpsertWithWhereUniqueWithoutUserInput | Prisma.AccessLogUpsertWithWhereUniqueWithoutUserInput[]
-  createMany?: Prisma.AccessLogCreateManyUserInputEnvelope
+export type AccessLogUncheckedUpdateManyWithoutLibrarianNestedInput = {
+  create?: Prisma.XOR<Prisma.AccessLogCreateWithoutLibrarianInput, Prisma.AccessLogUncheckedCreateWithoutLibrarianInput> | Prisma.AccessLogCreateWithoutLibrarianInput[] | Prisma.AccessLogUncheckedCreateWithoutLibrarianInput[]
+  connectOrCreate?: Prisma.AccessLogCreateOrConnectWithoutLibrarianInput | Prisma.AccessLogCreateOrConnectWithoutLibrarianInput[]
+  upsert?: Prisma.AccessLogUpsertWithWhereUniqueWithoutLibrarianInput | Prisma.AccessLogUpsertWithWhereUniqueWithoutLibrarianInput[]
+  createMany?: Prisma.AccessLogCreateManyLibrarianInputEnvelope
   set?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
   disconnect?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
   delete?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
   connect?: Prisma.AccessLogWhereUniqueInput | Prisma.AccessLogWhereUniqueInput[]
-  update?: Prisma.AccessLogUpdateWithWhereUniqueWithoutUserInput | Prisma.AccessLogUpdateWithWhereUniqueWithoutUserInput[]
-  updateMany?: Prisma.AccessLogUpdateManyWithWhereWithoutUserInput | Prisma.AccessLogUpdateManyWithWhereWithoutUserInput[]
+  update?: Prisma.AccessLogUpdateWithWhereUniqueWithoutLibrarianInput | Prisma.AccessLogUpdateWithWhereUniqueWithoutLibrarianInput[]
+  updateMany?: Prisma.AccessLogUpdateManyWithWhereWithoutLibrarianInput | Prisma.AccessLogUpdateManyWithWhereWithoutLibrarianInput[]
   deleteMany?: Prisma.AccessLogScalarWhereInput | Prisma.AccessLogScalarWhereInput[]
 }
 
@@ -385,7 +385,7 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
-export type AccessLogCreateWithoutUserInput = {
+export type AccessLogCreateWithoutLibrarianInput = {
   id?: string
   attemptedAccessCode: string
   success: boolean
@@ -393,7 +393,7 @@ export type AccessLogCreateWithoutUserInput = {
   createdAt?: Date | string
 }
 
-export type AccessLogUncheckedCreateWithoutUserInput = {
+export type AccessLogUncheckedCreateWithoutLibrarianInput = {
   id?: string
   attemptedAccessCode: string
   success: boolean
@@ -401,29 +401,29 @@ export type AccessLogUncheckedCreateWithoutUserInput = {
   createdAt?: Date | string
 }
 
-export type AccessLogCreateOrConnectWithoutUserInput = {
+export type AccessLogCreateOrConnectWithoutLibrarianInput = {
   where: Prisma.AccessLogWhereUniqueInput
-  create: Prisma.XOR<Prisma.AccessLogCreateWithoutUserInput, Prisma.AccessLogUncheckedCreateWithoutUserInput>
+  create: Prisma.XOR<Prisma.AccessLogCreateWithoutLibrarianInput, Prisma.AccessLogUncheckedCreateWithoutLibrarianInput>
 }
 
-export type AccessLogCreateManyUserInputEnvelope = {
-  data: Prisma.AccessLogCreateManyUserInput | Prisma.AccessLogCreateManyUserInput[]
+export type AccessLogCreateManyLibrarianInputEnvelope = {
+  data: Prisma.AccessLogCreateManyLibrarianInput | Prisma.AccessLogCreateManyLibrarianInput[]
 }
 
-export type AccessLogUpsertWithWhereUniqueWithoutUserInput = {
+export type AccessLogUpsertWithWhereUniqueWithoutLibrarianInput = {
   where: Prisma.AccessLogWhereUniqueInput
-  update: Prisma.XOR<Prisma.AccessLogUpdateWithoutUserInput, Prisma.AccessLogUncheckedUpdateWithoutUserInput>
-  create: Prisma.XOR<Prisma.AccessLogCreateWithoutUserInput, Prisma.AccessLogUncheckedCreateWithoutUserInput>
+  update: Prisma.XOR<Prisma.AccessLogUpdateWithoutLibrarianInput, Prisma.AccessLogUncheckedUpdateWithoutLibrarianInput>
+  create: Prisma.XOR<Prisma.AccessLogCreateWithoutLibrarianInput, Prisma.AccessLogUncheckedCreateWithoutLibrarianInput>
 }
 
-export type AccessLogUpdateWithWhereUniqueWithoutUserInput = {
+export type AccessLogUpdateWithWhereUniqueWithoutLibrarianInput = {
   where: Prisma.AccessLogWhereUniqueInput
-  data: Prisma.XOR<Prisma.AccessLogUpdateWithoutUserInput, Prisma.AccessLogUncheckedUpdateWithoutUserInput>
+  data: Prisma.XOR<Prisma.AccessLogUpdateWithoutLibrarianInput, Prisma.AccessLogUncheckedUpdateWithoutLibrarianInput>
 }
 
-export type AccessLogUpdateManyWithWhereWithoutUserInput = {
+export type AccessLogUpdateManyWithWhereWithoutLibrarianInput = {
   where: Prisma.AccessLogScalarWhereInput
-  data: Prisma.XOR<Prisma.AccessLogUpdateManyMutationInput, Prisma.AccessLogUncheckedUpdateManyWithoutUserInput>
+  data: Prisma.XOR<Prisma.AccessLogUpdateManyMutationInput, Prisma.AccessLogUncheckedUpdateManyWithoutLibrarianInput>
 }
 
 export type AccessLogScalarWhereInput = {
@@ -431,14 +431,14 @@ export type AccessLogScalarWhereInput = {
   OR?: Prisma.AccessLogScalarWhereInput[]
   NOT?: Prisma.AccessLogScalarWhereInput | Prisma.AccessLogScalarWhereInput[]
   id?: Prisma.StringFilter<"AccessLog"> | string
-  userId?: Prisma.StringNullableFilter<"AccessLog"> | string | null
+  librarianId?: Prisma.StringNullableFilter<"AccessLog"> | string | null
   attemptedAccessCode?: Prisma.StringFilter<"AccessLog"> | string
   success?: Prisma.BoolFilter<"AccessLog"> | boolean
   failureReason?: Prisma.StringNullableFilter<"AccessLog"> | string | null
   createdAt?: Prisma.DateTimeFilter<"AccessLog"> | Date | string
 }
 
-export type AccessLogCreateManyUserInput = {
+export type AccessLogCreateManyLibrarianInput = {
   id?: string
   attemptedAccessCode: string
   success: boolean
@@ -446,7 +446,7 @@ export type AccessLogCreateManyUserInput = {
   createdAt?: Date | string
 }
 
-export type AccessLogUpdateWithoutUserInput = {
+export type AccessLogUpdateWithoutLibrarianInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   attemptedAccessCode?: Prisma.StringFieldUpdateOperationsInput | string
   success?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -454,7 +454,7 @@ export type AccessLogUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type AccessLogUncheckedUpdateWithoutUserInput = {
+export type AccessLogUncheckedUpdateWithoutLibrarianInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   attemptedAccessCode?: Prisma.StringFieldUpdateOperationsInput | string
   success?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -462,7 +462,7 @@ export type AccessLogUncheckedUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type AccessLogUncheckedUpdateManyWithoutUserInput = {
+export type AccessLogUncheckedUpdateManyWithoutLibrarianInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   attemptedAccessCode?: Prisma.StringFieldUpdateOperationsInput | string
   success?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -474,62 +474,62 @@ export type AccessLogUncheckedUpdateManyWithoutUserInput = {
 
 export type AccessLogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  userId?: boolean
+  librarianId?: boolean
   attemptedAccessCode?: boolean
   success?: boolean
   failureReason?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.AccessLog$userArgs<ExtArgs>
+  librarian?: boolean | Prisma.AccessLog$librarianArgs<ExtArgs>
 }, ExtArgs["result"]["accessLog"]>
 
 export type AccessLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  userId?: boolean
+  librarianId?: boolean
   attemptedAccessCode?: boolean
   success?: boolean
   failureReason?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.AccessLog$userArgs<ExtArgs>
+  librarian?: boolean | Prisma.AccessLog$librarianArgs<ExtArgs>
 }, ExtArgs["result"]["accessLog"]>
 
 export type AccessLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  userId?: boolean
+  librarianId?: boolean
   attemptedAccessCode?: boolean
   success?: boolean
   failureReason?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.AccessLog$userArgs<ExtArgs>
+  librarian?: boolean | Prisma.AccessLog$librarianArgs<ExtArgs>
 }, ExtArgs["result"]["accessLog"]>
 
 export type AccessLogSelectScalar = {
   id?: boolean
-  userId?: boolean
+  librarianId?: boolean
   attemptedAccessCode?: boolean
   success?: boolean
   failureReason?: boolean
   createdAt?: boolean
 }
 
-export type AccessLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "attemptedAccessCode" | "success" | "failureReason" | "createdAt", ExtArgs["result"]["accessLog"]>
+export type AccessLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "librarianId" | "attemptedAccessCode" | "success" | "failureReason" | "createdAt", ExtArgs["result"]["accessLog"]>
 export type AccessLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.AccessLog$userArgs<ExtArgs>
+  librarian?: boolean | Prisma.AccessLog$librarianArgs<ExtArgs>
 }
 export type AccessLogIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.AccessLog$userArgs<ExtArgs>
+  librarian?: boolean | Prisma.AccessLog$librarianArgs<ExtArgs>
 }
 export type AccessLogIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.AccessLog$userArgs<ExtArgs>
+  librarian?: boolean | Prisma.AccessLog$librarianArgs<ExtArgs>
 }
 
 export type $AccessLogPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "AccessLog"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs> | null
+    librarian: Prisma.$LibrarianPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    userId: string | null
+    librarianId: string | null
     attemptedAccessCode: string
     success: boolean
     failureReason: string | null
@@ -928,7 +928,7 @@ readonly fields: AccessLogFieldRefs;
  */
 export interface Prisma__AccessLogClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.AccessLog$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AccessLog$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  librarian<T extends Prisma.AccessLog$librarianArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AccessLog$librarianArgs<ExtArgs>>): Prisma.Prisma__LibrarianClient<runtime.Types.Result.GetResult<Prisma.$LibrarianPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -959,7 +959,7 @@ export interface Prisma__AccessLogClient<T, Null = never, ExtArgs extends runtim
  */
 export interface AccessLogFieldRefs {
   readonly id: Prisma.FieldRef<"AccessLog", 'String'>
-  readonly userId: Prisma.FieldRef<"AccessLog", 'String'>
+  readonly librarianId: Prisma.FieldRef<"AccessLog", 'String'>
   readonly attemptedAccessCode: Prisma.FieldRef<"AccessLog", 'String'>
   readonly success: Prisma.FieldRef<"AccessLog", 'Boolean'>
   readonly failureReason: Prisma.FieldRef<"AccessLog", 'String'>
@@ -1358,22 +1358,22 @@ export type AccessLogDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * AccessLog.user
+ * AccessLog.librarian
  */
-export type AccessLog$userArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type AccessLog$librarianArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the User
+   * Select specific fields to fetch from the Librarian
    */
-  select?: Prisma.UserSelect<ExtArgs> | null
+  select?: Prisma.LibrarianSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the User
+   * Omit specific fields from the Librarian
    */
-  omit?: Prisma.UserOmit<ExtArgs> | null
+  omit?: Prisma.LibrarianOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.UserInclude<ExtArgs> | null
-  where?: Prisma.UserWhereInput
+  include?: Prisma.LibrarianInclude<ExtArgs> | null
+  where?: Prisma.LibrarianWhereInput
 }
 
 /**

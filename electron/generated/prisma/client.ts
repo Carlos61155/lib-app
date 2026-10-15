@@ -29,8 +29,8 @@ export * from "./enums.ts"
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Users
- * const users = await prisma.user.findMany()
+ * // Fetch zero or more People
+ * const people = await prisma.person.findMany()
  * ```
  * 
  * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
@@ -41,24 +41,40 @@ export { Prisma }
 
 
 // file annotations for bundling tools to include these files
-path.join(__dirname, "query_engine-windows.dll.node")
-path.join(process.cwd(), "electron/generated/prisma/query_engine-windows.dll.node")
+path.join(__dirname, "libquery_engine-debian-openssl-3.0.x.so.node")
+path.join(process.cwd(), "electron/generated/prisma/libquery_engine-debian-openssl-3.0.x.so.node")
 
 // file annotations for bundling tools to include these files
 path.join(__dirname, "libquery_engine-debian-openssl-1.1.x.so.node")
 path.join(process.cwd(), "electron/generated/prisma/libquery_engine-debian-openssl-1.1.x.so.node")
 
-// file annotations for bundling tools to include these files
-path.join(__dirname, "libquery_engine-debian-openssl-3.0.x.so.node")
-path.join(process.cwd(), "electron/generated/prisma/libquery_engine-debian-openssl-3.0.x.so.node")
-
 /**
- * Model User
+ * Model Person
  * 
  */
-export type User = Prisma.UserModel
+export type Person = Prisma.PersonModel
+/**
+ * Model Librarian
+ * 
+ */
+export type Librarian = Prisma.LibrarianModel
+/**
+ * Model Student
+ * 
+ */
+export type Student = Prisma.StudentModel
+/**
+ * Model Professor
+ * 
+ */
+export type Professor = Prisma.ProfessorModel
 /**
  * Model AccessLog
  * 
  */
 export type AccessLog = Prisma.AccessLogModel
+/**
+ * Model RegistrationLog
+ * 
+ */
+export type RegistrationLog = Prisma.RegistrationLogModel

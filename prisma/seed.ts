@@ -25,9 +25,9 @@ async function main() {
     );
   }
 
-  const existingUser = await prisma.user.findFirst({
+  const existingUser = await prisma.librarian.findFirst({
     where: {
-      OR: [{ email }, { accessCode }],
+      OR: [{ person: { email } }, { accessCode }],
     },
   });
 
@@ -40,16 +40,20 @@ async function main() {
 
   const passwordHash = await hashPassword(password);
 
-  await prisma.user.create({
-    data: {
-      name,
-      email,
-      accessCode,
-      passwordHash,
-      role: "BIBLIOTECARIO",
-      isActive: true,
-      mustChangePassword: true,
-    },
+  await prisma.$transaction(async (transaction) => {
+    const person = await transaction.person.create({ data: { name, email } });
+    await transaction.librarian.create({
+      data: {
+        personId: person.id,
+        accessCode,
+        passwordHash,
+        isActive: true,
+        mustChangePassword: true,
+      },
+    });
+    await transaction.registrationLog.create({
+      data: { personId: person.id, createdByLibrarianId: null },
+    });
   });
 
   console.log("Bibliotecário inicial criado com sucesso.");

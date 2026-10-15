@@ -39,6 +39,5 @@ release
 # aux files
 src/utils/
 
-tarefas.md
 /src/generated/prisma
 

@@ -49,8 +49,12 @@ export const AnyNull = runtime.objectEnumValues.instances.AnyNull
 
 
 export const ModelName = {
-  User: 'User',
-  AccessLog: 'AccessLog'
+  Person: 'Person',
+  Librarian: 'Librarian',
+  Student: 'Student',
+  Professor: 'Professor',
+  AccessLog: 'AccessLog',
+  RegistrationLog: 'RegistrationLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -66,13 +70,22 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const UserScalarFieldEnum = {
+export const PersonScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PersonScalarFieldEnum = (typeof PersonScalarFieldEnum)[keyof typeof PersonScalarFieldEnum]
+
+
+export const LibrarianScalarFieldEnum = {
+  id: 'id',
+  personId: 'personId',
   accessCode: 'accessCode',
   passwordHash: 'passwordHash',
-  role: 'role',
   isActive: 'isActive',
   mustChangePassword: 'mustChangePassword',
   failedLoginAttempts: 'failedLoginAttempts',
@@ -82,12 +95,38 @@ export const UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 } as const
 
-export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+export type LibrarianScalarFieldEnum = (typeof LibrarianScalarFieldEnum)[keyof typeof LibrarianScalarFieldEnum]
+
+
+export const StudentScalarFieldEnum = {
+  id: 'id',
+  personId: 'personId',
+  registrationNumber: 'registrationNumber',
+  course: 'course',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeof StudentScalarFieldEnum]
+
+
+export const ProfessorScalarFieldEnum = {
+  id: 'id',
+  personId: 'personId',
+  registrationNumber: 'registrationNumber',
+  department: 'department',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProfessorScalarFieldEnum = (typeof ProfessorScalarFieldEnum)[keyof typeof ProfessorScalarFieldEnum]
 
 
 export const AccessLogScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
+  librarianId: 'librarianId',
   attemptedAccessCode: 'attemptedAccessCode',
   success: 'success',
   failureReason: 'failureReason',
@@ -95,6 +134,16 @@ export const AccessLogScalarFieldEnum = {
 } as const
 
 export type AccessLogScalarFieldEnum = (typeof AccessLogScalarFieldEnum)[keyof typeof AccessLogScalarFieldEnum]
+
+
+export const RegistrationLogScalarFieldEnum = {
+  id: 'id',
+  personId: 'personId',
+  createdByLibrarianId: 'createdByLibrarianId',
+  createdAt: 'createdAt'
+} as const
+
+export type RegistrationLogScalarFieldEnum = (typeof RegistrationLogScalarFieldEnum)[keyof typeof RegistrationLogScalarFieldEnum]
 
 
 export const SortOrder = {
