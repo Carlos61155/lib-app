@@ -1,5 +1,24 @@
 import { contextBridge, ipcRenderer } from "electron";
 
+type CreateStudentInput = {
+  name: string;
+  email: string;
+  registrationNumber: string;
+  course: string;
+};
+
+type CreateProfessorInput = {
+  name: string;
+  email: string;
+  registrationNumber: string;
+};
+
+type CreateLibrarianInput = {
+  name: string;
+  email: string;
+  accessCode: string;
+};
+
 contextBridge.exposeInMainWorld("authAPI", {
   login: (accessCode: string, password: string) =>
     ipcRenderer.invoke("auth:login", { accessCode, password }),
@@ -9,7 +28,17 @@ contextBridge.exposeInMainWorld("authAPI", {
       currentPassword,
       newPassword,
     }),
+
   getSession: () => ipcRenderer.invoke("auth:get-session"),
   logout: () => ipcRenderer.invoke("auth:logout"),
   activity: () => ipcRenderer.invoke("auth:activity"),
+
+  createStudent: (input: CreateStudentInput) =>
+    ipcRenderer.invoke("registration:create-student", input),
+
+  createProfessor: (input: CreateProfessorInput) =>
+    ipcRenderer.invoke("registration:create-professor", input),
+
+  createLibrarian: (input: CreateLibrarianInput) =>
+    ipcRenderer.invoke("registration:create-librarian", input),
 });

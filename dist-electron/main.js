@@ -9,7 +9,7 @@ var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot
 var __privateMethod = (obj, member, method) => (__accessCheck(obj, member, "access private method"), method);
 var _a2, _b, _c2, _d2, _e, _f2, _g, _h, _i, _j, _k, _l2, _m2, _n2, _o2, _p2, _q, _r2, _s2, _t2, _u, _v, _w, _x, _y, _z, _A, _B, _e2, _C, _e3, _D, _e4, _E2, _Un_instances, e_fn, _F;
 import { app, BrowserWindow, ipcMain, Menu, dialog } from "electron";
-import { createHash, randomUUID } from "node:crypto";
+import { createHash, randomUUID, randomBytes } from "node:crypto";
 import Bo, { readdir, readFile, mkdir } from "node:fs/promises";
 import * as path from "node:path";
 import path__default from "node:path";
@@ -5579,7 +5579,7 @@ const config$1 = {
       "value": "prisma-client"
     },
     "output": {
-      "value": "C:\\Users\\marcosv\\Documents\\GitHub\\lib-app\\electron\\generated\\prisma",
+      "value": "/home/carlos/Documentos/PRINT/lib-app/electron/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -5588,7 +5588,7 @@ const config$1 = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "debian-openssl-3.0.x",
         "native": true
       },
       {
@@ -5601,7 +5601,7 @@ const config$1 = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\marcosv\\Documents\\GitHub\\lib-app\\prisma\\schema.prisma",
+    "sourceFilePath": "/home/carlos/Documentos/PRINT/lib-app/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativePath": "../../../prisma",
@@ -5611,7 +5611,6 @@ const config$1 = {
     "db"
   ],
   "activeProvider": "sqlite",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -5620,8 +5619,8 @@ const config$1 = {
       }
     }
   },
-  "inlineSchema": 'generator client {\n  provider      = "prisma-client"\n  output        = "../electron/generated/prisma"\n  // Keep native for development/build-host use and include engines for Mint 20.x and 21.x/22.x.\n  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]\n}\n\ndatasource db {\n  provider = "sqlite"\n  url      = env("DATABASE_URL")\n}\n\nmodel User {\n  id                  String    @id @default(uuid())\n  name                String\n  email               String    @unique\n  accessCode          String    @unique\n  passwordHash        String    @map("password_hash")\n  role                Role      @default(BIBLIOTECARIO)\n  isActive            Boolean   @default(true) @map("is_active")\n  mustChangePassword  Boolean   @default(true) @map("must_change_password")\n  failedLoginAttempts Int       @default(0) @map("failed_login_attempts")\n  lastFailedLoginAt   DateTime? @map("last_failed_login_at")\n  lockedUntil         DateTime? @map("locked_until")\n  createdAt           DateTime  @default(now()) @map("created_at")\n  updatedAt           DateTime  @updatedAt @map("updated_at")\n\n  accessLogs AccessLog[]\n\n  @@map("users")\n}\n\nmodel AccessLog {\n  id                  String   @id @default(uuid())\n  userId              String?  @map("user_id")\n  attemptedAccessCode String   @map("attempted_access_code")\n  success             Boolean\n  failureReason       String?  @map("failure_reason")\n  createdAt           DateTime @default(now()) @map("created_at")\n\n  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)\n\n  @@map("access_logs")\n}\n\nenum Role {\n  BIBLIOTECARIO\n}\n',
-  "inlineSchemaHash": "1a538187140b9a9b722d76ea074d21386fc4f9afe93017f874dc85631dcdc70a",
+  "inlineSchema": 'generator client {\n  provider      = "prisma-client"\n  output        = "../electron/generated/prisma"\n  // Keep native for development/build-host use and include engines for Mint 20.x and 21.x/22.x.\n  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]\n}\n\ndatasource db {\n  provider = "sqlite"\n  url      = env("DATABASE_URL")\n}\n\nmodel Person {\n  id        String   @id @default(uuid())\n  name      String\n  email     String   @unique\n  createdAt DateTime @default(now()) @map("created_at")\n  updatedAt DateTime @updatedAt @map("updated_at")\n\n  librarian Librarian?\n  student   Student?\n  professor Professor?\n\n  registrationLogs RegistrationLog[]\n\n  @@map("people")\n}\n\nmodel Librarian {\n  id                  String    @id @default(uuid())\n  personId            String    @unique @map("person_id")\n  accessCode          String    @unique @map("access_code")\n  passwordHash        String    @map("password_hash")\n  isActive            Boolean   @default(true) @map("is_active")\n  mustChangePassword  Boolean   @default(true) @map("must_change_password")\n  failedLoginAttempts Int       @default(0) @map("failed_login_attempts")\n  lastFailedLoginAt   DateTime? @map("last_failed_login_at")\n  lockedUntil         DateTime? @map("locked_until")\n  createdAt           DateTime  @default(now()) @map("created_at")\n  updatedAt           DateTime  @updatedAt @map("updated_at")\n\n  person            Person            @relation(fields: [personId], references: [id], onDelete: Restrict)\n  accessLogs        AccessLog[]\n  registrationsMade RegistrationLog[] @relation("RegistrationCreatedBy")\n\n  @@map("librarians")\n}\n\nmodel Student {\n  id                 String   @id @default(uuid())\n  personId           String   @unique @map("person_id")\n  registrationNumber String   @unique @map("registration_number")\n  course             String\n  isActive           Boolean  @default(true) @map("is_active")\n  createdAt          DateTime @default(now()) @map("created_at")\n  updatedAt          DateTime @updatedAt @map("updated_at")\n\n  person Person @relation(fields: [personId], references: [id], onDelete: Restrict)\n\n  @@map("students")\n}\n\nmodel Professor {\n  id                 String   @id @default(uuid())\n  personId           String   @unique @map("person_id")\n  registrationNumber String   @unique @map("registration_number")\n  isActive           Boolean  @default(true) @map("is_active")\n  createdAt          DateTime @default(now()) @map("created_at")\n  updatedAt          DateTime @updatedAt @map("updated_at")\n\n  person Person @relation(fields: [personId], references: [id], onDelete: Restrict)\n\n  @@map("professors")\n}\n\nmodel AccessLog {\n  id                  String   @id @default(uuid())\n  librarianId         String?  @map("librarian_id")\n  attemptedAccessCode String   @map("attempted_access_code")\n  success             Boolean\n  failureReason       String?  @map("failure_reason")\n  createdAt           DateTime @default(now()) @map("created_at")\n\n  librarian Librarian? @relation(fields: [librarianId], references: [id], onDelete: SetNull)\n\n  @@map("access_logs")\n}\n\nmodel RegistrationLog {\n  id                   String   @id @default(uuid())\n  personId             String   @map("person_id")\n  createdByLibrarianId String?  @map("created_by_librarian_id")\n  createdAt            DateTime @default(now()) @map("created_at")\n\n  person             Person     @relation(fields: [personId], references: [id], onDelete: Restrict)\n  createdByLibrarian Librarian? @relation("RegistrationCreatedBy", fields: [createdByLibrarianId], references: [id], onDelete: Restrict)\n\n  @@index([personId])\n  @@index([createdByLibrarianId, createdAt])\n  @@map("registration_logs")\n}\n',
+  "inlineSchemaHash": "1b8c451a551cfb0552f9cef757347d0177cbe99ab5d29d3f6b1ecf759d2ccab1",
   "copyEngine": true,
   "runtimeDataModel": {
     "models": {},
@@ -5630,7 +5629,7 @@ const config$1 = {
   },
   "dirname": ""
 };
-config$1.runtimeDataModel = JSON.parse('{"models":{"User":{"dbName":"users","schema":null,"fields":[{"name":"id","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":true,"isReadOnly":false,"hasDefaultValue":true,"type":"String","nativeType":null,"default":{"name":"uuid","args":[4]},"isGenerated":false,"isUpdatedAt":false},{"name":"name","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"email","kind":"scalar","isList":false,"isRequired":true,"isUnique":true,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"accessCode","kind":"scalar","isList":false,"isRequired":true,"isUnique":true,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"passwordHash","dbName":"password_hash","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"role","kind":"enum","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"Role","nativeType":null,"default":"BIBLIOTECARIO","isGenerated":false,"isUpdatedAt":false},{"name":"isActive","dbName":"is_active","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"Boolean","nativeType":null,"default":true,"isGenerated":false,"isUpdatedAt":false},{"name":"mustChangePassword","dbName":"must_change_password","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"Boolean","nativeType":null,"default":true,"isGenerated":false,"isUpdatedAt":false},{"name":"failedLoginAttempts","dbName":"failed_login_attempts","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"Int","nativeType":null,"default":0,"isGenerated":false,"isUpdatedAt":false},{"name":"lastFailedLoginAt","dbName":"last_failed_login_at","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"DateTime","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"lockedUntil","dbName":"locked_until","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"DateTime","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"createdAt","dbName":"created_at","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"DateTime","nativeType":null,"default":{"name":"now","args":[]},"isGenerated":false,"isUpdatedAt":false},{"name":"updatedAt","dbName":"updated_at","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"DateTime","nativeType":null,"isGenerated":false,"isUpdatedAt":true},{"name":"accessLogs","kind":"object","isList":true,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"AccessLog","nativeType":null,"relationName":"AccessLogToUser","relationFromFields":[],"relationToFields":[],"isGenerated":false,"isUpdatedAt":false}],"primaryKey":null,"uniqueFields":[],"uniqueIndexes":[],"isGenerated":false},"AccessLog":{"dbName":"access_logs","schema":null,"fields":[{"name":"id","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":true,"isReadOnly":false,"hasDefaultValue":true,"type":"String","nativeType":null,"default":{"name":"uuid","args":[4]},"isGenerated":false,"isUpdatedAt":false},{"name":"userId","dbName":"user_id","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":true,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"attemptedAccessCode","dbName":"attempted_access_code","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"success","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"Boolean","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"failureReason","dbName":"failure_reason","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"createdAt","dbName":"created_at","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"DateTime","nativeType":null,"default":{"name":"now","args":[]},"isGenerated":false,"isUpdatedAt":false},{"name":"user","kind":"object","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"User","nativeType":null,"relationName":"AccessLogToUser","relationFromFields":["userId"],"relationToFields":["id"],"relationOnDelete":"SetNull","isGenerated":false,"isUpdatedAt":false}],"primaryKey":null,"uniqueFields":[],"uniqueIndexes":[],"isGenerated":false}},"enums":{"Role":{"values":[{"name":"BIBLIOTECARIO","dbName":null}],"dbName":null}},"types":{}}');
+config$1.runtimeDataModel = JSON.parse('{"models":{"Person":{"dbName":"people","schema":null,"fields":[{"name":"id","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":true,"isReadOnly":false,"hasDefaultValue":true,"type":"String","nativeType":null,"default":{"name":"uuid","args":[4]},"isGenerated":false,"isUpdatedAt":false},{"name":"name","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"email","kind":"scalar","isList":false,"isRequired":true,"isUnique":true,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"createdAt","dbName":"created_at","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"DateTime","nativeType":null,"default":{"name":"now","args":[]},"isGenerated":false,"isUpdatedAt":false},{"name":"updatedAt","dbName":"updated_at","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"DateTime","nativeType":null,"isGenerated":false,"isUpdatedAt":true},{"name":"librarian","kind":"object","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"Librarian","nativeType":null,"relationName":"LibrarianToPerson","relationFromFields":[],"relationToFields":[],"isGenerated":false,"isUpdatedAt":false},{"name":"student","kind":"object","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"Student","nativeType":null,"relationName":"PersonToStudent","relationFromFields":[],"relationToFields":[],"isGenerated":false,"isUpdatedAt":false},{"name":"professor","kind":"object","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"Professor","nativeType":null,"relationName":"PersonToProfessor","relationFromFields":[],"relationToFields":[],"isGenerated":false,"isUpdatedAt":false},{"name":"registrationLogs","kind":"object","isList":true,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"RegistrationLog","nativeType":null,"relationName":"PersonToRegistrationLog","relationFromFields":[],"relationToFields":[],"isGenerated":false,"isUpdatedAt":false}],"primaryKey":null,"uniqueFields":[],"uniqueIndexes":[],"isGenerated":false},"Librarian":{"dbName":"librarians","schema":null,"fields":[{"name":"id","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":true,"isReadOnly":false,"hasDefaultValue":true,"type":"String","nativeType":null,"default":{"name":"uuid","args":[4]},"isGenerated":false,"isUpdatedAt":false},{"name":"personId","dbName":"person_id","kind":"scalar","isList":false,"isRequired":true,"isUnique":true,"isId":false,"isReadOnly":true,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"accessCode","dbName":"access_code","kind":"scalar","isList":false,"isRequired":true,"isUnique":true,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"passwordHash","dbName":"password_hash","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"isActive","dbName":"is_active","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"Boolean","nativeType":null,"default":true,"isGenerated":false,"isUpdatedAt":false},{"name":"mustChangePassword","dbName":"must_change_password","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"Boolean","nativeType":null,"default":true,"isGenerated":false,"isUpdatedAt":false},{"name":"failedLoginAttempts","dbName":"failed_login_attempts","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"Int","nativeType":null,"default":0,"isGenerated":false,"isUpdatedAt":false},{"name":"lastFailedLoginAt","dbName":"last_failed_login_at","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"DateTime","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"lockedUntil","dbName":"locked_until","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"DateTime","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"createdAt","dbName":"created_at","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"DateTime","nativeType":null,"default":{"name":"now","args":[]},"isGenerated":false,"isUpdatedAt":false},{"name":"updatedAt","dbName":"updated_at","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"DateTime","nativeType":null,"isGenerated":false,"isUpdatedAt":true},{"name":"person","kind":"object","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"Person","nativeType":null,"relationName":"LibrarianToPerson","relationFromFields":["personId"],"relationToFields":["id"],"relationOnDelete":"Restrict","isGenerated":false,"isUpdatedAt":false},{"name":"accessLogs","kind":"object","isList":true,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"AccessLog","nativeType":null,"relationName":"AccessLogToLibrarian","relationFromFields":[],"relationToFields":[],"isGenerated":false,"isUpdatedAt":false},{"name":"registrationsMade","kind":"object","isList":true,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"RegistrationLog","nativeType":null,"relationName":"RegistrationCreatedBy","relationFromFields":[],"relationToFields":[],"isGenerated":false,"isUpdatedAt":false}],"primaryKey":null,"uniqueFields":[],"uniqueIndexes":[],"isGenerated":false},"Student":{"dbName":"students","schema":null,"fields":[{"name":"id","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":true,"isReadOnly":false,"hasDefaultValue":true,"type":"String","nativeType":null,"default":{"name":"uuid","args":[4]},"isGenerated":false,"isUpdatedAt":false},{"name":"personId","dbName":"person_id","kind":"scalar","isList":false,"isRequired":true,"isUnique":true,"isId":false,"isReadOnly":true,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"registrationNumber","dbName":"registration_number","kind":"scalar","isList":false,"isRequired":true,"isUnique":true,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"course","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"isActive","dbName":"is_active","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"Boolean","nativeType":null,"default":true,"isGenerated":false,"isUpdatedAt":false},{"name":"createdAt","dbName":"created_at","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"DateTime","nativeType":null,"default":{"name":"now","args":[]},"isGenerated":false,"isUpdatedAt":false},{"name":"updatedAt","dbName":"updated_at","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"DateTime","nativeType":null,"isGenerated":false,"isUpdatedAt":true},{"name":"person","kind":"object","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"Person","nativeType":null,"relationName":"PersonToStudent","relationFromFields":["personId"],"relationToFields":["id"],"relationOnDelete":"Restrict","isGenerated":false,"isUpdatedAt":false}],"primaryKey":null,"uniqueFields":[],"uniqueIndexes":[],"isGenerated":false},"Professor":{"dbName":"professors","schema":null,"fields":[{"name":"id","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":true,"isReadOnly":false,"hasDefaultValue":true,"type":"String","nativeType":null,"default":{"name":"uuid","args":[4]},"isGenerated":false,"isUpdatedAt":false},{"name":"personId","dbName":"person_id","kind":"scalar","isList":false,"isRequired":true,"isUnique":true,"isId":false,"isReadOnly":true,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"registrationNumber","dbName":"registration_number","kind":"scalar","isList":false,"isRequired":true,"isUnique":true,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"isActive","dbName":"is_active","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"Boolean","nativeType":null,"default":true,"isGenerated":false,"isUpdatedAt":false},{"name":"createdAt","dbName":"created_at","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"DateTime","nativeType":null,"default":{"name":"now","args":[]},"isGenerated":false,"isUpdatedAt":false},{"name":"updatedAt","dbName":"updated_at","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"DateTime","nativeType":null,"isGenerated":false,"isUpdatedAt":true},{"name":"person","kind":"object","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"Person","nativeType":null,"relationName":"PersonToProfessor","relationFromFields":["personId"],"relationToFields":["id"],"relationOnDelete":"Restrict","isGenerated":false,"isUpdatedAt":false}],"primaryKey":null,"uniqueFields":[],"uniqueIndexes":[],"isGenerated":false},"AccessLog":{"dbName":"access_logs","schema":null,"fields":[{"name":"id","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":true,"isReadOnly":false,"hasDefaultValue":true,"type":"String","nativeType":null,"default":{"name":"uuid","args":[4]},"isGenerated":false,"isUpdatedAt":false},{"name":"librarianId","dbName":"librarian_id","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":true,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"attemptedAccessCode","dbName":"attempted_access_code","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"success","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"Boolean","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"failureReason","dbName":"failure_reason","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"createdAt","dbName":"created_at","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"DateTime","nativeType":null,"default":{"name":"now","args":[]},"isGenerated":false,"isUpdatedAt":false},{"name":"librarian","kind":"object","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"Librarian","nativeType":null,"relationName":"AccessLogToLibrarian","relationFromFields":["librarianId"],"relationToFields":["id"],"relationOnDelete":"SetNull","isGenerated":false,"isUpdatedAt":false}],"primaryKey":null,"uniqueFields":[],"uniqueIndexes":[],"isGenerated":false},"RegistrationLog":{"dbName":"registration_logs","schema":null,"fields":[{"name":"id","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":true,"isReadOnly":false,"hasDefaultValue":true,"type":"String","nativeType":null,"default":{"name":"uuid","args":[4]},"isGenerated":false,"isUpdatedAt":false},{"name":"personId","dbName":"person_id","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":true,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"createdByLibrarianId","dbName":"created_by_librarian_id","kind":"scalar","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":true,"hasDefaultValue":false,"type":"String","nativeType":null,"isGenerated":false,"isUpdatedAt":false},{"name":"createdAt","dbName":"created_at","kind":"scalar","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":true,"type":"DateTime","nativeType":null,"default":{"name":"now","args":[]},"isGenerated":false,"isUpdatedAt":false},{"name":"person","kind":"object","isList":false,"isRequired":true,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"Person","nativeType":null,"relationName":"PersonToRegistrationLog","relationFromFields":["personId"],"relationToFields":["id"],"relationOnDelete":"Restrict","isGenerated":false,"isUpdatedAt":false},{"name":"createdByLibrarian","kind":"object","isList":false,"isRequired":false,"isUnique":false,"isId":false,"isReadOnly":false,"hasDefaultValue":false,"type":"Librarian","nativeType":null,"relationName":"RegistrationCreatedBy","relationFromFields":["createdByLibrarianId"],"relationToFields":["id"],"relationOnDelete":"Restrict","isGenerated":false,"isUpdatedAt":false}],"primaryKey":null,"uniqueFields":[],"uniqueIndexes":[],"isGenerated":false}},"enums":{},"types":{}}');
 config$1.engineWasm = void 0;
 config$1.compilerWasm = void 0;
 function getPrismaClientClass(dirname) {
@@ -5644,12 +5643,10 @@ qf({
 Ao.defineExtension;
 globalThis["__dirname"] = path.dirname(fileURLToPath(import.meta.url));
 const PrismaClient = getPrismaClientClass(__dirname);
-path.join(__dirname, "query_engine-windows.dll.node");
-path.join(process$1.cwd(), "electron/generated/prisma/query_engine-windows.dll.node");
-path.join(__dirname, "libquery_engine-debian-openssl-1.1.x.so.node");
-path.join(process$1.cwd(), "electron/generated/prisma/libquery_engine-debian-openssl-1.1.x.so.node");
 path.join(__dirname, "libquery_engine-debian-openssl-3.0.x.so.node");
 path.join(process$1.cwd(), "electron/generated/prisma/libquery_engine-debian-openssl-3.0.x.so.node");
+path.join(__dirname, "libquery_engine-debian-openssl-1.1.x.so.node");
+path.join(process$1.cwd(), "electron/generated/prisma/libquery_engine-debian-openssl-1.1.x.so.node");
 let prisma;
 async function initializeDatabase(databaseUrl) {
   prisma = new PrismaClient({ datasourceUrl: databaseUrl });
@@ -6049,6 +6046,18 @@ function prefixIssues(path2, issues) {
 }
 function unwrapMessage(message) {
   return typeof message === "string" ? message : message == null ? void 0 : message.message;
+}
+function sizeCaps(defChecks) {
+  const caps = [];
+  for (const ch of defChecks ?? []) {
+    const d = ch._zod.def;
+    if (!/_(length|size)$|_equals$/.test(d.check))
+      break;
+    const max = d.maximum ?? d.length ?? d.size;
+    if (max >= 0)
+      caps.push([max, ch]);
+  }
+  return caps;
 }
 function attachSchema(issues, start, inst) {
   var _a3;
@@ -6900,7 +6909,7 @@ ${content.join("\n")}
 const version = {
   major: 4,
   minor: 6,
-  patch: 5
+  patch: 7
 };
 const $ZodType = /* @__PURE__ */ $constructor("$ZodType", (inst, def) => {
   var _a4;
@@ -7408,6 +7417,29 @@ const $ZodNever = /* @__PURE__ */ $constructor("$ZodNever", (inst, def) => {
     return payload;
   };
 });
+function capSize(inst, size) {
+  const caps = sizeCaps(inst._zod.def.checks);
+  if (!caps.length)
+    return;
+  const cap = Math.min(...caps.map((c) => c[0]));
+  const parse2 = inst._zod.parse;
+  inst._zod.parse = (payload, ctx) => {
+    const n = size(payload.value);
+    if (n > cap && !(ctx == null ? void 0 : ctx.skipChecks) && (ctx == null ? void 0 : ctx.direction) !== "backward") {
+      for (const [max, ch] of sizeCaps(inst._zod.def.checks)) {
+        if (n > max && ch._zod.def.when(payload)) {
+          const start = payload.issues.length;
+          ch._zod.check(payload);
+          payload.issues[start].continue = false;
+          attachSchema(payload.issues, start, inst);
+          return payload;
+        }
+      }
+    }
+    return parse2(payload, ctx);
+  };
+}
+const arraySize = (input) => Array.isArray(input) ? input.length : -1;
 function handleArrayResult(result, final, index) {
   if (result.issues.length) {
     final.issues.push(...prefixIssues(index, result.issues));
@@ -7451,6 +7483,7 @@ const $ZodArray = /* @__PURE__ */ $constructor("$ZodArray", (inst, def) => {
     }
     return payload;
   };
+  capSize(inst, arraySize);
 });
 function handlePropertyResult(result, final, key, input, optin, optout) {
   const isPresent = key in input;
@@ -10824,7 +10857,7 @@ const MAX_FAILED_ATTEMPTS = 3;
 const LOCK_DURATION_MINUTES = 15;
 class AuthService {
   async provisionInitialLibrarian(input) {
-    if (await prisma.user.count() > 0) return false;
+    if (await prisma.librarian.count() > 0) return false;
     const configuration = input;
     const requiredFields = ["name", "email", "accessCode", "password"];
     const missingFields = requiredFields.filter(
@@ -10852,18 +10885,21 @@ class AuthService {
     }
     const passwordHash = await hashPassword(password);
     const user = await prisma.$transaction(async (transaction) => {
-      if (await transaction.user.count() > 0) return null;
-      return transaction.user.create({
+      if (await transaction.librarian.count() > 0) return null;
+      const person = await transaction.person.create({ data: { name, email: email2 } });
+      const librarian = await transaction.librarian.create({
         data: {
-          name,
-          email: email2,
+          personId: person.id,
           accessCode,
           passwordHash,
-          role: "BIBLIOTECARIO",
           isActive: true,
           mustChangePassword: true
         }
       });
+      await transaction.registrationLog.create({
+        data: { personId: person.id, createdByLibrarianId: null }
+      });
+      return librarian;
     });
     return user !== null;
   }
@@ -10882,7 +10918,10 @@ class AuthService {
       throw new Error("INVALID_INPUT");
     }
     const { accessCode, password } = validate2.data;
-    const user = await prisma.user.findUnique({ where: { accessCode } });
+    const user = await prisma.librarian.findUnique({
+      where: { accessCode },
+      include: { person: true }
+    });
     if (!user) {
       await prisma.accessLog.create({
         data: {
@@ -10891,7 +10930,7 @@ class AuthService {
           failureReason: "INVALID_CREDENTIALS"
         }
       });
-      if (await prisma.user.count() === 0)
+      if (await prisma.librarian.count() === 0)
         throw new Error("NO_CREDENTIALS_CONFIGURED");
       throw new Error("INVALID_CREDENTIALS");
     }
@@ -10899,7 +10938,7 @@ class AuthService {
     if (user.lockedUntil && user.lockedUntil > now) {
       await prisma.accessLog.create({
         data: {
-          userId: user.id,
+          librarianId: user.id,
           attemptedAccessCode: accessCode,
           success: false,
           failureReason: "ACCOUNT_LOCKED"
@@ -10910,7 +10949,7 @@ class AuthService {
     if (!user.isActive) {
       await prisma.accessLog.create({
         data: {
-          userId: user.id,
+          librarianId: user.id,
           attemptedAccessCode: accessCode,
           success: false,
           failureReason: "ACCOUNT_INACTIVE"
@@ -10920,13 +10959,15 @@ class AuthService {
     }
     if (!await verifyPassword(password, user.passwordHash)) {
       for (let attempt = 0; attempt < 5; attempt += 1) {
-        const latest = await prisma.user.findUnique({ where: { id: user.id } });
+        const latest = await prisma.librarian.findUnique({
+          where: { id: user.id }
+        });
         if (!latest) throw new Error("ACCOUNT_UNAVAILABLE");
         const currentTime = /* @__PURE__ */ new Date();
         if (latest.lockedUntil && latest.lockedUntil > currentTime) {
           await prisma.accessLog.create({
             data: {
-              userId: user.id,
+              librarianId: user.id,
               attemptedAccessCode: accessCode,
               success: false,
               failureReason: "ACCOUNT_LOCKED"
@@ -10937,7 +10978,7 @@ class AuthService {
         const currentAttempts = latest.lockedUntil && latest.lockedUntil <= currentTime ? 0 : latest.failedLoginAttempts;
         const failedAttempts = currentAttempts + 1;
         const lockedUntil = failedAttempts >= MAX_FAILED_ATTEMPTS ? new Date(currentTime.getTime() + LOCK_DURATION_MINUTES * 6e4) : null;
-        const changed = await prisma.user.updateMany({
+        const changed = await prisma.librarian.updateMany({
           where: {
             id: user.id,
             failedLoginAttempts: latest.failedLoginAttempts,
@@ -10952,7 +10993,7 @@ class AuthService {
         if (changed.count === 1) {
           await prisma.accessLog.create({
             data: {
-              userId: user.id,
+              librarianId: user.id,
               attemptedAccessCode: accessCode,
               success: false,
               failureReason: "INVALID_CREDENTIALS"
@@ -10967,19 +11008,19 @@ class AuthService {
     }
     const authenticatedUser = {
       id: user.id,
-      name: user.name,
+      name: user.person.name,
       accessCode: user.accessCode,
-      role: user.role,
+      role: "BIBLIOTECARIO",
       mustChangePassword: user.mustChangePassword
     };
     await prisma.$transaction([
-      prisma.user.update({
+      prisma.librarian.update({
         where: { id: user.id },
         data: { failedLoginAttempts: 0, lockedUntil: null }
       }),
       prisma.accessLog.create({
         data: {
-          userId: user.id,
+          librarianId: user.id,
           attemptedAccessCode: accessCode,
           success: true,
           failureReason: null
@@ -11003,7 +11044,7 @@ class AuthService {
       throw new Error("INVALID_INPUT");
     }
     const { currentPassword, newPassword } = validate2.data;
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+    const user = await prisma.librarian.findUnique({ where: { id: userId } });
     if (!user || !user.isActive) throw new Error("ACCOUNT_UNAVAILABLE");
     if (!await verifyPassword(currentPassword, user.passwordHash)) {
       throw new Error("INVALID_CURRENT_PASSWORD");
@@ -11012,7 +11053,7 @@ class AuthService {
       throw new Error("PASSWORD_MUST_BE_DIFFERENT");
     }
     const newPasswordHash = await hashPassword(newPassword);
-    await prisma.user.update({
+    await prisma.librarian.update({
       where: { id: user.id },
       data: {
         passwordHash: newPasswordHash,
@@ -11023,12 +11064,217 @@ class AuthService {
     });
   }
 }
+const personFields = {
+  name: string().trim().min(1, "NAME_REQUIRED").max(120),
+  email: string().trim().email("EMAIL_INVALID").max(254)
+};
+const CreateStudentSchema = object({
+  ...personFields,
+  registrationNumber: string().trim().min(1, "REGISTRATION_NUMBER_REQUIRED").max(40),
+  course: string().trim().min(1, "COURSE_REQUIRED").max(120)
+}).strict();
+const CreateProfessorSchema = object({
+  ...personFields,
+  registrationNumber: string().trim().min(1, "REGISTRATION_NUMBER_REQUIRED").max(40)
+}).strict();
+const CreateLibrarianSchema = object({
+  ...personFields,
+  accessCode: string().trim().min(1, "ACCESS_CODE_REQUIRED").max(64)
+}).strict();
+function handleDatabaseError(error2) {
+  if (error2 && typeof error2 === "object" && "code" in error2 && error2.code === "P2002") {
+    throw new Error("DUPLICATE_DATA");
+  }
+  throw error2;
+}
+class RegistrationService {
+  async createStudent(input, librarianId) {
+    const data = CreateStudentSchema.parse(input);
+    const emailAlreadyExists = await prisma.person.findUnique({
+      where: { email: data.email }
+    });
+    if (emailAlreadyExists) {
+      throw new Error("EMAIL_ALREADY_REGISTERED");
+    }
+    const registrationNumberAlreadyExists = await prisma.student.findUnique({
+      where: {
+        registrationNumber: data.registrationNumber
+      }
+    });
+    if (registrationNumberAlreadyExists) {
+      throw new Error("REGISTRATION_NUMBER_ALREADY_REGISTERED");
+    }
+    try {
+      return await prisma.$transaction(async (transaction) => {
+        const person = await transaction.person.create({
+          data: {
+            name: data.name,
+            email: data.email
+          }
+        });
+        const student = await transaction.student.create({
+          data: {
+            personId: person.id,
+            registrationNumber: data.registrationNumber,
+            course: data.course
+          }
+        });
+        await transaction.registrationLog.create({
+          data: {
+            personId: person.id,
+            createdByLibrarianId: librarianId
+          }
+        });
+        return {
+          id: student.id,
+          name: person.name,
+          email: person.email,
+          registrationNumber: student.registrationNumber,
+          course: student.course
+        };
+      });
+    } catch (error2) {
+      handleDatabaseError(error2);
+    }
+  }
+  async createProfessor(input, librarianId) {
+    const data = CreateProfessorSchema.parse(input);
+    const emailAlreadyExists = await prisma.person.findUnique({
+      where: { email: data.email }
+    });
+    if (emailAlreadyExists) {
+      throw new Error("EMAIL_ALREADY_REGISTERED");
+    }
+    const registrationNumberAlreadyExists = await prisma.professor.findUnique({
+      where: {
+        registrationNumber: data.registrationNumber
+      }
+    });
+    if (registrationNumberAlreadyExists) {
+      throw new Error("REGISTRATION_NUMBER_ALREADY_REGISTERED");
+    }
+    try {
+      return await prisma.$transaction(async (transaction) => {
+        const person = await transaction.person.create({
+          data: {
+            name: data.name,
+            email: data.email
+          }
+        });
+        const professor = await transaction.professor.create({
+          data: {
+            personId: person.id,
+            registrationNumber: data.registrationNumber
+          }
+        });
+        await transaction.registrationLog.create({
+          data: {
+            personId: person.id,
+            createdByLibrarianId: librarianId
+          }
+        });
+        return {
+          id: professor.id,
+          name: person.name,
+          email: person.email,
+          registrationNumber: professor.registrationNumber
+        };
+      });
+    } catch (error2) {
+      handleDatabaseError(error2);
+    }
+  }
+  async createLibrarian(input, creatorId) {
+    const data = CreateLibrarianSchema.parse(input);
+    const emailAlreadyExists = await prisma.person.findUnique({
+      where: { email: data.email }
+    });
+    if (emailAlreadyExists) {
+      throw new Error("EMAIL_ALREADY_REGISTERED");
+    }
+    const accessCodeAlreadyExists = await prisma.librarian.findUnique({
+      where: {
+        accessCode: data.accessCode
+      }
+    });
+    if (accessCodeAlreadyExists) {
+      throw new Error("ACCESS_CODE_ALREADY_REGISTERED");
+    }
+    const temporaryPassword = randomBytes(18).toString("base64url");
+    const passwordHash = await hashPassword(temporaryPassword);
+    try {
+      return await prisma.$transaction(async (transaction) => {
+        const person = await transaction.person.create({
+          data: {
+            name: data.name,
+            email: data.email
+          }
+        });
+        const librarian = await transaction.librarian.create({
+          data: {
+            personId: person.id,
+            accessCode: data.accessCode,
+            passwordHash,
+            isActive: true,
+            mustChangePassword: true
+          }
+        });
+        await transaction.registrationLog.create({
+          data: {
+            personId: person.id,
+            createdByLibrarianId: creatorId
+          }
+        });
+        return {
+          id: librarian.id,
+          name: person.name,
+          email: person.email,
+          accessCode: librarian.accessCode,
+          temporaryPassword
+        };
+      });
+    } catch (error2) {
+      handleDatabaseError(error2);
+    }
+  }
+}
 const require$1 = createRequire(import.meta.url);
 const { config: loadDotEnv } = require$1("dotenv");
 const authService = new AuthService();
+const registrationService = new RegistrationService();
 const sessions = /* @__PURE__ */ new Map();
 const SESSION_IDLE_TIMEOUT_MS = 15 * 60 * 1e3;
 const __dirname$1 = path__default.dirname(fileURLToPath(import.meta.url));
+async function requireActiveLibrarian(event) {
+  if (event.senderFrame !== event.sender.mainFrame) {
+    throw new Error("UNAUTHORIZED");
+  }
+  const session = sessions.get(event.sender.id);
+  if (!session) {
+    throw new Error("NOT_AUTHENTICATED");
+  }
+  if (Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
+    sessions.delete(event.sender.id);
+    throw new Error("SESSION_EXPIRED");
+  }
+  const librarian = await prisma.librarian.findUnique({
+    where: { id: session.userId },
+    select: {
+      id: true,
+      isActive: true,
+      mustChangePassword: true
+    }
+  });
+  if (!librarian || !librarian.isActive) {
+    sessions.delete(event.sender.id);
+    throw new Error("ACCOUNT_UNAVAILABLE");
+  }
+  if (librarian.mustChangePassword) {
+    throw new Error("PASSWORD_CHANGE_REQUIRED");
+  }
+  session.lastActivityAt = Date.now();
+  return librarian.id;
+}
 function toSqliteFileUrl(absolutePath) {
   return `file:${absolutePath.replace(/\\/g, "/")}`;
 }
@@ -11051,7 +11297,6 @@ function createWindow() {
   win = new BrowserWindow({
     title: "Libapp",
     autoHideMenuBar: true,
-    icon: path__default.join(process.env.VITE_PUBLIC, "images/app-icon.svg"),
     webPreferences: {
       preload: path__default.join(__dirname$1, "preload.mjs"),
       contextIsolation: true,
@@ -11100,7 +11345,10 @@ ipcMain.handle("auth:get-session", async (event) => {
     sessions.delete(event.sender.id);
     return null;
   }
-  const user = await prisma.user.findUnique({ where: { id: session.userId } });
+  const user = await prisma.librarian.findUnique({
+    where: { id: session.userId },
+    include: { person: true }
+  });
   if (!user || !user.isActive) {
     sessions.delete(event.sender.id);
     return null;
@@ -11109,8 +11357,8 @@ ipcMain.handle("auth:get-session", async (event) => {
   return {
     user: {
       id: user.id,
-      name: user.name,
-      role: user.role,
+      name: user.person.name,
+      role: "BIBLIOTECARIO",
       mustChangePassword: user.mustChangePassword
     },
     idleTimeoutMs: SESSION_IDLE_TIMEOUT_MS
@@ -11146,12 +11394,33 @@ ipcMain.handle("auth:change-password", async (event, input) => {
   session.lastActivityAt = Date.now();
   return { success: true };
 });
+ipcMain.handle("registration:create-student", async (event, input) => {
+  const librarianId = await requireActiveLibrarian(event);
+  return registrationService.createStudent(input, librarianId);
+});
+ipcMain.handle(
+  "registration:create-professor",
+  async (event, input) => {
+    const librarianId = await requireActiveLibrarian(event);
+    return registrationService.createProfessor(input, librarianId);
+  }
+);
+ipcMain.handle(
+  "registration:create-librarian",
+  async (event, input) => {
+    const librarianId = await requireActiveLibrarian(event);
+    return registrationService.createLibrarian(input, librarianId);
+  }
+);
 app.whenReady().then(async () => {
   Menu.setApplicationMenu(null);
   const provisioningEnvPath = app.isPackaged ? path__default.join(app.getPath("userData"), ".env") : path__default.join(app.getAppPath(), ".env");
   loadDotEnv({ path: provisioningEnvPath });
   const configuredDatabaseUrl = process.env.DATABASE_URL;
-  const packagedDatabasePath = path__default.join(app.getPath("userData"), "lib-app.db");
+  const packagedDatabasePath = path__default.join(
+    app.getPath("userData"),
+    "lib-app.db"
+  );
   const databaseUrl = app.isPackaged ? toSqliteFileUrl(packagedDatabasePath) : configuredDatabaseUrl ? resolveDevelopmentDatabaseUrl(configuredDatabaseUrl) : configuredDatabaseUrl;
   if (!databaseUrl) {
     throw new Error("DATABASE_URL is required while running in development.");
@@ -11173,7 +11442,9 @@ app.whenReady().then(async () => {
     password: process.env.INITIAL_LIBRARIAN_PASSWORD
   });
   if (librarianCreated) {
-    console.info("Created the initial librarian account from the provisioning environment.");
+    console.info(
+      "Created the initial librarian account from the provisioning environment."
+    );
   }
   createWindow();
 }).catch((error2) => {

@@ -940,7 +940,6 @@ export const ProfessorScalarFieldEnum = {
   id: 'id',
   personId: 'personId',
   registrationNumber: 'registrationNumber',
-  department: 'department',
   isActive: 'isActive',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

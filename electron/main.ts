@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { mkdir } from "node:fs/promises";
+import { RegistrationService } from "./registration/registration.service";
 
 const require = createRequire(import.meta.url);
 const { config: loadDotEnv } = require("dotenv") as {
@@ -12,6 +13,7 @@ const { config: loadDotEnv } = require("dotenv") as {
 };
 
 const authService = new AuthService();
+const registrationService = new RegistrationService();
 
 type UserSession = {
   userId: string;
@@ -21,6 +23,47 @@ type UserSession = {
 const sessions = new Map<number, UserSession>();
 const SESSION_IDLE_TIMEOUT_MS = 15 * 60 * 1000;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+async function requireActiveLibrarian(
+  event: Electron.IpcMainInvokeEvent,
+): Promise<string> {
+  if (event.senderFrame !== event.sender.mainFrame) {
+    throw new Error("UNAUTHORIZED");
+  }
+
+  const session = sessions.get(event.sender.id);
+
+  if (!session) {
+    throw new Error("NOT_AUTHENTICATED");
+  }
+
+  if (Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
+    sessions.delete(event.sender.id);
+    throw new Error("SESSION_EXPIRED");
+  }
+
+  const librarian = await prisma.librarian.findUnique({
+    where: { id: session.userId },
+    select: {
+      id: true,
+      isActive: true,
+      mustChangePassword: true,
+    },
+  });
+
+  if (!librarian || !librarian.isActive) {
+    sessions.delete(event.sender.id);
+    throw new Error("ACCOUNT_UNAVAILABLE");
+  }
+
+  if (librarian.mustChangePassword) {
+    throw new Error("PASSWORD_CHANGE_REQUIRED");
+  }
+
+  session.lastActivityAt = Date.now();
+
+  return librarian.id;
+}
 
 function toSqliteFileUrl(absolutePath: string): string {
   // Keep SQLite paths in Prisma connection-string form on both Windows and Linux.
@@ -32,7 +75,8 @@ function resolveDevelopmentDatabaseUrl(databaseUrl: string): string {
 
   const fileUrl = databaseUrl.slice("file:".length);
   const queryIndex = fileUrl.indexOf("?");
-  const databasePath = queryIndex === -1 ? fileUrl : fileUrl.slice(0, queryIndex);
+  const databasePath =
+    queryIndex === -1 ? fileUrl : fileUrl.slice(0, queryIndex);
   const query = queryIndex === -1 ? "" : fileUrl.slice(queryIndex);
   const absolutePath = path.isAbsolute(databasePath)
     ? databasePath
@@ -190,63 +234,94 @@ ipcMain.handle("auth:change-password", async (event, input: unknown) => {
   return { success: true };
 });
 
-app.whenReady().then(async () => {
-  Menu.setApplicationMenu(null);
-
-  const provisioningEnvPath = app.isPackaged
-    ? path.join(app.getPath("userData"), ".env")
-    : path.join(app.getAppPath(), ".env");
-  loadDotEnv({ path: provisioningEnvPath });
-
-  const configuredDatabaseUrl = process.env.DATABASE_URL;
-  const packagedDatabasePath = path.join(app.getPath("userData"), "lib-app.db");
-  const databaseUrl = app.isPackaged
-    ? toSqliteFileUrl(packagedDatabasePath)
-    : configuredDatabaseUrl
-      ? resolveDevelopmentDatabaseUrl(configuredDatabaseUrl)
-      : configuredDatabaseUrl;
-
-  if (!databaseUrl) {
-    throw new Error("DATABASE_URL is required while running in development.");
-  }
-
-  if (app.isPackaged) {
-    await mkdir(path.dirname(packagedDatabasePath), { recursive: true });
-  } else if (configuredDatabaseUrl?.startsWith("file:")) {
-    const databasePath = configuredDatabaseUrl.slice("file:".length).split("?")[0];
-    const absoluteDatabasePath = path.isAbsolute(databasePath)
-      ? databasePath
-      : path.resolve(app.getAppPath(), "prisma", databasePath);
-    await mkdir(path.dirname(absoluteDatabasePath), { recursive: true });
-  }
-
-  await initializeDatabase(databaseUrl);
-
-  const migrationsDirectory = app.isPackaged
-    ? path.join(app.getAppPath(), "prisma", "migrations")
-    : path.resolve(app.getAppPath(), "prisma", "migrations");
-  await applySqliteMigrations(migrationsDirectory);
-
-  const librarianCreated = await authService.provisionInitialLibrarian({
-    name: process.env.INITIAL_LIBRARIAN_NAME,
-    email: process.env.INITIAL_LIBRARIAN_EMAIL,
-    accessCode: process.env.INITIAL_LIBRARIAN_ACCESS_CODE,
-    password: process.env.INITIAL_LIBRARIAN_PASSWORD,
-  });
-  if (librarianCreated) {
-    console.info("Created the initial librarian account from the provisioning environment.");
-  }
-
-  createWindow();
-}).catch((error: unknown) => {
-  console.error("Failed to initialize the SQLite database:", error);
-  const message = error instanceof Error ? error.message : String(error);
-  const configurationError = message.startsWith("INITIAL_LIBRARIAN_");
-  dialog.showErrorBox(
-    "Biblioteca IFCE",
-    configurationError
-      ? `The database is empty and the initial librarian could not be created. Configure INITIAL_LIBRARIAN_NAME, INITIAL_LIBRARIAN_EMAIL, INITIAL_LIBRARIAN_ACCESS_CODE, and INITIAL_LIBRARIAN_PASSWORD in ${app.isPackaged ? path.join(app.getPath("userData"), ".env") : path.join(app.getAppPath(), ".env")}. Restart the app after saving the file. (${message})`
-      : `The application could not initialize its SQLite database. (${message})`,
-  );
-  app.quit();
+ipcMain.handle("registration:create-student", async (event, input: unknown) => {
+  const librarianId = await requireActiveLibrarian(event);
+  return registrationService.createStudent(input, librarianId);
 });
+
+ipcMain.handle(
+  "registration:create-professor",
+  async (event, input: unknown) => {
+    const librarianId = await requireActiveLibrarian(event);
+    return registrationService.createProfessor(input, librarianId);
+  },
+);
+
+ipcMain.handle(
+  "registration:create-librarian",
+  async (event, input: unknown) => {
+    const librarianId = await requireActiveLibrarian(event);
+    return registrationService.createLibrarian(input, librarianId);
+  },
+);
+
+app
+  .whenReady()
+  .then(async () => {
+    Menu.setApplicationMenu(null);
+
+    const provisioningEnvPath = app.isPackaged
+      ? path.join(app.getPath("userData"), ".env")
+      : path.join(app.getAppPath(), ".env");
+    loadDotEnv({ path: provisioningEnvPath });
+
+    const configuredDatabaseUrl = process.env.DATABASE_URL;
+    const packagedDatabasePath = path.join(
+      app.getPath("userData"),
+      "lib-app.db",
+    );
+    const databaseUrl = app.isPackaged
+      ? toSqliteFileUrl(packagedDatabasePath)
+      : configuredDatabaseUrl
+        ? resolveDevelopmentDatabaseUrl(configuredDatabaseUrl)
+        : configuredDatabaseUrl;
+
+    if (!databaseUrl) {
+      throw new Error("DATABASE_URL is required while running in development.");
+    }
+
+    if (app.isPackaged) {
+      await mkdir(path.dirname(packagedDatabasePath), { recursive: true });
+    } else if (configuredDatabaseUrl?.startsWith("file:")) {
+      const databasePath = configuredDatabaseUrl
+        .slice("file:".length)
+        .split("?")[0];
+      const absoluteDatabasePath = path.isAbsolute(databasePath)
+        ? databasePath
+        : path.resolve(app.getAppPath(), "prisma", databasePath);
+      await mkdir(path.dirname(absoluteDatabasePath), { recursive: true });
+    }
+
+    await initializeDatabase(databaseUrl);
+
+    const migrationsDirectory = app.isPackaged
+      ? path.join(app.getAppPath(), "prisma", "migrations")
+      : path.resolve(app.getAppPath(), "prisma", "migrations");
+    await applySqliteMigrations(migrationsDirectory);
+
+    const librarianCreated = await authService.provisionInitialLibrarian({
+      name: process.env.INITIAL_LIBRARIAN_NAME,
+      email: process.env.INITIAL_LIBRARIAN_EMAIL,
+      accessCode: process.env.INITIAL_LIBRARIAN_ACCESS_CODE,
+      password: process.env.INITIAL_LIBRARIAN_PASSWORD,
+    });
+    if (librarianCreated) {
+      console.info(
+        "Created the initial librarian account from the provisioning environment.",
+      );
+    }
+
+    createWindow();
+  })
+  .catch((error: unknown) => {
+    console.error("Failed to initialize the SQLite database:", error);
+    const message = error instanceof Error ? error.message : String(error);
+    const configurationError = message.startsWith("INITIAL_LIBRARIAN_");
+    dialog.showErrorBox(
+      "Biblioteca IFCE",
+      configurationError
+        ? `The database is empty and the initial librarian could not be created. Configure INITIAL_LIBRARIAN_NAME, INITIAL_LIBRARIAN_EMAIL, INITIAL_LIBRARIAN_ACCESS_CODE, and INITIAL_LIBRARIAN_PASSWORD in ${app.isPackaged ? path.join(app.getPath("userData"), ".env") : path.join(app.getAppPath(), ".env")}. Restart the app after saving the file. (${message})`
+        : `The application could not initialize its SQLite database. (${message})`,
+    );
+    app.quit();
+  });
