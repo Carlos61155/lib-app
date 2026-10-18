@@ -395,7 +395,9 @@ export const ModelName = {
   Student: 'Student',
   Professor: 'Professor',
   AccessLog: 'AccessLog',
-  RegistrationLog: 'RegistrationLog'
+  RegistrationLog: 'RegistrationLog',
+  Author: 'Author',
+  RegistrationAuthorLog: 'RegistrationAuthorLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -411,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "person" | "librarian" | "student" | "professor" | "accessLog" | "registrationLog"
+    modelProps: "person" | "librarian" | "student" | "professor" | "accessLog" | "registrationLog" | "author" | "registrationAuthorLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -859,6 +861,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Author: {
+      payload: Prisma.$AuthorPayload<ExtArgs>
+      fields: Prisma.AuthorFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AuthorFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AuthorFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload>
+        }
+        findFirst: {
+          args: Prisma.AuthorFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AuthorFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload>
+        }
+        findMany: {
+          args: Prisma.AuthorFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload>[]
+        }
+        create: {
+          args: Prisma.AuthorCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload>
+        }
+        createMany: {
+          args: Prisma.AuthorCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AuthorCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload>[]
+        }
+        delete: {
+          args: Prisma.AuthorDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload>
+        }
+        update: {
+          args: Prisma.AuthorUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload>
+        }
+        deleteMany: {
+          args: Prisma.AuthorDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AuthorUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AuthorUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload>[]
+        }
+        upsert: {
+          args: Prisma.AuthorUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AuthorPayload>
+        }
+        aggregate: {
+          args: Prisma.AuthorAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAuthor>
+        }
+        groupBy: {
+          args: Prisma.AuthorGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuthorGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AuthorCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AuthorCountAggregateOutputType> | number
+        }
+      }
+    }
+    RegistrationAuthorLog: {
+      payload: Prisma.$RegistrationAuthorLogPayload<ExtArgs>
+      fields: Prisma.RegistrationAuthorLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RegistrationAuthorLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationAuthorLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RegistrationAuthorLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationAuthorLogPayload>
+        }
+        findFirst: {
+          args: Prisma.RegistrationAuthorLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationAuthorLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RegistrationAuthorLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationAuthorLogPayload>
+        }
+        findMany: {
+          args: Prisma.RegistrationAuthorLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationAuthorLogPayload>[]
+        }
+        create: {
+          args: Prisma.RegistrationAuthorLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationAuthorLogPayload>
+        }
+        createMany: {
+          args: Prisma.RegistrationAuthorLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RegistrationAuthorLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationAuthorLogPayload>[]
+        }
+        delete: {
+          args: Prisma.RegistrationAuthorLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationAuthorLogPayload>
+        }
+        update: {
+          args: Prisma.RegistrationAuthorLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationAuthorLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.RegistrationAuthorLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RegistrationAuthorLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RegistrationAuthorLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationAuthorLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.RegistrationAuthorLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationAuthorLogPayload>
+        }
+        aggregate: {
+          args: Prisma.RegistrationAuthorLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRegistrationAuthorLog>
+        }
+        groupBy: {
+          args: Prisma.RegistrationAuthorLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RegistrationAuthorLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RegistrationAuthorLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RegistrationAuthorLogCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -970,6 +1120,32 @@ export const RegistrationLogScalarFieldEnum = {
 } as const
 
 export type RegistrationLogScalarFieldEnum = (typeof RegistrationLogScalarFieldEnum)[keyof typeof RegistrationLogScalarFieldEnum]
+
+
+export const AuthorScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  nationality: 'nationality',
+  pseudonym: 'pseudonym',
+  dateOfBirth: 'dateOfBirth',
+  dateOfDeath: 'dateOfDeath',
+  biography: 'biography',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AuthorScalarFieldEnum = (typeof AuthorScalarFieldEnum)[keyof typeof AuthorScalarFieldEnum]
+
+
+export const RegistrationAuthorLogScalarFieldEnum = {
+  id: 'id',
+  authorId: 'authorId',
+  createdByLibrarianId: 'createdByLibrarianId',
+  createdAt: 'createdAt'
+} as const
+
+export type RegistrationAuthorLogScalarFieldEnum = (typeof RegistrationAuthorLogScalarFieldEnum)[keyof typeof RegistrationAuthorLogScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1121,6 +1297,8 @@ export type GlobalOmitConfig = {
   professor?: Prisma.ProfessorOmit
   accessLog?: Prisma.AccessLogOmit
   registrationLog?: Prisma.RegistrationLogOmit
+  author?: Prisma.AuthorOmit
+  registrationAuthorLog?: Prisma.RegistrationAuthorLogOmit
 }
 
 /* Types for Logging */

@@ -267,6 +267,7 @@ export type LibrarianWhereInput = {
   person?: Prisma.XOR<Prisma.PersonScalarRelationFilter, Prisma.PersonWhereInput>
   accessLogs?: Prisma.AccessLogListRelationFilter
   registrationsMade?: Prisma.RegistrationLogListRelationFilter
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogListRelationFilter
 }
 
 export type LibrarianOrderByWithRelationInput = {
@@ -284,6 +285,7 @@ export type LibrarianOrderByWithRelationInput = {
   person?: Prisma.PersonOrderByWithRelationInput
   accessLogs?: Prisma.AccessLogOrderByRelationAggregateInput
   registrationsMade?: Prisma.RegistrationLogOrderByRelationAggregateInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogOrderByRelationAggregateInput
 }
 
 export type LibrarianWhereUniqueInput = Prisma.AtLeast<{
@@ -304,6 +306,7 @@ export type LibrarianWhereUniqueInput = Prisma.AtLeast<{
   person?: Prisma.XOR<Prisma.PersonScalarRelationFilter, Prisma.PersonWhereInput>
   accessLogs?: Prisma.AccessLogListRelationFilter
   registrationsMade?: Prisma.RegistrationLogListRelationFilter
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogListRelationFilter
 }, "id" | "personId" | "accessCode">
 
 export type LibrarianOrderByWithAggregationInput = {
@@ -356,6 +359,7 @@ export type LibrarianCreateInput = {
   person: Prisma.PersonCreateNestedOneWithoutLibrarianInput
   accessLogs?: Prisma.AccessLogCreateNestedManyWithoutLibrarianInput
   registrationsMade?: Prisma.RegistrationLogCreateNestedManyWithoutCreatedByLibrarianInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogCreateNestedManyWithoutCreatedByLibrarianInput
 }
 
 export type LibrarianUncheckedCreateInput = {
@@ -372,6 +376,7 @@ export type LibrarianUncheckedCreateInput = {
   updatedAt?: Date | string
   accessLogs?: Prisma.AccessLogUncheckedCreateNestedManyWithoutLibrarianInput
   registrationsMade?: Prisma.RegistrationLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
 }
 
 export type LibrarianUpdateInput = {
@@ -388,6 +393,7 @@ export type LibrarianUpdateInput = {
   person?: Prisma.PersonUpdateOneRequiredWithoutLibrarianNestedInput
   accessLogs?: Prisma.AccessLogUpdateManyWithoutLibrarianNestedInput
   registrationsMade?: Prisma.RegistrationLogUpdateManyWithoutCreatedByLibrarianNestedInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogUpdateManyWithoutCreatedByLibrarianNestedInput
 }
 
 export type LibrarianUncheckedUpdateInput = {
@@ -404,6 +410,7 @@ export type LibrarianUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accessLogs?: Prisma.AccessLogUncheckedUpdateManyWithoutLibrarianNestedInput
   registrationsMade?: Prisma.RegistrationLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
 }
 
 export type LibrarianCreateManyInput = {
@@ -502,6 +509,11 @@ export type LibrarianSumOrderByAggregateInput = {
   failedLoginAttempts?: Prisma.SortOrder
 }
 
+export type LibrarianScalarRelationFilter = {
+  is?: Prisma.LibrarianWhereInput
+  isNot?: Prisma.LibrarianWhereInput
+}
+
 export type LibrarianCreateNestedOneWithoutPersonInput = {
   create?: Prisma.XOR<Prisma.LibrarianCreateWithoutPersonInput, Prisma.LibrarianUncheckedCreateWithoutPersonInput>
   connectOrCreate?: Prisma.LibrarianCreateOrConnectWithoutPersonInput
@@ -582,6 +594,20 @@ export type LibrarianUpdateOneWithoutRegistrationsMadeNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.LibrarianUpdateToOneWithWhereWithoutRegistrationsMadeInput, Prisma.LibrarianUpdateWithoutRegistrationsMadeInput>, Prisma.LibrarianUncheckedUpdateWithoutRegistrationsMadeInput>
 }
 
+export type LibrarianCreateNestedOneWithoutAuthorRegistrationsMadeInput = {
+  create?: Prisma.XOR<Prisma.LibrarianCreateWithoutAuthorRegistrationsMadeInput, Prisma.LibrarianUncheckedCreateWithoutAuthorRegistrationsMadeInput>
+  connectOrCreate?: Prisma.LibrarianCreateOrConnectWithoutAuthorRegistrationsMadeInput
+  connect?: Prisma.LibrarianWhereUniqueInput
+}
+
+export type LibrarianUpdateOneRequiredWithoutAuthorRegistrationsMadeNestedInput = {
+  create?: Prisma.XOR<Prisma.LibrarianCreateWithoutAuthorRegistrationsMadeInput, Prisma.LibrarianUncheckedCreateWithoutAuthorRegistrationsMadeInput>
+  connectOrCreate?: Prisma.LibrarianCreateOrConnectWithoutAuthorRegistrationsMadeInput
+  upsert?: Prisma.LibrarianUpsertWithoutAuthorRegistrationsMadeInput
+  connect?: Prisma.LibrarianWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LibrarianUpdateToOneWithWhereWithoutAuthorRegistrationsMadeInput, Prisma.LibrarianUpdateWithoutAuthorRegistrationsMadeInput>, Prisma.LibrarianUncheckedUpdateWithoutAuthorRegistrationsMadeInput>
+}
+
 export type LibrarianCreateWithoutPersonInput = {
   id?: string
   accessCode: string
@@ -595,6 +621,7 @@ export type LibrarianCreateWithoutPersonInput = {
   updatedAt?: Date | string
   accessLogs?: Prisma.AccessLogCreateNestedManyWithoutLibrarianInput
   registrationsMade?: Prisma.RegistrationLogCreateNestedManyWithoutCreatedByLibrarianInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogCreateNestedManyWithoutCreatedByLibrarianInput
 }
 
 export type LibrarianUncheckedCreateWithoutPersonInput = {
@@ -610,6 +637,7 @@ export type LibrarianUncheckedCreateWithoutPersonInput = {
   updatedAt?: Date | string
   accessLogs?: Prisma.AccessLogUncheckedCreateNestedManyWithoutLibrarianInput
   registrationsMade?: Prisma.RegistrationLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
 }
 
 export type LibrarianCreateOrConnectWithoutPersonInput = {
@@ -641,6 +669,7 @@ export type LibrarianUpdateWithoutPersonInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accessLogs?: Prisma.AccessLogUpdateManyWithoutLibrarianNestedInput
   registrationsMade?: Prisma.RegistrationLogUpdateManyWithoutCreatedByLibrarianNestedInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogUpdateManyWithoutCreatedByLibrarianNestedInput
 }
 
 export type LibrarianUncheckedUpdateWithoutPersonInput = {
@@ -656,6 +685,7 @@ export type LibrarianUncheckedUpdateWithoutPersonInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accessLogs?: Prisma.AccessLogUncheckedUpdateManyWithoutLibrarianNestedInput
   registrationsMade?: Prisma.RegistrationLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
 }
 
 export type LibrarianCreateWithoutAccessLogsInput = {
@@ -671,6 +701,7 @@ export type LibrarianCreateWithoutAccessLogsInput = {
   updatedAt?: Date | string
   person: Prisma.PersonCreateNestedOneWithoutLibrarianInput
   registrationsMade?: Prisma.RegistrationLogCreateNestedManyWithoutCreatedByLibrarianInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogCreateNestedManyWithoutCreatedByLibrarianInput
 }
 
 export type LibrarianUncheckedCreateWithoutAccessLogsInput = {
@@ -686,6 +717,7 @@ export type LibrarianUncheckedCreateWithoutAccessLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   registrationsMade?: Prisma.RegistrationLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
 }
 
 export type LibrarianCreateOrConnectWithoutAccessLogsInput = {
@@ -717,6 +749,7 @@ export type LibrarianUpdateWithoutAccessLogsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   person?: Prisma.PersonUpdateOneRequiredWithoutLibrarianNestedInput
   registrationsMade?: Prisma.RegistrationLogUpdateManyWithoutCreatedByLibrarianNestedInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogUpdateManyWithoutCreatedByLibrarianNestedInput
 }
 
 export type LibrarianUncheckedUpdateWithoutAccessLogsInput = {
@@ -732,6 +765,7 @@ export type LibrarianUncheckedUpdateWithoutAccessLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrationsMade?: Prisma.RegistrationLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
 }
 
 export type LibrarianCreateWithoutRegistrationsMadeInput = {
@@ -747,6 +781,7 @@ export type LibrarianCreateWithoutRegistrationsMadeInput = {
   updatedAt?: Date | string
   person: Prisma.PersonCreateNestedOneWithoutLibrarianInput
   accessLogs?: Prisma.AccessLogCreateNestedManyWithoutLibrarianInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogCreateNestedManyWithoutCreatedByLibrarianInput
 }
 
 export type LibrarianUncheckedCreateWithoutRegistrationsMadeInput = {
@@ -762,6 +797,7 @@ export type LibrarianUncheckedCreateWithoutRegistrationsMadeInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   accessLogs?: Prisma.AccessLogUncheckedCreateNestedManyWithoutLibrarianInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
 }
 
 export type LibrarianCreateOrConnectWithoutRegistrationsMadeInput = {
@@ -793,6 +829,7 @@ export type LibrarianUpdateWithoutRegistrationsMadeInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   person?: Prisma.PersonUpdateOneRequiredWithoutLibrarianNestedInput
   accessLogs?: Prisma.AccessLogUpdateManyWithoutLibrarianNestedInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogUpdateManyWithoutCreatedByLibrarianNestedInput
 }
 
 export type LibrarianUncheckedUpdateWithoutRegistrationsMadeInput = {
@@ -808,6 +845,87 @@ export type LibrarianUncheckedUpdateWithoutRegistrationsMadeInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   accessLogs?: Prisma.AccessLogUncheckedUpdateManyWithoutLibrarianNestedInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
+}
+
+export type LibrarianCreateWithoutAuthorRegistrationsMadeInput = {
+  id?: string
+  accessCode: string
+  passwordHash: string
+  isActive?: boolean
+  mustChangePassword?: boolean
+  failedLoginAttempts?: number
+  lastFailedLoginAt?: Date | string | null
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  person: Prisma.PersonCreateNestedOneWithoutLibrarianInput
+  accessLogs?: Prisma.AccessLogCreateNestedManyWithoutLibrarianInput
+  registrationsMade?: Prisma.RegistrationLogCreateNestedManyWithoutCreatedByLibrarianInput
+}
+
+export type LibrarianUncheckedCreateWithoutAuthorRegistrationsMadeInput = {
+  id?: string
+  personId: string
+  accessCode: string
+  passwordHash: string
+  isActive?: boolean
+  mustChangePassword?: boolean
+  failedLoginAttempts?: number
+  lastFailedLoginAt?: Date | string | null
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accessLogs?: Prisma.AccessLogUncheckedCreateNestedManyWithoutLibrarianInput
+  registrationsMade?: Prisma.RegistrationLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
+}
+
+export type LibrarianCreateOrConnectWithoutAuthorRegistrationsMadeInput = {
+  where: Prisma.LibrarianWhereUniqueInput
+  create: Prisma.XOR<Prisma.LibrarianCreateWithoutAuthorRegistrationsMadeInput, Prisma.LibrarianUncheckedCreateWithoutAuthorRegistrationsMadeInput>
+}
+
+export type LibrarianUpsertWithoutAuthorRegistrationsMadeInput = {
+  update: Prisma.XOR<Prisma.LibrarianUpdateWithoutAuthorRegistrationsMadeInput, Prisma.LibrarianUncheckedUpdateWithoutAuthorRegistrationsMadeInput>
+  create: Prisma.XOR<Prisma.LibrarianCreateWithoutAuthorRegistrationsMadeInput, Prisma.LibrarianUncheckedCreateWithoutAuthorRegistrationsMadeInput>
+  where?: Prisma.LibrarianWhereInput
+}
+
+export type LibrarianUpdateToOneWithWhereWithoutAuthorRegistrationsMadeInput = {
+  where?: Prisma.LibrarianWhereInput
+  data: Prisma.XOR<Prisma.LibrarianUpdateWithoutAuthorRegistrationsMadeInput, Prisma.LibrarianUncheckedUpdateWithoutAuthorRegistrationsMadeInput>
+}
+
+export type LibrarianUpdateWithoutAuthorRegistrationsMadeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  accessCode?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lastFailedLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  person?: Prisma.PersonUpdateOneRequiredWithoutLibrarianNestedInput
+  accessLogs?: Prisma.AccessLogUpdateManyWithoutLibrarianNestedInput
+  registrationsMade?: Prisma.RegistrationLogUpdateManyWithoutCreatedByLibrarianNestedInput
+}
+
+export type LibrarianUncheckedUpdateWithoutAuthorRegistrationsMadeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  personId?: Prisma.StringFieldUpdateOperationsInput | string
+  accessCode?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lastFailedLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accessLogs?: Prisma.AccessLogUncheckedUpdateManyWithoutLibrarianNestedInput
+  registrationsMade?: Prisma.RegistrationLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
 }
 
 
@@ -818,11 +936,13 @@ export type LibrarianUncheckedUpdateWithoutRegistrationsMadeInput = {
 export type LibrarianCountOutputType = {
   accessLogs: number
   registrationsMade: number
+  authorRegistrationsMade: number
 }
 
 export type LibrarianCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accessLogs?: boolean | LibrarianCountOutputTypeCountAccessLogsArgs
   registrationsMade?: boolean | LibrarianCountOutputTypeCountRegistrationsMadeArgs
+  authorRegistrationsMade?: boolean | LibrarianCountOutputTypeCountAuthorRegistrationsMadeArgs
 }
 
 /**
@@ -849,6 +969,13 @@ export type LibrarianCountOutputTypeCountRegistrationsMadeArgs<ExtArgs extends r
   where?: Prisma.RegistrationLogWhereInput
 }
 
+/**
+ * LibrarianCountOutputType without action
+ */
+export type LibrarianCountOutputTypeCountAuthorRegistrationsMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RegistrationAuthorLogWhereInput
+}
+
 
 export type LibrarianSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -865,6 +992,7 @@ export type LibrarianSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   person?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
   accessLogs?: boolean | Prisma.Librarian$accessLogsArgs<ExtArgs>
   registrationsMade?: boolean | Prisma.Librarian$registrationsMadeArgs<ExtArgs>
+  authorRegistrationsMade?: boolean | Prisma.Librarian$authorRegistrationsMadeArgs<ExtArgs>
   _count?: boolean | Prisma.LibrarianCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["librarian"]>
 
@@ -917,6 +1045,7 @@ export type LibrarianInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   person?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
   accessLogs?: boolean | Prisma.Librarian$accessLogsArgs<ExtArgs>
   registrationsMade?: boolean | Prisma.Librarian$registrationsMadeArgs<ExtArgs>
+  authorRegistrationsMade?: boolean | Prisma.Librarian$authorRegistrationsMadeArgs<ExtArgs>
   _count?: boolean | Prisma.LibrarianCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LibrarianIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -932,6 +1061,7 @@ export type $LibrarianPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     person: Prisma.$PersonPayload<ExtArgs>
     accessLogs: Prisma.$AccessLogPayload<ExtArgs>[]
     registrationsMade: Prisma.$RegistrationLogPayload<ExtArgs>[]
+    authorRegistrationsMade: Prisma.$RegistrationAuthorLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1342,6 +1472,7 @@ export interface Prisma__LibrarianClient<T, Null = never, ExtArgs extends runtim
   person<T extends Prisma.PersonDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PersonDefaultArgs<ExtArgs>>): Prisma.Prisma__PersonClient<runtime.Types.Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   accessLogs<T extends Prisma.Librarian$accessLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Librarian$accessLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccessLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   registrationsMade<T extends Prisma.Librarian$registrationsMadeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Librarian$registrationsMadeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  authorRegistrationsMade<T extends Prisma.Librarian$authorRegistrationsMadeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Librarian$authorRegistrationsMadeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationAuthorLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1821,6 +1952,30 @@ export type Librarian$registrationsMadeArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.RegistrationLogScalarFieldEnum | Prisma.RegistrationLogScalarFieldEnum[]
+}
+
+/**
+ * Librarian.authorRegistrationsMade
+ */
+export type Librarian$authorRegistrationsMadeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RegistrationAuthorLog
+   */
+  select?: Prisma.RegistrationAuthorLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RegistrationAuthorLog
+   */
+  omit?: Prisma.RegistrationAuthorLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationAuthorLogInclude<ExtArgs> | null
+  where?: Prisma.RegistrationAuthorLogWhereInput
+  orderBy?: Prisma.RegistrationAuthorLogOrderByWithRelationInput | Prisma.RegistrationAuthorLogOrderByWithRelationInput[]
+  cursor?: Prisma.RegistrationAuthorLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RegistrationAuthorLogScalarFieldEnum | Prisma.RegistrationAuthorLogScalarFieldEnum[]
 }
 
 /**

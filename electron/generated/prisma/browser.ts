@@ -47,3 +47,13 @@ export type AccessLog = Prisma.AccessLogModel
  * 
  */
 export type RegistrationLog = Prisma.RegistrationLogModel
+/**
+ * Model Author
+ * 
+ */
+export type Author = Prisma.AuthorModel
+/**
+ * Model RegistrationAuthorLog
+ * 
+ */
+export type RegistrationAuthorLog = Prisma.RegistrationAuthorLogModel

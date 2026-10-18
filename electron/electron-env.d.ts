@@ -96,5 +96,25 @@ interface Window {
       accessCode: string;
       temporaryPassword: string;
     }>;
+
+    createAuthor: (input: {
+      name: string;
+      nationality: string;
+      pseudonym?: string;
+      dateOfBirth?: string;
+      dateOfDeath?: string;
+      biography?: string;
+    }) => Promise<{
+      id: string;
+      name: string;
+      nationality: string;
+      pseudonym: string | null;
+      dateOfBirth: Date | null;
+      dateOfDeath: Date | null;
+      biography: string | null;
+      isActive: boolean;
+      createdAt: Date;
+      updatedAt: Date;
+    }>;
   };
 }

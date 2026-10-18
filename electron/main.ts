@@ -6,6 +6,7 @@ import { createRequire } from "node:module";
 import path from "node:path";
 import { mkdir } from "node:fs/promises";
 import { RegistrationService } from "./registration/registration.service";
+import { AuthorService } from "./author/author.service";
 
 const require = createRequire(import.meta.url);
 const { config: loadDotEnv } = require("dotenv") as {
@@ -14,6 +15,7 @@ const { config: loadDotEnv } = require("dotenv") as {
 
 const authService = new AuthService();
 const registrationService = new RegistrationService();
+const authorService = new AuthorService();
 
 type UserSession = {
   userId: string;
@@ -254,6 +256,11 @@ ipcMain.handle(
     return registrationService.createLibrarian(input, librarianId);
   },
 );
+
+ipcMain.handle("author:create", async (event, input: unknown) => {
+  const librarianId = await requireActiveLibrarian(event);
+  return authorService.createAuthor(input, librarianId);
+});
 
 app
   .whenReady()

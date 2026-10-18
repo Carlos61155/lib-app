@@ -23,6 +23,15 @@ type CreateLibrarianInput = {
   accessCode: string;
 };
 
+type CreateAuthorInput = {
+  name: string;
+  nationality: string;
+  pseudonym?: string;
+  dateOfBirth?: string;
+  dateOfDeath?: string;
+  biography?: string;
+};
+
 contextBridge.exposeInMainWorld("authAPI", {
   login: (accessCode: string, password: string) =>
     ipcRenderer.invoke("auth:login", { accessCode, password }),
@@ -45,4 +54,7 @@ contextBridge.exposeInMainWorld("authAPI", {
 
   createLibrarian: (input: CreateLibrarianInput) =>
     ipcRenderer.invoke("registration:create-librarian", input),
+
+  createAuthor: (input: CreateAuthorInput) =>
+    ipcRenderer.invoke("author:create", input),
 });
