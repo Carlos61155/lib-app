@@ -72,6 +72,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const PersonScalarFieldEnum = {
   id: 'id',
+  cpf: 'cpf',
   name: 'name',
   email: 'email',
   createdAt: 'createdAt',
@@ -114,6 +115,7 @@ export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeo
 export const ProfessorScalarFieldEnum = {
   id: 'id',
   personId: 'personId',
+  department: 'department',
   registrationNumber: 'registrationNumber',
   isActive: 'isActive',
   createdAt: 'createdAt',

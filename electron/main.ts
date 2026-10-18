@@ -302,6 +302,7 @@ app
     const librarianCreated = await authService.provisionInitialLibrarian({
       name: process.env.INITIAL_LIBRARIAN_NAME,
       email: process.env.INITIAL_LIBRARIAN_EMAIL,
+      cpf: process.env.INITIAL_LIBRARIAN_CPF,
       accessCode: process.env.INITIAL_LIBRARIAN_ACCESS_CODE,
       password: process.env.INITIAL_LIBRARIAN_PASSWORD,
     });
@@ -320,7 +321,7 @@ app
     dialog.showErrorBox(
       "Biblioteca IFCE",
       configurationError
-        ? `The database is empty and the initial librarian could not be created. Configure INITIAL_LIBRARIAN_NAME, INITIAL_LIBRARIAN_EMAIL, INITIAL_LIBRARIAN_ACCESS_CODE, and INITIAL_LIBRARIAN_PASSWORD in ${app.isPackaged ? path.join(app.getPath("userData"), ".env") : path.join(app.getAppPath(), ".env")}. Restart the app after saving the file. (${message})`
+        ? `The database is empty and the initial librarian could not be created. Configure INITIAL_LIBRARIAN_NAME, INITIAL_LIBRARIAN_EMAIL,INITIAL_LIBRARIAN_CPF, INITIAL_LIBRARIAN_ACCESS_CODE, and INITIAL_LIBRARIAN_PASSWORD in ${app.isPackaged ? path.join(app.getPath("userData"), ".env") : path.join(app.getAppPath(), ".env")}. Restart the app after saving the file. (${message})`
         : `The application could not initialize its SQLite database. (${message})`,
     );
     app.quit();

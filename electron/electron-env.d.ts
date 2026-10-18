@@ -60,6 +60,7 @@ interface Window {
     createStudent: (input: {
       name: string;
       email: string;
+      cpf: string;
       registrationNumber: string;
       course: string;
     }) => Promise<{
@@ -73,6 +74,8 @@ interface Window {
     createProfessor: (input: {
       name: string;
       email: string;
+      cpf: string;
+      department: string;
       registrationNumber: string;
     }) => Promise<{
       id: string;
@@ -84,6 +87,7 @@ interface Window {
     createLibrarian: (input: {
       name: string;
       email: string;
+      cpf: string;
       accessCode: string;
     }) => Promise<{
       id: string;

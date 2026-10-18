@@ -46,6 +46,7 @@ export class RegistrationService {
           data: {
             name: data.name,
             email: data.email,
+            cpf: data.cpf,
           },
         });
 
@@ -104,6 +105,7 @@ export class RegistrationService {
           data: {
             name: data.name,
             email: data.email,
+            cpf: data.cpf,
           },
         });
 
@@ -111,6 +113,7 @@ export class RegistrationService {
           data: {
             personId: person.id,
             registrationNumber: data.registrationNumber,
+            department: data.department,
           },
         });
 
@@ -163,6 +166,7 @@ export class RegistrationService {
           data: {
             name: data.name,
             email: data.email,
+            cpf: data.cpf,
           },
         });
 

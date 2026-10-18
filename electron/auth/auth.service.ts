@@ -15,7 +15,13 @@ export class AuthService {
     if ((await prisma.librarian.count()) > 0) return false;
 
     const configuration = input as Record<string, unknown>;
-    const requiredFields = ["name", "email", "accessCode", "password"] as const;
+    const requiredFields = [
+      "name",
+      "email",
+      "cpf",
+      "accessCode",
+      "password",
+    ] as const;
     const missingFields = requiredFields.filter(
       (field) =>
         typeof configuration?.[field] !== "string" ||
@@ -25,6 +31,7 @@ export class AuthService {
       const envNames: Record<(typeof requiredFields)[number], string> = {
         name: "INITIAL_LIBRARIAN_NAME",
         email: "INITIAL_LIBRARIAN_EMAIL",
+        cpf: "INITIAL_LIBRARIAN_CPF",
         accessCode: "INITIAL_LIBRARIAN_ACCESS_CODE",
         password: "INITIAL_LIBRARIAN_PASSWORD",
       };
@@ -39,10 +46,11 @@ export class AuthService {
       throw new Error(issue?.message ?? "INVALID_INPUT");
     }
 
-    const { name, email, accessCode, password } = validate.data;
+    const { name, email, cpf, accessCode, password } = validate.data;
     if (
       email.endsWith(".invalid") ||
       accessCode.startsWith("CHANGE_ME") ||
+      cpf === "CHANGE_ME_VALID_CPF" ||
       password.includes("CHANGE_ME") ||
       password === "TROQUE_POR_UMA_SENHA_TEMPORARIA_FORTE"
     ) {
@@ -53,7 +61,9 @@ export class AuthService {
     const user = await prisma.$transaction(async (transaction) => {
       if ((await transaction.librarian.count()) > 0) return null;
 
-      const person = await transaction.person.create({ data: { name, email } });
+      const person = await transaction.person.create({
+        data: { name, email, cpf },
+      });
       const librarian = await transaction.librarian.create({
         data: {
           personId: person.id,

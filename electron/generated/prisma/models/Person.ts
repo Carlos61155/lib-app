@@ -26,6 +26,7 @@ export type AggregatePerson = {
 
 export type PersonMinAggregateOutputType = {
   id: string | null
+  cpf: string | null
   name: string | null
   email: string | null
   createdAt: Date | null
@@ -34,6 +35,7 @@ export type PersonMinAggregateOutputType = {
 
 export type PersonMaxAggregateOutputType = {
   id: string | null
+  cpf: string | null
   name: string | null
   email: string | null
   createdAt: Date | null
@@ -42,6 +44,7 @@ export type PersonMaxAggregateOutputType = {
 
 export type PersonCountAggregateOutputType = {
   id: number
+  cpf: number
   name: number
   email: number
   createdAt: number
@@ -52,6 +55,7 @@ export type PersonCountAggregateOutputType = {
 
 export type PersonMinAggregateInputType = {
   id?: true
+  cpf?: true
   name?: true
   email?: true
   createdAt?: true
@@ -60,6 +64,7 @@ export type PersonMinAggregateInputType = {
 
 export type PersonMaxAggregateInputType = {
   id?: true
+  cpf?: true
   name?: true
   email?: true
   createdAt?: true
@@ -68,6 +73,7 @@ export type PersonMaxAggregateInputType = {
 
 export type PersonCountAggregateInputType = {
   id?: true
+  cpf?: true
   name?: true
   email?: true
   createdAt?: true
@@ -149,6 +155,7 @@ export type PersonGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type PersonGroupByOutputType = {
   id: string
+  cpf: string
   name: string
   email: string
   createdAt: Date
@@ -178,6 +185,7 @@ export type PersonWhereInput = {
   OR?: Prisma.PersonWhereInput[]
   NOT?: Prisma.PersonWhereInput | Prisma.PersonWhereInput[]
   id?: Prisma.StringFilter<"Person"> | string
+  cpf?: Prisma.StringFilter<"Person"> | string
   name?: Prisma.StringFilter<"Person"> | string
   email?: Prisma.StringFilter<"Person"> | string
   createdAt?: Prisma.DateTimeFilter<"Person"> | Date | string
@@ -190,6 +198,7 @@ export type PersonWhereInput = {
 
 export type PersonOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  cpf?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -202,6 +211,7 @@ export type PersonOrderByWithRelationInput = {
 
 export type PersonWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  cpf?: string
   email?: string
   AND?: Prisma.PersonWhereInput | Prisma.PersonWhereInput[]
   OR?: Prisma.PersonWhereInput[]
@@ -213,10 +223,11 @@ export type PersonWhereUniqueInput = Prisma.AtLeast<{
   student?: Prisma.XOR<Prisma.StudentNullableScalarRelationFilter, Prisma.StudentWhereInput> | null
   professor?: Prisma.XOR<Prisma.ProfessorNullableScalarRelationFilter, Prisma.ProfessorWhereInput> | null
   registrationLogs?: Prisma.RegistrationLogListRelationFilter
-}, "id" | "email">
+}, "id" | "cpf" | "email">
 
 export type PersonOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  cpf?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -231,6 +242,7 @@ export type PersonScalarWhereWithAggregatesInput = {
   OR?: Prisma.PersonScalarWhereWithAggregatesInput[]
   NOT?: Prisma.PersonScalarWhereWithAggregatesInput | Prisma.PersonScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Person"> | string
+  cpf?: Prisma.StringWithAggregatesFilter<"Person"> | string
   name?: Prisma.StringWithAggregatesFilter<"Person"> | string
   email?: Prisma.StringWithAggregatesFilter<"Person"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Person"> | Date | string
@@ -239,6 +251,7 @@ export type PersonScalarWhereWithAggregatesInput = {
 
 export type PersonCreateInput = {
   id?: string
+  cpf: string
   name: string
   email: string
   createdAt?: Date | string
@@ -251,6 +264,7 @@ export type PersonCreateInput = {
 
 export type PersonUncheckedCreateInput = {
   id?: string
+  cpf: string
   name: string
   email: string
   createdAt?: Date | string
@@ -263,6 +277,7 @@ export type PersonUncheckedCreateInput = {
 
 export type PersonUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cpf?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -275,6 +290,7 @@ export type PersonUpdateInput = {
 
 export type PersonUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cpf?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -287,6 +303,7 @@ export type PersonUncheckedUpdateInput = {
 
 export type PersonCreateManyInput = {
   id?: string
+  cpf: string
   name: string
   email: string
   createdAt?: Date | string
@@ -295,6 +312,7 @@ export type PersonCreateManyInput = {
 
 export type PersonUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cpf?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -303,6 +321,7 @@ export type PersonUpdateManyMutationInput = {
 
 export type PersonUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cpf?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -311,6 +330,7 @@ export type PersonUncheckedUpdateManyInput = {
 
 export type PersonCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  cpf?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -319,6 +339,7 @@ export type PersonCountOrderByAggregateInput = {
 
 export type PersonMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  cpf?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -327,6 +348,7 @@ export type PersonMaxOrderByAggregateInput = {
 
 export type PersonMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  cpf?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -404,6 +426,7 @@ export type PersonUpdateOneRequiredWithoutRegistrationLogsNestedInput = {
 
 export type PersonCreateWithoutLibrarianInput = {
   id?: string
+  cpf: string
   name: string
   email: string
   createdAt?: Date | string
@@ -415,6 +438,7 @@ export type PersonCreateWithoutLibrarianInput = {
 
 export type PersonUncheckedCreateWithoutLibrarianInput = {
   id?: string
+  cpf: string
   name: string
   email: string
   createdAt?: Date | string
@@ -442,6 +466,7 @@ export type PersonUpdateToOneWithWhereWithoutLibrarianInput = {
 
 export type PersonUpdateWithoutLibrarianInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cpf?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -453,6 +478,7 @@ export type PersonUpdateWithoutLibrarianInput = {
 
 export type PersonUncheckedUpdateWithoutLibrarianInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cpf?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -464,6 +490,7 @@ export type PersonUncheckedUpdateWithoutLibrarianInput = {
 
 export type PersonCreateWithoutStudentInput = {
   id?: string
+  cpf: string
   name: string
   email: string
   createdAt?: Date | string
@@ -475,6 +502,7 @@ export type PersonCreateWithoutStudentInput = {
 
 export type PersonUncheckedCreateWithoutStudentInput = {
   id?: string
+  cpf: string
   name: string
   email: string
   createdAt?: Date | string
@@ -502,6 +530,7 @@ export type PersonUpdateToOneWithWhereWithoutStudentInput = {
 
 export type PersonUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cpf?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -513,6 +542,7 @@ export type PersonUpdateWithoutStudentInput = {
 
 export type PersonUncheckedUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cpf?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -524,6 +554,7 @@ export type PersonUncheckedUpdateWithoutStudentInput = {
 
 export type PersonCreateWithoutProfessorInput = {
   id?: string
+  cpf: string
   name: string
   email: string
   createdAt?: Date | string
@@ -535,6 +566,7 @@ export type PersonCreateWithoutProfessorInput = {
 
 export type PersonUncheckedCreateWithoutProfessorInput = {
   id?: string
+  cpf: string
   name: string
   email: string
   createdAt?: Date | string
@@ -562,6 +594,7 @@ export type PersonUpdateToOneWithWhereWithoutProfessorInput = {
 
 export type PersonUpdateWithoutProfessorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cpf?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -573,6 +606,7 @@ export type PersonUpdateWithoutProfessorInput = {
 
 export type PersonUncheckedUpdateWithoutProfessorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cpf?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -584,6 +618,7 @@ export type PersonUncheckedUpdateWithoutProfessorInput = {
 
 export type PersonCreateWithoutRegistrationLogsInput = {
   id?: string
+  cpf: string
   name: string
   email: string
   createdAt?: Date | string
@@ -595,6 +630,7 @@ export type PersonCreateWithoutRegistrationLogsInput = {
 
 export type PersonUncheckedCreateWithoutRegistrationLogsInput = {
   id?: string
+  cpf: string
   name: string
   email: string
   createdAt?: Date | string
@@ -622,6 +658,7 @@ export type PersonUpdateToOneWithWhereWithoutRegistrationLogsInput = {
 
 export type PersonUpdateWithoutRegistrationLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cpf?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -633,6 +670,7 @@ export type PersonUpdateWithoutRegistrationLogsInput = {
 
 export type PersonUncheckedUpdateWithoutRegistrationLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  cpf?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -675,6 +713,7 @@ export type PersonCountOutputTypeCountRegistrationLogsArgs<ExtArgs extends runti
 
 export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  cpf?: boolean
   name?: boolean
   email?: boolean
   createdAt?: boolean
@@ -688,6 +727,7 @@ export type PersonSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 
 export type PersonSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  cpf?: boolean
   name?: boolean
   email?: boolean
   createdAt?: boolean
@@ -696,6 +736,7 @@ export type PersonSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
 
 export type PersonSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  cpf?: boolean
   name?: boolean
   email?: boolean
   createdAt?: boolean
@@ -704,13 +745,14 @@ export type PersonSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 
 export type PersonSelectScalar = {
   id?: boolean
+  cpf?: boolean
   name?: boolean
   email?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PersonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "createdAt" | "updatedAt", ExtArgs["result"]["person"]>
+export type PersonOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "cpf" | "name" | "email" | "createdAt" | "updatedAt", ExtArgs["result"]["person"]>
 export type PersonInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   librarian?: boolean | Prisma.Person$librarianArgs<ExtArgs>
   student?: boolean | Prisma.Person$studentArgs<ExtArgs>
@@ -731,6 +773,7 @@ export type $PersonPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    cpf: string
     name: string
     email: string
     createdAt: Date
@@ -1163,6 +1206,7 @@ export interface Prisma__PersonClient<T, Null = never, ExtArgs extends runtime.T
  */
 export interface PersonFieldRefs {
   readonly id: Prisma.FieldRef<"Person", 'String'>
+  readonly cpf: Prisma.FieldRef<"Person", 'String'>
   readonly name: Prisma.FieldRef<"Person", 'String'>
   readonly email: Prisma.FieldRef<"Person", 'String'>
   readonly createdAt: Prisma.FieldRef<"Person", 'DateTime'>

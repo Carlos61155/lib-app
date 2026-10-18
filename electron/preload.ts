@@ -3,6 +3,7 @@ import { contextBridge, ipcRenderer } from "electron";
 type CreateStudentInput = {
   name: string;
   email: string;
+  cpf: string;
   registrationNumber: string;
   course: string;
 };
@@ -10,12 +11,15 @@ type CreateStudentInput = {
 type CreateProfessorInput = {
   name: string;
   email: string;
+  cpf: string;
+  department: string;
   registrationNumber: string;
 };
 
 type CreateLibrarianInput = {
   name: string;
   email: string;
+  cpf: string;
   accessCode: string;
 };
 
