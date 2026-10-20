@@ -48,6 +48,10 @@ path.join(process.cwd(), "electron/generated/prisma/libquery_engine-debian-opens
 path.join(__dirname, "libquery_engine-debian-openssl-1.1.x.so.node")
 path.join(process.cwd(), "electron/generated/prisma/libquery_engine-debian-openssl-1.1.x.so.node")
 
+// file annotations for bundling tools to include these files
+path.join(__dirname, "query_engine-windows.dll.node")
+path.join(process.cwd(), "electron/generated/prisma/query_engine-windows.dll.node")
+
 /**
  * Model Person
  * 

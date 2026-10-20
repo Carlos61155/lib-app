@@ -1,8 +1,8 @@
 generator client {
   provider      = "prisma-client"
   output        = "../electron/generated/prisma"
-  // Keep native for development/build-host use and include engines for Mint 20.x and 21.x/22.x.
-  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
+  // Keep native for development/build-host use and include Linux Mint and Windows engines.
+  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x", "windows"]
 }
 
 datasource db {

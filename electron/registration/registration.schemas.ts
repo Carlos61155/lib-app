@@ -75,6 +75,5 @@ export const CreateProfessorSchema = z
 export const CreateLibrarianSchema = z
   .object({
     ...personFields,
-    accessCode: z.string().trim().min(1, "ACCESS_CODE_REQUIRED").max(64),
   })
   .strict();

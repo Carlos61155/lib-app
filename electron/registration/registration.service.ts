@@ -147,14 +147,9 @@ export class RegistrationService {
       throw new Error("EMAIL_ALREADY_REGISTERED");
     }
 
-    const accessCodeAlreadyExists = await prisma.librarian.findUnique({
-      where: {
-        accessCode: data.accessCode,
-      },
-    });
-
-    if (accessCodeAlreadyExists) {
-      throw new Error("ACCESS_CODE_ALREADY_REGISTERED");
+    let accessCode = randomBytes(6).toString("hex").toUpperCase();
+    while (await prisma.librarian.findUnique({ where: { accessCode } })) {
+      accessCode = randomBytes(6).toString("hex").toUpperCase();
     }
 
     const temporaryPassword = randomBytes(18).toString("base64url");
@@ -173,7 +168,7 @@ export class RegistrationService {
         const librarian = await transaction.librarian.create({
           data: {
             personId: person.id,
-            accessCode: data.accessCode,
+            accessCode,
             passwordHash,
             isActive: true,
             mustChangePassword: true,

@@ -88,7 +88,6 @@ interface Window {
       name: string;
       email: string;
       cpf: string;
-      accessCode: string;
     }) => Promise<{
       id: string;
       name: string;

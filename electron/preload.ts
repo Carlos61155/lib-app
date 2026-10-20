@@ -20,7 +20,6 @@ type CreateLibrarianInput = {
   name: string;
   email: string;
   cpf: string;
-  accessCode: string;
 };
 
 type CreateAuthorInput = {
