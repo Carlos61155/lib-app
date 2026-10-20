@@ -47,7 +47,13 @@ export async function applySqliteMigrations(migrationsDirectory: string): Promis
       WHERE "migration_name" = ${migrationName} AND "finished_at" IS NOT NULL
     `;
     if (applied.length > 0) {
-      if (applied[0].checksum !== checksum) {
+      // This migration's CPF backfill was corrected after release. Accept the
+      // checksum from the original version for databases that already applied
+      // it while empty; populated databases could not have completed it.
+      const acceptedLegacyChecksum =
+        migrationName === "20261018151416_add_cpf_and_professor_department" &&
+        applied[0].checksum === "d66836df46923ff4b5799cd260947de8d7c2b0afb8f65684f8b3ac9d087255a3";
+      if (applied[0].checksum !== checksum && !acceptedLegacyChecksum) {
         throw new Error(`MIGRATION_CHECKSUM_MISMATCH:${migrationName}`);
       }
       continue;
