@@ -63,18 +63,44 @@ export async function applySqliteMigrations(migrationsDirectory: string): Promis
       .replace(/^\s*--.*$/gm, "")
       .split(";")
       .map((statement) => statement.trim())
-      .filter((statement) => statement.length > 0 && !/^PRAGMA\b/i.test(statement));
+      // SQLite ignores `PRAGMA foreign_keys = OFF` inside a transaction. Prisma's
+      // table-rebuild migrations use it to temporarily remove FK checks, so the
+      // actual safe equivalent here is deferred checking until transaction
+      // commit. Keep the defer ON directive and discard the other migration
+      // pragmas; SQLite resets this setting when the transaction ends.
+      .filter(
+        (statement) =>
+          statement.length > 0 &&
+          (!/^PRAGMA\b/i.test(statement) ||
+            /^PRAGMA\s+defer_foreign_keys\s*=\s*ON$/i.test(statement)),
+      );
 
-    await prisma.$transaction(async (transaction) => {
-      for (const statement of statements) {
-        await transaction.$executeRawUnsafe(statement);
-      }
-      await transaction.$executeRaw`
-        INSERT INTO "_prisma_migrations"
-          ("id", "checksum", "finished_at", "migration_name", "started_at", "applied_steps_count")
-        VALUES
-          (${randomUUID()}, ${checksum}, CURRENT_TIMESTAMP, ${migrationName}, CURRENT_TIMESTAMP, ${statements.length})
-      `;
-    });
+    // Several Prisma SQLite migrations rebuild parent tables. SQLite's
+    // `defer_foreign_keys` does not defer `RESTRICT` actions triggered by DROP
+    // TABLE, so those migrations must run with FK enforcement disabled. The
+    // pragma has no effect inside a transaction; set it before opening the
+    // transaction and restore it after the migration has committed/rolled back.
+    await prisma.$executeRawUnsafe("PRAGMA foreign_keys = OFF");
+    try {
+      await prisma.$transaction(async (transaction) => {
+        for (const statement of statements) {
+          await transaction.$executeRawUnsafe(statement);
+        }
+        await transaction.$executeRaw`
+          INSERT INTO "_prisma_migrations"
+            ("id", "checksum", "finished_at", "migration_name", "started_at", "applied_steps_count")
+          VALUES
+            (${randomUUID()}, ${checksum}, CURRENT_TIMESTAMP, ${migrationName}, CURRENT_TIMESTAMP, ${statements.length})
+        `;
+      });
+    } finally {
+      await prisma.$executeRawUnsafe("PRAGMA foreign_keys = ON");
+    }
+
+    const violations = await prisma.$queryRaw<Array<Record<string, unknown>>>
+      `PRAGMA foreign_key_check`;
+    if (violations.length > 0) {
+      throw new Error(`MIGRATION_FOREIGN_KEY_CHECK_FAILED:${migrationName}`);
+    }
   }
 }
