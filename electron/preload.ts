@@ -32,6 +32,11 @@ type CreateAuthorInput = {
   biography?: string;
 };
 
+type CreateGenreInput = {
+  name: string;
+  description?: string;
+};
+
 contextBridge.exposeInMainWorld("authAPI", {
   login: (accessCode: string, password: string) =>
     ipcRenderer.invoke("auth:login", { accessCode, password }),
@@ -57,4 +62,7 @@ contextBridge.exposeInMainWorld("authAPI", {
 
   createAuthor: (input: CreateAuthorInput) =>
     ipcRenderer.invoke("author:create", input),
+
+  createGenre: (input: CreateGenreInput) =>
+    ipcRenderer.invoke("genre:create", input),
 });

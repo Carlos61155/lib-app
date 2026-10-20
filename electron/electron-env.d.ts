@@ -116,5 +116,14 @@ interface Window {
       createdAt: Date;
       updatedAt: Date;
     }>;
+
+    createGenre: (input: { name: string; description?: string }) => Promise<{
+      id: string;
+      name: string;
+      description: string | null;
+      isActive: boolean;
+      createdAt: Date;
+      updatedAt: Date;
+    }>;
   };
 }

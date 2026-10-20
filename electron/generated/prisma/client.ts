@@ -88,3 +88,13 @@ export type Author = Prisma.AuthorModel
  * 
  */
 export type RegistrationAuthorLog = Prisma.RegistrationAuthorLogModel
+/**
+ * Model Genre
+ * 
+ */
+export type Genre = Prisma.GenreModel
+/**
+ * Model RegistrationGenreLog
+ * 
+ */
+export type RegistrationGenreLog = Prisma.RegistrationGenreLogModel
