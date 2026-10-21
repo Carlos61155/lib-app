@@ -2,8 +2,10 @@ import "dotenv/config";
 import { PrismaClient } from "../electron/generated/prisma/client";
 import { hashPassword } from "../electron/auth/password.service";
 import { InitialLibrarianSchema } from "../electron/auth/auth.schemas";
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 
-const prisma = new PrismaClient();
+const adapter = new PrismaBetterSqlite3({ url: process.env.DATABASE_URL });
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   const name = process.env.INITIAL_LIBRARIAN_NAME;

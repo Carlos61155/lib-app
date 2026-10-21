@@ -82,7 +82,7 @@ function resolveDevelopmentDatabaseUrl(databaseUrl: string): string {
   const query = queryIndex === -1 ? "" : fileUrl.slice(queryIndex);
   const absolutePath = path.isAbsolute(databasePath)
     ? databasePath
-    : path.resolve(app.getAppPath(), "prisma", databasePath);
+    : path.resolve(app.getAppPath(), databasePath);
 
   return `${toSqliteFileUrl(absolutePath)}${query}`;
 }
@@ -295,7 +295,7 @@ app
         .split("?")[0];
       const absoluteDatabasePath = path.isAbsolute(databasePath)
         ? databasePath
-        : path.resolve(app.getAppPath(), "prisma", databasePath);
+        : path.resolve(app.getAppPath(), databasePath);
       await mkdir(path.dirname(absoluteDatabasePath), { recursive: true });
     }
 

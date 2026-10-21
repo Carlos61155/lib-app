@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/library"
+import type * as runtime from "@prisma/client/runtime/client"
 import type * as $Enums from "../enums.ts"
 import type * as Prisma from "../internal/prismaNamespace.ts"
 
@@ -151,7 +151,7 @@ export type RegistrationAuthorLogGroupByOutputType = {
   _max: RegistrationAuthorLogMaxAggregateOutputType | null
 }
 
-type GetRegistrationAuthorLogGroupByPayload<T extends RegistrationAuthorLogGroupByArgs> = Prisma.PrismaPromise<
+export type GetRegistrationAuthorLogGroupByPayload<T extends RegistrationAuthorLogGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<RegistrationAuthorLogGroupByOutputType, T['by']> &
       {
@@ -1199,6 +1199,11 @@ export type RegistrationAuthorLogFindManyArgs<ExtArgs extends runtime.Types.Exte
    * Skip the first `n` RegistrationAuthorLogs.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of RegistrationAuthorLogs.
+   */
   distinct?: Prisma.RegistrationAuthorLogScalarFieldEnum | Prisma.RegistrationAuthorLogScalarFieldEnum[]
 }
 

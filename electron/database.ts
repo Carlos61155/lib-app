@@ -2,15 +2,19 @@ import { createHash, randomUUID } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { PrismaClient } from "./generated/prisma/client";
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 
 export let prisma: PrismaClient;
 
 export async function initializeDatabase(databaseUrl: string): Promise<void> {
-  prisma = new PrismaClient({ datasourceUrl: databaseUrl });
+  const adapter = new PrismaBetterSqlite3({ url: databaseUrl });
+  prisma = new PrismaClient({ adapter });
   await prisma.$connect();
 }
 
-export async function applySqliteMigrations(migrationsDirectory: string): Promise<void> {
+export async function applySqliteMigrations(
+  migrationsDirectory: string,
+): Promise<void> {
   await prisma.$executeRawUnsafe(`
     CREATE TABLE IF NOT EXISTS "_prisma_migrations" (
       "id" TEXT NOT NULL PRIMARY KEY,
@@ -24,7 +28,9 @@ export async function applySqliteMigrations(migrationsDirectory: string): Promis
     )
   `);
 
-  const migrationNames = (await readdir(migrationsDirectory, { withFileTypes: true }))
+  const migrationNames = (
+    await readdir(migrationsDirectory, { withFileTypes: true })
+  )
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
     .sort();
@@ -34,7 +40,12 @@ export async function applySqliteMigrations(migrationsDirectory: string): Promis
       path.join(migrationsDirectory, migrationName, "migration.sql"),
       "utf8",
     ).catch((error: unknown) => {
-      if (error && typeof error === "object" && "code" in error && error.code === "ENOENT") {
+      if (
+        error &&
+        typeof error === "object" &&
+        "code" in error &&
+        error.code === "ENOENT"
+      ) {
         return null;
       }
       throw error;
@@ -52,7 +63,8 @@ export async function applySqliteMigrations(migrationsDirectory: string): Promis
       // it while empty; populated databases could not have completed it.
       const acceptedLegacyChecksum =
         migrationName === "20261018151416_add_cpf_and_professor_department" &&
-        applied[0].checksum === "d66836df46923ff4b5799cd260947de8d7c2b0afb8f65684f8b3ac9d087255a3";
+        applied[0].checksum ===
+          "d66836df46923ff4b5799cd260947de8d7c2b0afb8f65684f8b3ac9d087255a3";
       if (applied[0].checksum !== checksum && !acceptedLegacyChecksum) {
         throw new Error(`MIGRATION_CHECKSUM_MISMATCH:${migrationName}`);
       }
@@ -97,8 +109,9 @@ export async function applySqliteMigrations(migrationsDirectory: string): Promis
       await prisma.$executeRawUnsafe("PRAGMA foreign_keys = ON");
     }
 
-    const violations = await prisma.$queryRaw<Array<Record<string, unknown>>>
-      `PRAGMA foreign_key_check`;
+    const violations = await prisma.$queryRaw<
+      Array<Record<string, unknown>>
+    >`PRAGMA foreign_key_check`;
     if (violations.length > 0) {
       throw new Error(`MIGRATION_FOREIGN_KEY_CHECK_FAILED:${migrationName}`);
     }

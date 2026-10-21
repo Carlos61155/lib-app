@@ -1,9 +1,9 @@
-import { defineConfig } from 'vite'
-import path from 'node:path'
-import electron from 'vite-plugin-electron/simple'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import tsconfigPaths from 'vite-tsconfig-paths'
+import { defineConfig } from "vite";
+import path from "node:path";
+import electron from "vite-plugin-electron/simple";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -17,7 +17,7 @@ export default defineConfig({
         vite: {
           build: {
             rollupOptions: {
-              external: ["bcrypt"],
+              external: ["bcrypt", "better-sqlite3"],
             },
           },
         },

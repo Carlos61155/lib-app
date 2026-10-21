@@ -8,7 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import type * as runtime from "@prisma/client/runtime/library"
+import type * as runtime from "@prisma/client/runtime/client"
 import type * as $Enums from "../enums.ts"
 import type * as Prisma from "../internal/prismaNamespace.ts"
 
@@ -172,7 +172,7 @@ export type ProfessorGroupByOutputType = {
   _max: ProfessorMaxAggregateOutputType | null
 }
 
-type GetProfessorGroupByPayload<T extends ProfessorGroupByArgs> = Prisma.PrismaPromise<
+export type GetProfessorGroupByPayload<T extends ProfessorGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ProfessorGroupByOutputType, T['by']> &
       {
@@ -1136,6 +1136,11 @@ export type ProfessorFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Skip the first `n` Professors.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Professors.
+   */
   distinct?: Prisma.ProfessorScalarFieldEnum | Prisma.ProfessorScalarFieldEnum[]
 }
 

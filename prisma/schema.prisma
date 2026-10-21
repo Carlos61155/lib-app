@@ -1,13 +1,10 @@
 generator client {
-  provider      = "prisma-client"
-  output        = "../electron/generated/prisma"
-  // Keep native for development/build-host use and include Linux Mint and Windows engines.
-  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x", "windows"]
+  provider = "prisma-client"
+  output   = "../electron/generated/prisma"
 }
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
 }
 
 model Person {
@@ -40,9 +37,9 @@ model Librarian {
   createdAt           DateTime  @default(now()) @map("created_at")
   updatedAt           DateTime  @updatedAt @map("updated_at")
 
-  person            Person            @relation(fields: [personId], references: [id], onDelete: Restrict)
-  accessLogs        AccessLog[]
-  registrationsMade RegistrationLog[] @relation("RegistrationCreatedBy")
+  person                  Person                  @relation(fields: [personId], references: [id], onDelete: Restrict)
+  accessLogs              AccessLog[]
+  registrationsMade       RegistrationLog[]       @relation("RegistrationCreatedBy")
   authorRegistrationsMade RegistrationAuthorLog[] @relation("AuthorRegistrationCreatedBy")
 
   @@map("librarians")
@@ -127,7 +124,7 @@ model RegistrationAuthorLog {
   createdByLibrarianId String   @map("created_by_librarian_id")
   createdAt            DateTime @default(now()) @map("created_at")
 
-  author             Author   @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  author             Author    @relation(fields: [authorId], references: [id], onDelete: Restrict)
   createdByLibrarian Librarian @relation("AuthorRegistrationCreatedBy", fields: [createdByLibrarianId], references: [id], onDelete: Restrict)
 
   @@index([authorId])
