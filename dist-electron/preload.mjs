@@ -12,5 +12,6 @@ electron.contextBridge.exposeInMainWorld("authAPI", {
   createStudent: (input) => electron.ipcRenderer.invoke("registration:create-student", input),
   createProfessor: (input) => electron.ipcRenderer.invoke("registration:create-professor", input),
   createLibrarian: (input) => electron.ipcRenderer.invoke("registration:create-librarian", input),
-  createAuthor: (input) => electron.ipcRenderer.invoke("author:create", input)
+  createAuthor: (input) => electron.ipcRenderer.invoke("author:create", input),
+  createGenre: (input) => electron.ipcRenderer.invoke("genre:create", input)
 });

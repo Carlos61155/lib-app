@@ -7,6 +7,7 @@ import path from "node:path";
 import { mkdir } from "node:fs/promises";
 import { RegistrationService } from "./registration/registration.service";
 import { AuthorService } from "./author/author.service";
+import { GenreService } from "./genre/genre.service";
 
 const require = createRequire(import.meta.url);
 const { config: loadDotEnv } = require("dotenv") as {
@@ -16,6 +17,7 @@ const { config: loadDotEnv } = require("dotenv") as {
 const authService = new AuthService();
 const registrationService = new RegistrationService();
 const authorService = new AuthorService();
+const genreService = new GenreService();
 
 type UserSession = {
   userId: string;
@@ -260,6 +262,11 @@ ipcMain.handle(
 ipcMain.handle("author:create", async (event, input: unknown) => {
   const librarianId = await requireActiveLibrarian(event);
   return authorService.createAuthor(input, librarianId);
+});
+
+ipcMain.handle("genre:create", async (event, input: unknown) => {
+  const librarianId = await requireActiveLibrarian(event);
+  return genreService.createGenre(input, librarianId);
 });
 
 app

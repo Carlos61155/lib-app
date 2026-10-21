@@ -58,7 +58,9 @@ export const ModelName = {
   AccessLog: 'AccessLog',
   RegistrationLog: 'RegistrationLog',
   Author: 'Author',
-  RegistrationAuthorLog: 'RegistrationAuthorLog'
+  RegistrationAuthorLog: 'RegistrationAuthorLog',
+  Genre: 'Genre',
+  RegistrationGenreLog: 'RegistrationGenreLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -175,6 +177,28 @@ export const RegistrationAuthorLogScalarFieldEnum = {
 } as const
 
 export type RegistrationAuthorLogScalarFieldEnum = (typeof RegistrationAuthorLogScalarFieldEnum)[keyof typeof RegistrationAuthorLogScalarFieldEnum]
+
+
+export const GenreScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GenreScalarFieldEnum = (typeof GenreScalarFieldEnum)[keyof typeof GenreScalarFieldEnum]
+
+
+export const RegistrationGenreLogScalarFieldEnum = {
+  id: 'id',
+  genreId: 'genreId',
+  createdByLibrarianId: 'createdByLibrarianId',
+  createdAt: 'createdAt'
+} as const
+
+export type RegistrationGenreLogScalarFieldEnum = (typeof RegistrationGenreLogScalarFieldEnum)[keyof typeof RegistrationGenreLogScalarFieldEnum]
 
 
 export const SortOrder = {

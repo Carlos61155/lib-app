@@ -41,6 +41,7 @@ model Librarian {
   accessLogs              AccessLog[]
   registrationsMade       RegistrationLog[]       @relation("RegistrationCreatedBy")
   authorRegistrationsMade RegistrationAuthorLog[] @relation("AuthorRegistrationCreatedBy")
+  genreRegistrationsMade  RegistrationGenreLog[]  @relation("GenreRegistrationCreatedBy")
 
   @@map("librarians")
 }
@@ -130,4 +131,31 @@ model RegistrationAuthorLog {
   @@index([authorId])
   @@index([createdByLibrarianId, createdAt])
   @@map("registration_author_logs")
+}
+
+model Genre {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+  isActive    Boolean @default(true) @map("is_active")
+
+  createdAt             DateTime               @default(now()) @map("created_at")
+  updatedAt             DateTime               @updatedAt @map("updated_at")
+  registrationGenreLogs RegistrationGenreLog[]
+
+  @@map("genres")
+}
+
+model RegistrationGenreLog {
+  id                   String   @id @default(uuid())
+  genreId              String   @map("genre_id")
+  createdByLibrarianId String   @map("created_by_librarian_id")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  genre              Genre     @relation(fields: [genreId], references: [id], onDelete: Restrict)
+  createdByLibrarian Librarian @relation("GenreRegistrationCreatedBy", fields: [createdByLibrarianId], references: [id], onDelete: Restrict)
+
+  @@index([genreId])
+  @@index([createdByLibrarianId, createdAt])
+  @@map("registration_genre_logs")
 }
