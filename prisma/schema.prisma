@@ -42,6 +42,7 @@ model Librarian {
   registrationsMade       RegistrationLog[]       @relation("RegistrationCreatedBy")
   authorRegistrationsMade RegistrationAuthorLog[] @relation("AuthorRegistrationCreatedBy")
   genreRegistrationsMade  RegistrationGenreLog[]  @relation("GenreRegistrationCreatedBy")
+  bookRegistrationsMade   RegistrationBookLog[]   @relation("BookRegistrationCreatedBy")
 
   @@map("librarians")
 }
@@ -115,6 +116,7 @@ model Author {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   registrationLogs RegistrationAuthorLog[]
+  books            BookAuthor[]
 
   @@map("authors")
 }
@@ -142,6 +144,7 @@ model Genre {
   createdAt             DateTime               @default(now()) @map("created_at")
   updatedAt             DateTime               @updatedAt @map("updated_at")
   registrationGenreLogs RegistrationGenreLog[]
+  books                 BookGenre[]
 
   @@map("genres")
 }
@@ -158,4 +161,67 @@ model RegistrationGenreLog {
   @@index([genreId])
   @@index([createdByLibrarianId, createdAt])
   @@map("registration_genre_logs")
+}
+
+model Book {
+  id                String @id @default(uuid())
+  title             String
+  isbn              String @unique
+  publisher         String
+  yearOfPublication Int    @map("year_of_publication")
+
+  subTitle      String?
+  edition       String?
+  numberOfPages Int?    @map("number_of_pages")
+  language      String?
+  synopsis      String?
+  coverPath     String? @map("cover_path")
+
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  registrationLogs RegistrationBookLog[]
+  authors           BookAuthor[]
+  genres            BookGenre[]
+
+  @@map("books")
+}
+
+model RegistrationBookLog {
+  id                   String   @id @default(uuid())
+  bookId               String   @map("book_id")
+  createdByLibrarianId String   @map("created_by_librarian_id")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  book                 Book      @relation(fields: [bookId], references: [id], onDelete: Restrict)
+  createdByLibrarian   Librarian @relation("BookRegistrationCreatedBy", fields: [createdByLibrarianId], references: [id], onDelete: Restrict)
+
+  @@index([bookId])
+  @@index([createdByLibrarianId, createdAt])
+  @@map("registration_book_logs")
+}
+
+model BookAuthor {
+  bookId   String @map("book_id")
+  authorId String @map("author_id")
+
+  book   Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  author Author @relation(fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@id([bookId, authorId])
+  @@index([authorId])
+  @@map("book_authors")
+}
+
+model BookGenre {
+  bookId  String @map("book_id")
+  genreId String @map("genre_id")
+
+  book  Book  @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  genre Genre @relation(fields: [genreId], references: [id], onDelete: Restrict)
+
+  @@id([bookId, genreId])
+  @@index([genreId])
+  @@map("book_genres")
 }

@@ -91,3 +91,23 @@ export type Genre = Prisma.GenreModel
  * 
  */
 export type RegistrationGenreLog = Prisma.RegistrationGenreLogModel
+/**
+ * Model Book
+ * 
+ */
+export type Book = Prisma.BookModel
+/**
+ * Model RegistrationBookLog
+ * 
+ */
+export type RegistrationBookLog = Prisma.RegistrationBookLogModel
+/**
+ * Model BookAuthor
+ * 
+ */
+export type BookAuthor = Prisma.BookAuthorModel
+/**
+ * Model BookGenre
+ * 
+ */
+export type BookGenre = Prisma.BookGenreModel

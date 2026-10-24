@@ -60,7 +60,11 @@ export const ModelName = {
   Author: 'Author',
   RegistrationAuthorLog: 'RegistrationAuthorLog',
   Genre: 'Genre',
-  RegistrationGenreLog: 'RegistrationGenreLog'
+  RegistrationGenreLog: 'RegistrationGenreLog',
+  Book: 'Book',
+  RegistrationBookLog: 'RegistrationBookLog',
+  BookAuthor: 'BookAuthor',
+  BookGenre: 'BookGenre'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -199,6 +203,52 @@ export const RegistrationGenreLogScalarFieldEnum = {
 } as const
 
 export type RegistrationGenreLogScalarFieldEnum = (typeof RegistrationGenreLogScalarFieldEnum)[keyof typeof RegistrationGenreLogScalarFieldEnum]
+
+
+export const BookScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  isbn: 'isbn',
+  publisher: 'publisher',
+  yearOfPublication: 'yearOfPublication',
+  subTitle: 'subTitle',
+  edition: 'edition',
+  numberOfPages: 'numberOfPages',
+  language: 'language',
+  synopsis: 'synopsis',
+  coverPath: 'coverPath',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BookScalarFieldEnum = (typeof BookScalarFieldEnum)[keyof typeof BookScalarFieldEnum]
+
+
+export const RegistrationBookLogScalarFieldEnum = {
+  id: 'id',
+  bookId: 'bookId',
+  createdByLibrarianId: 'createdByLibrarianId',
+  createdAt: 'createdAt'
+} as const
+
+export type RegistrationBookLogScalarFieldEnum = (typeof RegistrationBookLogScalarFieldEnum)[keyof typeof RegistrationBookLogScalarFieldEnum]
+
+
+export const BookAuthorScalarFieldEnum = {
+  bookId: 'bookId',
+  authorId: 'authorId'
+} as const
+
+export type BookAuthorScalarFieldEnum = (typeof BookAuthorScalarFieldEnum)[keyof typeof BookAuthorScalarFieldEnum]
+
+
+export const BookGenreScalarFieldEnum = {
+  bookId: 'bookId',
+  genreId: 'genreId'
+} as const
+
+export type BookGenreScalarFieldEnum = (typeof BookGenreScalarFieldEnum)[keyof typeof BookGenreScalarFieldEnum]
 
 
 export const SortOrder = {

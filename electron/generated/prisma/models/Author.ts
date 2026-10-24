@@ -223,6 +223,7 @@ export type AuthorWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Author"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Author"> | Date | string
   registrationLogs?: Prisma.RegistrationAuthorLogListRelationFilter
+  books?: Prisma.BookAuthorListRelationFilter
 }
 
 export type AuthorOrderByWithRelationInput = {
@@ -237,6 +238,7 @@ export type AuthorOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   registrationLogs?: Prisma.RegistrationAuthorLogOrderByRelationAggregateInput
+  books?: Prisma.BookAuthorOrderByRelationAggregateInput
 }
 
 export type AuthorWhereUniqueInput = Prisma.AtLeast<{
@@ -254,6 +256,7 @@ export type AuthorWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Author"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Author"> | Date | string
   registrationLogs?: Prisma.RegistrationAuthorLogListRelationFilter
+  books?: Prisma.BookAuthorListRelationFilter
 }, "id">
 
 export type AuthorOrderByWithAggregationInput = {
@@ -300,6 +303,7 @@ export type AuthorCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   registrationLogs?: Prisma.RegistrationAuthorLogCreateNestedManyWithoutAuthorInput
+  books?: Prisma.BookAuthorCreateNestedManyWithoutAuthorInput
 }
 
 export type AuthorUncheckedCreateInput = {
@@ -314,6 +318,7 @@ export type AuthorUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   registrationLogs?: Prisma.RegistrationAuthorLogUncheckedCreateNestedManyWithoutAuthorInput
+  books?: Prisma.BookAuthorUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type AuthorUpdateInput = {
@@ -328,6 +333,7 @@ export type AuthorUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrationLogs?: Prisma.RegistrationAuthorLogUpdateManyWithoutAuthorNestedInput
+  books?: Prisma.BookAuthorUpdateManyWithoutAuthorNestedInput
 }
 
 export type AuthorUncheckedUpdateInput = {
@@ -342,6 +348,7 @@ export type AuthorUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrationLogs?: Prisma.RegistrationAuthorLogUncheckedUpdateManyWithoutAuthorNestedInput
+  books?: Prisma.BookAuthorUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 export type AuthorCreateManyInput = {
@@ -441,6 +448,20 @@ export type AuthorUpdateOneRequiredWithoutRegistrationLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AuthorUpdateToOneWithWhereWithoutRegistrationLogsInput, Prisma.AuthorUpdateWithoutRegistrationLogsInput>, Prisma.AuthorUncheckedUpdateWithoutRegistrationLogsInput>
 }
 
+export type AuthorCreateNestedOneWithoutBooksInput = {
+  create?: Prisma.XOR<Prisma.AuthorCreateWithoutBooksInput, Prisma.AuthorUncheckedCreateWithoutBooksInput>
+  connectOrCreate?: Prisma.AuthorCreateOrConnectWithoutBooksInput
+  connect?: Prisma.AuthorWhereUniqueInput
+}
+
+export type AuthorUpdateOneRequiredWithoutBooksNestedInput = {
+  create?: Prisma.XOR<Prisma.AuthorCreateWithoutBooksInput, Prisma.AuthorUncheckedCreateWithoutBooksInput>
+  connectOrCreate?: Prisma.AuthorCreateOrConnectWithoutBooksInput
+  upsert?: Prisma.AuthorUpsertWithoutBooksInput
+  connect?: Prisma.AuthorWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AuthorUpdateToOneWithWhereWithoutBooksInput, Prisma.AuthorUpdateWithoutBooksInput>, Prisma.AuthorUncheckedUpdateWithoutBooksInput>
+}
+
 export type AuthorCreateWithoutRegistrationLogsInput = {
   id?: string
   name: string
@@ -452,6 +473,7 @@ export type AuthorCreateWithoutRegistrationLogsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  books?: Prisma.BookAuthorCreateNestedManyWithoutAuthorInput
 }
 
 export type AuthorUncheckedCreateWithoutRegistrationLogsInput = {
@@ -465,6 +487,7 @@ export type AuthorUncheckedCreateWithoutRegistrationLogsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  books?: Prisma.BookAuthorUncheckedCreateNestedManyWithoutAuthorInput
 }
 
 export type AuthorCreateOrConnectWithoutRegistrationLogsInput = {
@@ -494,6 +517,7 @@ export type AuthorUpdateWithoutRegistrationLogsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  books?: Prisma.BookAuthorUpdateManyWithoutAuthorNestedInput
 }
 
 export type AuthorUncheckedUpdateWithoutRegistrationLogsInput = {
@@ -507,6 +531,79 @@ export type AuthorUncheckedUpdateWithoutRegistrationLogsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  books?: Prisma.BookAuthorUncheckedUpdateManyWithoutAuthorNestedInput
+}
+
+export type AuthorCreateWithoutBooksInput = {
+  id?: string
+  name: string
+  nationality: string
+  pseudonym?: string | null
+  dateOfBirth?: Date | string | null
+  dateOfDeath?: Date | string | null
+  biography?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  registrationLogs?: Prisma.RegistrationAuthorLogCreateNestedManyWithoutAuthorInput
+}
+
+export type AuthorUncheckedCreateWithoutBooksInput = {
+  id?: string
+  name: string
+  nationality: string
+  pseudonym?: string | null
+  dateOfBirth?: Date | string | null
+  dateOfDeath?: Date | string | null
+  biography?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  registrationLogs?: Prisma.RegistrationAuthorLogUncheckedCreateNestedManyWithoutAuthorInput
+}
+
+export type AuthorCreateOrConnectWithoutBooksInput = {
+  where: Prisma.AuthorWhereUniqueInput
+  create: Prisma.XOR<Prisma.AuthorCreateWithoutBooksInput, Prisma.AuthorUncheckedCreateWithoutBooksInput>
+}
+
+export type AuthorUpsertWithoutBooksInput = {
+  update: Prisma.XOR<Prisma.AuthorUpdateWithoutBooksInput, Prisma.AuthorUncheckedUpdateWithoutBooksInput>
+  create: Prisma.XOR<Prisma.AuthorCreateWithoutBooksInput, Prisma.AuthorUncheckedCreateWithoutBooksInput>
+  where?: Prisma.AuthorWhereInput
+}
+
+export type AuthorUpdateToOneWithWhereWithoutBooksInput = {
+  where?: Prisma.AuthorWhereInput
+  data: Prisma.XOR<Prisma.AuthorUpdateWithoutBooksInput, Prisma.AuthorUncheckedUpdateWithoutBooksInput>
+}
+
+export type AuthorUpdateWithoutBooksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  pseudonym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dateOfDeath?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  biography?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrationLogs?: Prisma.RegistrationAuthorLogUpdateManyWithoutAuthorNestedInput
+}
+
+export type AuthorUncheckedUpdateWithoutBooksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  nationality?: Prisma.StringFieldUpdateOperationsInput | string
+  pseudonym?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  dateOfDeath?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  biography?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrationLogs?: Prisma.RegistrationAuthorLogUncheckedUpdateManyWithoutAuthorNestedInput
 }
 
 
@@ -516,10 +613,12 @@ export type AuthorUncheckedUpdateWithoutRegistrationLogsInput = {
 
 export type AuthorCountOutputType = {
   registrationLogs: number
+  books: number
 }
 
 export type AuthorCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   registrationLogs?: boolean | AuthorCountOutputTypeCountRegistrationLogsArgs
+  books?: boolean | AuthorCountOutputTypeCountBooksArgs
 }
 
 /**
@@ -539,6 +638,13 @@ export type AuthorCountOutputTypeCountRegistrationLogsArgs<ExtArgs extends runti
   where?: Prisma.RegistrationAuthorLogWhereInput
 }
 
+/**
+ * AuthorCountOutputType without action
+ */
+export type AuthorCountOutputTypeCountBooksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BookAuthorWhereInput
+}
+
 
 export type AuthorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -552,6 +658,7 @@ export type AuthorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   createdAt?: boolean
   updatedAt?: boolean
   registrationLogs?: boolean | Prisma.Author$registrationLogsArgs<ExtArgs>
+  books?: boolean | Prisma.Author$booksArgs<ExtArgs>
   _count?: boolean | Prisma.AuthorCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["author"]>
 
@@ -597,6 +704,7 @@ export type AuthorSelectScalar = {
 export type AuthorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "nationality" | "pseudonym" | "dateOfBirth" | "dateOfDeath" | "biography" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["author"]>
 export type AuthorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   registrationLogs?: boolean | Prisma.Author$registrationLogsArgs<ExtArgs>
+  books?: boolean | Prisma.Author$booksArgs<ExtArgs>
   _count?: boolean | Prisma.AuthorCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AuthorIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -606,6 +714,7 @@ export type $AuthorPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name: "Author"
   objects: {
     registrationLogs: Prisma.$RegistrationAuthorLogPayload<ExtArgs>[]
+    books: Prisma.$BookAuthorPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1013,6 +1122,7 @@ readonly fields: AuthorFieldRefs;
 export interface Prisma__AuthorClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   registrationLogs<T extends Prisma.Author$registrationLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Author$registrationLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationAuthorLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  books<T extends Prisma.Author$booksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Author$booksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookAuthorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1464,6 +1574,30 @@ export type Author$registrationLogsArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.RegistrationAuthorLogScalarFieldEnum | Prisma.RegistrationAuthorLogScalarFieldEnum[]
+}
+
+/**
+ * Author.books
+ */
+export type Author$booksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BookAuthor
+   */
+  select?: Prisma.BookAuthorSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BookAuthor
+   */
+  omit?: Prisma.BookAuthorOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BookAuthorInclude<ExtArgs> | null
+  where?: Prisma.BookAuthorWhereInput
+  orderBy?: Prisma.BookAuthorOrderByWithRelationInput | Prisma.BookAuthorOrderByWithRelationInput[]
+  cursor?: Prisma.BookAuthorWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BookAuthorScalarFieldEnum | Prisma.BookAuthorScalarFieldEnum[]
 }
 
 /**

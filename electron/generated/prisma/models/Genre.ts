@@ -191,6 +191,7 @@ export type GenreWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Genre"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Genre"> | Date | string
   registrationGenreLogs?: Prisma.RegistrationGenreLogListRelationFilter
+  books?: Prisma.BookGenreListRelationFilter
 }
 
 export type GenreOrderByWithRelationInput = {
@@ -201,6 +202,7 @@ export type GenreOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   registrationGenreLogs?: Prisma.RegistrationGenreLogOrderByRelationAggregateInput
+  books?: Prisma.BookGenreOrderByRelationAggregateInput
 }
 
 export type GenreWhereUniqueInput = Prisma.AtLeast<{
@@ -214,6 +216,7 @@ export type GenreWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Genre"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Genre"> | Date | string
   registrationGenreLogs?: Prisma.RegistrationGenreLogListRelationFilter
+  books?: Prisma.BookGenreListRelationFilter
 }, "id" | "name">
 
 export type GenreOrderByWithAggregationInput = {
@@ -248,6 +251,7 @@ export type GenreCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   registrationGenreLogs?: Prisma.RegistrationGenreLogCreateNestedManyWithoutGenreInput
+  books?: Prisma.BookGenreCreateNestedManyWithoutGenreInput
 }
 
 export type GenreUncheckedCreateInput = {
@@ -258,6 +262,7 @@ export type GenreUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   registrationGenreLogs?: Prisma.RegistrationGenreLogUncheckedCreateNestedManyWithoutGenreInput
+  books?: Prisma.BookGenreUncheckedCreateNestedManyWithoutGenreInput
 }
 
 export type GenreUpdateInput = {
@@ -268,6 +273,7 @@ export type GenreUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrationGenreLogs?: Prisma.RegistrationGenreLogUpdateManyWithoutGenreNestedInput
+  books?: Prisma.BookGenreUpdateManyWithoutGenreNestedInput
 }
 
 export type GenreUncheckedUpdateInput = {
@@ -278,6 +284,7 @@ export type GenreUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrationGenreLogs?: Prisma.RegistrationGenreLogUncheckedUpdateManyWithoutGenreNestedInput
+  books?: Prisma.BookGenreUncheckedUpdateManyWithoutGenreNestedInput
 }
 
 export type GenreCreateManyInput = {
@@ -353,6 +360,20 @@ export type GenreUpdateOneRequiredWithoutRegistrationGenreLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.GenreUpdateToOneWithWhereWithoutRegistrationGenreLogsInput, Prisma.GenreUpdateWithoutRegistrationGenreLogsInput>, Prisma.GenreUncheckedUpdateWithoutRegistrationGenreLogsInput>
 }
 
+export type GenreCreateNestedOneWithoutBooksInput = {
+  create?: Prisma.XOR<Prisma.GenreCreateWithoutBooksInput, Prisma.GenreUncheckedCreateWithoutBooksInput>
+  connectOrCreate?: Prisma.GenreCreateOrConnectWithoutBooksInput
+  connect?: Prisma.GenreWhereUniqueInput
+}
+
+export type GenreUpdateOneRequiredWithoutBooksNestedInput = {
+  create?: Prisma.XOR<Prisma.GenreCreateWithoutBooksInput, Prisma.GenreUncheckedCreateWithoutBooksInput>
+  connectOrCreate?: Prisma.GenreCreateOrConnectWithoutBooksInput
+  upsert?: Prisma.GenreUpsertWithoutBooksInput
+  connect?: Prisma.GenreWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.GenreUpdateToOneWithWhereWithoutBooksInput, Prisma.GenreUpdateWithoutBooksInput>, Prisma.GenreUncheckedUpdateWithoutBooksInput>
+}
+
 export type GenreCreateWithoutRegistrationGenreLogsInput = {
   id?: string
   name: string
@@ -360,6 +381,7 @@ export type GenreCreateWithoutRegistrationGenreLogsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  books?: Prisma.BookGenreCreateNestedManyWithoutGenreInput
 }
 
 export type GenreUncheckedCreateWithoutRegistrationGenreLogsInput = {
@@ -369,6 +391,7 @@ export type GenreUncheckedCreateWithoutRegistrationGenreLogsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  books?: Prisma.BookGenreUncheckedCreateNestedManyWithoutGenreInput
 }
 
 export type GenreCreateOrConnectWithoutRegistrationGenreLogsInput = {
@@ -394,6 +417,7 @@ export type GenreUpdateWithoutRegistrationGenreLogsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  books?: Prisma.BookGenreUpdateManyWithoutGenreNestedInput
 }
 
 export type GenreUncheckedUpdateWithoutRegistrationGenreLogsInput = {
@@ -403,6 +427,63 @@ export type GenreUncheckedUpdateWithoutRegistrationGenreLogsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  books?: Prisma.BookGenreUncheckedUpdateManyWithoutGenreNestedInput
+}
+
+export type GenreCreateWithoutBooksInput = {
+  id?: string
+  name: string
+  description?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  registrationGenreLogs?: Prisma.RegistrationGenreLogCreateNestedManyWithoutGenreInput
+}
+
+export type GenreUncheckedCreateWithoutBooksInput = {
+  id?: string
+  name: string
+  description?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  registrationGenreLogs?: Prisma.RegistrationGenreLogUncheckedCreateNestedManyWithoutGenreInput
+}
+
+export type GenreCreateOrConnectWithoutBooksInput = {
+  where: Prisma.GenreWhereUniqueInput
+  create: Prisma.XOR<Prisma.GenreCreateWithoutBooksInput, Prisma.GenreUncheckedCreateWithoutBooksInput>
+}
+
+export type GenreUpsertWithoutBooksInput = {
+  update: Prisma.XOR<Prisma.GenreUpdateWithoutBooksInput, Prisma.GenreUncheckedUpdateWithoutBooksInput>
+  create: Prisma.XOR<Prisma.GenreCreateWithoutBooksInput, Prisma.GenreUncheckedCreateWithoutBooksInput>
+  where?: Prisma.GenreWhereInput
+}
+
+export type GenreUpdateToOneWithWhereWithoutBooksInput = {
+  where?: Prisma.GenreWhereInput
+  data: Prisma.XOR<Prisma.GenreUpdateWithoutBooksInput, Prisma.GenreUncheckedUpdateWithoutBooksInput>
+}
+
+export type GenreUpdateWithoutBooksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrationGenreLogs?: Prisma.RegistrationGenreLogUpdateManyWithoutGenreNestedInput
+}
+
+export type GenreUncheckedUpdateWithoutBooksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrationGenreLogs?: Prisma.RegistrationGenreLogUncheckedUpdateManyWithoutGenreNestedInput
 }
 
 
@@ -412,10 +493,12 @@ export type GenreUncheckedUpdateWithoutRegistrationGenreLogsInput = {
 
 export type GenreCountOutputType = {
   registrationGenreLogs: number
+  books: number
 }
 
 export type GenreCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   registrationGenreLogs?: boolean | GenreCountOutputTypeCountRegistrationGenreLogsArgs
+  books?: boolean | GenreCountOutputTypeCountBooksArgs
 }
 
 /**
@@ -435,6 +518,13 @@ export type GenreCountOutputTypeCountRegistrationGenreLogsArgs<ExtArgs extends r
   where?: Prisma.RegistrationGenreLogWhereInput
 }
 
+/**
+ * GenreCountOutputType without action
+ */
+export type GenreCountOutputTypeCountBooksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BookGenreWhereInput
+}
+
 
 export type GenreSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -444,6 +534,7 @@ export type GenreSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   createdAt?: boolean
   updatedAt?: boolean
   registrationGenreLogs?: boolean | Prisma.Genre$registrationGenreLogsArgs<ExtArgs>
+  books?: boolean | Prisma.Genre$booksArgs<ExtArgs>
   _count?: boolean | Prisma.GenreCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["genre"]>
 
@@ -477,6 +568,7 @@ export type GenreSelectScalar = {
 export type GenreOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["genre"]>
 export type GenreInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   registrationGenreLogs?: boolean | Prisma.Genre$registrationGenreLogsArgs<ExtArgs>
+  books?: boolean | Prisma.Genre$booksArgs<ExtArgs>
   _count?: boolean | Prisma.GenreCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type GenreIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -486,6 +578,7 @@ export type $GenrePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name: "Genre"
   objects: {
     registrationGenreLogs: Prisma.$RegistrationGenreLogPayload<ExtArgs>[]
+    books: Prisma.$BookGenrePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -889,6 +982,7 @@ readonly fields: GenreFieldRefs;
 export interface Prisma__GenreClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   registrationGenreLogs<T extends Prisma.Genre$registrationGenreLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Genre$registrationGenreLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationGenreLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  books<T extends Prisma.Genre$booksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Genre$booksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookGenrePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1336,6 +1430,30 @@ export type Genre$registrationGenreLogsArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.RegistrationGenreLogScalarFieldEnum | Prisma.RegistrationGenreLogScalarFieldEnum[]
+}
+
+/**
+ * Genre.books
+ */
+export type Genre$booksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BookGenre
+   */
+  select?: Prisma.BookGenreSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BookGenre
+   */
+  omit?: Prisma.BookGenreOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BookGenreInclude<ExtArgs> | null
+  where?: Prisma.BookGenreWhereInput
+  orderBy?: Prisma.BookGenreOrderByWithRelationInput | Prisma.BookGenreOrderByWithRelationInput[]
+  cursor?: Prisma.BookGenreWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BookGenreScalarFieldEnum | Prisma.BookGenreScalarFieldEnum[]
 }
 
 /**

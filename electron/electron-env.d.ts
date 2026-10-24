@@ -124,5 +124,73 @@ interface Window {
       createdAt: Date;
       updatedAt: Date;
     }>;
+
+    selectBookCover: () => Promise<{
+      token: string;
+      fileName: string;
+      previewDataUrl: string;
+    } | null>;
+
+    discardBookCover: (token: string) => Promise<{
+      success: true;
+    }>;
+
+    createBook: (input: {
+      title: string;
+      isbn: string;
+      publisher: string;
+      yearOfPublication: number | string;
+      authorIds: string[];
+      genreIds: string[];
+      subTitle?: string;
+      edition?: string;
+      numberOfPages?: number | string;
+      language?: string;
+      synopsis?: string;
+      coverToken?: string;
+    }) => Promise<{
+      id: string;
+      title: string;
+      isbn: string;
+      publisher: string;
+      yearOfPublication: number;
+      subTitle: string | null;
+      edition: string | null;
+      numberOfPages: number | null;
+      language: string | null;
+      synopsis: string | null;
+      coverPath: string | null;
+      isActive: boolean;
+      createdAt: Date;
+      updatedAt: Date;
+      authors: {
+        bookId: string;
+        authorId: string;
+        author: {
+          id: string;
+          name: string;
+          nationality: string;
+          pseudonym: string | null;
+          dateOfBirth: Date | null;
+          dateOfDeath: Date | null;
+          biography: string | null;
+          isActive: boolean;
+          createdAt: Date;
+          updatedAt: Date;
+        };
+      }[];
+      genres: {
+        bookId: string;
+        genreId: string;
+        genre: {
+          id: string;
+          name: string;
+          description: string | null;
+          isActive: boolean;
+          createdAt: Date;
+          updatedAt: Date;
+        };
+      }[];
+    }>;
   };
 }

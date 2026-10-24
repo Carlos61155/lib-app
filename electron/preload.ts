@@ -36,6 +36,21 @@ type CreateGenreInput = {
   description?: string;
 };
 
+type CreateBookInput = {
+  title: string;
+  isbn: string;
+  publisher: string;
+  yearOfPublication: number | string;
+  authorIds: string[];
+  genreIds: string[];
+  subTitle?: string;
+  edition?: string;
+  numberOfPages?: number | string;
+  language?: string;
+  synopsis?: string;
+  coverToken?: string;
+};
+
 contextBridge.exposeInMainWorld("authAPI", {
   login: (accessCode: string, password: string) =>
     ipcRenderer.invoke("auth:login", { accessCode, password }),
@@ -64,4 +79,12 @@ contextBridge.exposeInMainWorld("authAPI", {
 
   createGenre: (input: CreateGenreInput) =>
     ipcRenderer.invoke("genre:create", input),
+
+  createBook: (input: CreateBookInput) =>
+    ipcRenderer.invoke("book:create", input),
+
+  selectBookCover: () => ipcRenderer.invoke("book:select-cover"),
+
+  discardBookCover: (token: string) =>
+    ipcRenderer.invoke("book:discard-cover", token),
 });
