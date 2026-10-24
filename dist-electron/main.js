@@ -16152,6 +16152,13 @@ function handleDatabaseError$2(error2) {
   throw error2;
 }
 class AuthorService {
+  async listActiveAuthors() {
+    return prisma.author.findMany({
+      where: { isActive: true },
+      select: { id: true, name: true },
+      orderBy: { name: "asc" }
+    });
+  }
   async createAuthor(input, librarianId) {
     const data = CreateAuthorSchema.parse(input);
     try {
@@ -16200,6 +16207,13 @@ function handleDatabaseError$1(error2) {
   throw error2;
 }
 class GenreService {
+  async listActiveGenres() {
+    return prisma.genre.findMany({
+      where: { isActive: true },
+      select: { id: true, name: true },
+      orderBy: { name: "asc" }
+    });
+  }
   async createGenre(input, librarianId) {
     const result = CreateGenreSchema.safeParse(input);
     if (!result.success) {
@@ -16299,6 +16313,11 @@ class BookService {
       if (fields.has("isbn")) throw new Error("BOOK_ISBN_INVALID");
       if (fields.has("publisher")) throw new Error("BOOK_PUBLISHER_INVALID");
       if (fields.has("yearOfPublication")) {
+        if (result.error.issues.some(
+          (issue2) => issue2.path[0] === "yearOfPublication" && issue2.message === "YEAR_CANNOT_BE_FUTURE"
+        )) {
+          throw new Error("BOOK_YEAR_CANNOT_BE_FUTURE");
+        }
         throw new Error("BOOK_YEAR_INVALID");
       }
       if (fields.has("authorIds")) throw new Error("BOOK_AUTHORS_INVALID");
@@ -16569,6 +16588,14 @@ ipcMain.handle(
 ipcMain.handle("author:create", async (event, input) => {
   const librarianId = await requireActiveLibrarian(event);
   return authorService.createAuthor(input, librarianId);
+});
+ipcMain.handle("author:list-active", async (event) => {
+  await requireActiveLibrarian(event);
+  return authorService.listActiveAuthors();
+});
+ipcMain.handle("genre:list-active", async (event) => {
+  await requireActiveLibrarian(event);
+  return genreService.listActiveGenres();
 });
 ipcMain.handle("genre:create", async (event, input) => {
   const librarianId = await requireActiveLibrarian(event);

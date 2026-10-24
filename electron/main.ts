@@ -313,6 +313,16 @@ ipcMain.handle("author:create", async (event, input: unknown) => {
   return authorService.createAuthor(input, librarianId);
 });
 
+ipcMain.handle("author:list-active", async (event) => {
+  await requireActiveLibrarian(event);
+  return authorService.listActiveAuthors();
+});
+
+ipcMain.handle("genre:list-active", async (event) => {
+  await requireActiveLibrarian(event);
+  return genreService.listActiveGenres();
+});
+
 ipcMain.handle("genre:create", async (event, input: unknown) => {
   const librarianId = await requireActiveLibrarian(event);
   return genreService.createGenre(input, librarianId);

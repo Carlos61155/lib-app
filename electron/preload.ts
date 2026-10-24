@@ -77,8 +77,12 @@ contextBridge.exposeInMainWorld("authAPI", {
   createAuthor: (input: CreateAuthorInput) =>
     ipcRenderer.invoke("author:create", input),
 
+  listActiveAuthors: () => ipcRenderer.invoke("author:list-active"),
+
   createGenre: (input: CreateGenreInput) =>
     ipcRenderer.invoke("genre:create", input),
+
+  listActiveGenres: () => ipcRenderer.invoke("genre:list-active"),
 
   createBook: (input: CreateBookInput) =>
     ipcRenderer.invoke("book:create", input),

@@ -23,6 +23,14 @@ function handleDatabaseError(error: unknown): never {
 }
 
 export class GenreService {
+  async listActiveGenres() {
+    return prisma.genre.findMany({
+      where: { isActive: true },
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
+    });
+  }
+
   async createGenre(input: unknown, librarianId: string) {
     const result = CreateGenreSchema.safeParse(input);
 

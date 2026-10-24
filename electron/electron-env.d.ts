@@ -116,6 +116,8 @@ interface Window {
       updatedAt: Date;
     }>;
 
+    listActiveAuthors: () => Promise<{ id: string; name: string }[]>;
+
     createGenre: (input: { name: string; description?: string }) => Promise<{
       id: string;
       name: string;
@@ -124,6 +126,8 @@ interface Window {
       createdAt: Date;
       updatedAt: Date;
     }>;
+
+    listActiveGenres: () => Promise<{ id: string; name: string }[]>;
 
     selectBookCover: () => Promise<{
       token: string;

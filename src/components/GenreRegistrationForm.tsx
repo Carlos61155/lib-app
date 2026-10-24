@@ -1,4 +1,6 @@
 import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { CreateGenreSchema } from '../../electron/genre/genre.schemas'
 
 type GenreValues = {
   name: string
@@ -18,7 +20,7 @@ function genreErrorMessage(error: unknown) {
 }
 
 export function GenreRegistrationForm({ onSuccess, onCancel }: { onSuccess: (genre: GenreValues) => void; onCancel: () => void }) {
-  const form = useForm<GenreValues>({ defaultValues: { name: '', description: '' }, mode: 'onSubmit', reValidateMode: 'onChange' })
+  const form = useForm<GenreValues>({ resolver: zodResolver(CreateGenreSchema), defaultValues: { name: '', description: '' }, mode: 'onSubmit', reValidateMode: 'onChange' })
   const name = form.watch('name')
   const description = form.watch('description')
 
@@ -37,14 +39,14 @@ export function GenreRegistrationForm({ onSuccess, onCancel }: { onSuccess: (gen
 
       <label className={labelClass}>
         <span>Nome do gênero <span aria-hidden="true">*</span></span>
-        <input {...form.register('name', { required: 'Informe o nome do gênero.', maxLength: { value: 50, message: 'Use no máximo 50 caracteres.' }, minLength: { value: 2, message: 'Informe pelo menos 2 caracteres.' } })} maxLength={50} placeholder="Digite o nome do gênero" className={fieldClass} aria-invalid={Boolean(form.formState.errors.name)} />
+        <input {...form.register('name')} maxLength={50} placeholder="Digite o nome do gênero" className={fieldClass} aria-invalid={Boolean(form.formState.errors.name)} />
         {form.formState.errors.name && <span role="alert" className="text-[13px] font-normal text-[#B42331]">{form.formState.errors.name.message}</span>}
         <span aria-live="polite" className="-mt-1 self-end text-[11px] font-normal text-[#69768f]">{name.length}/50 caracteres</span>
       </label>
 
       <label className={labelClass}>
         <span>Descrição</span>
-        <textarea {...form.register('description', { maxLength: { value: 240, message: 'A descrição deve ter no máximo 240 caracteres.' } })} maxLength={240} rows={4} placeholder="Escreva uma breve descrição do gênero" className="min-h-[100px] w-full resize-y rounded-[10px] border border-[#315bbd] bg-white px-[10px] py-[10px] text-[14px] leading-5 text-[#19294c] placeholder:text-[#69768f] focus:outline-none focus:ring-2 focus:ring-[#315bbd]/20" aria-invalid={Boolean(form.formState.errors.description)} />
+        <textarea {...form.register('description')} maxLength={240} rows={4} placeholder="Escreva uma breve descrição do gênero" className="min-h-[100px] w-full resize-y rounded-[10px] border border-[#315bbd] bg-white px-[10px] py-[10px] text-[14px] leading-5 text-[#19294c] placeholder:text-[#69768f] focus:outline-none focus:ring-2 focus:ring-[#315bbd]/20" aria-invalid={Boolean(form.formState.errors.description)} />
         {form.formState.errors.description && <span role="alert" className="text-[13px] font-normal text-[#B42331]">{form.formState.errors.description.message}</span>}
         <span aria-live="polite" className="-mt-1 self-end text-[11px] font-normal text-[#69768f]">{description.length}/240 caracteres</span>
       </label>

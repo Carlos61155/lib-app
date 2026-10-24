@@ -34,6 +34,14 @@ function handleDatabaseError(error: unknown): never {
 }
 
 export class AuthorService {
+  async listActiveAuthors() {
+    return prisma.author.findMany({
+      where: { isActive: true },
+      select: { id: true, name: true },
+      orderBy: { name: "asc" },
+    });
+  }
+
   async createAuthor(input: unknown, librarianId: string) {
     const data = CreateAuthorSchema.parse(input);
 

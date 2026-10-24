@@ -25,6 +25,15 @@ export class BookService {
       if (fields.has("isbn")) throw new Error("BOOK_ISBN_INVALID");
       if (fields.has("publisher")) throw new Error("BOOK_PUBLISHER_INVALID");
       if (fields.has("yearOfPublication")) {
+        if (
+          result.error.issues.some(
+            (issue) =>
+              issue.path[0] === "yearOfPublication" &&
+              issue.message === "YEAR_CANNOT_BE_FUTURE",
+          )
+        ) {
+          throw new Error("BOOK_YEAR_CANNOT_BE_FUTURE");
+        }
         throw new Error("BOOK_YEAR_INVALID");
       }
       if (fields.has("authorIds")) throw new Error("BOOK_AUTHORS_INVALID");

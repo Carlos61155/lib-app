@@ -33,6 +33,13 @@ export const router = createHashRouter([
           return { Component: Genres }
         },
       },
+      {
+        path: '/books',
+        lazy: async () => {
+          const { default: Books } = await import('../pages/Books')
+          return { Component: Books }
+        },
+      },
     ],
   },
 ])
