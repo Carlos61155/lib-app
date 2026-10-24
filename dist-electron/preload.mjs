@@ -14,5 +14,7 @@ electron.contextBridge.exposeInMainWorld("authAPI", {
   createLibrarian: (input) => electron.ipcRenderer.invoke("registration:create-librarian", input),
   createAuthor: (input) => electron.ipcRenderer.invoke("author:create", input),
   createGenre: (input) => electron.ipcRenderer.invoke("genre:create", input),
-  createBook: (input) => electron.ipcRenderer.invoke("book:create", input)
+  createBook: (input) => electron.ipcRenderer.invoke("book:create", input),
+  selectBookCover: () => electron.ipcRenderer.invoke("book:select-cover"),
+  discardBookCover: (token) => electron.ipcRenderer.invoke("book:discard-cover", token)
 });

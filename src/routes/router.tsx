@@ -19,6 +19,13 @@ export const router = createHashRouter([
           return { Component: Dashboard }
         },
       },
+      {
+        path: '/authors',
+        lazy: async () => {
+          const { default: Authors } = await import('../pages/Authors')
+          return { Component: Authors }
+        },
+      },
     ],
   },
 ])

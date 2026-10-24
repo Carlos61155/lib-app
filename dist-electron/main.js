@@ -18,9 +18,9 @@ var __privateWrapper = (obj, member, setter, getter) => ({
   }
 });
 var _a2, _representation, _b, __brand_DbNull, _c2, __brand_JsonNull, _d2, __brand_AnyNull, _e2, _e3, _f, _e4, _g, _e5, _t2, _r2, _i2, _o2, _s2, _a3, _e8_instances, n_fn, u_fn, l_fn, p_fn, c_fn, d_fn, _h, _e6, _t3, _r3, _Li_instances, i_fn, o_fn, s_fn, a_fn, n_fn2, u_fn2, l_fn2, p_fn2, _i3, _e7, _t4, _r4, _j, _e8, _t5, _r5, _i4, _ln_instances, o_fn2, s_fn2, a_fn2, n_fn3, u_fn3, l_fn3, p_fn3, c_fn2, _k, _e9, _t6, _r6, _gr_instances, i_fn2, o_fn3, s_fn3, a_fn3, n_fn4, u_fn4, l_fn4, p_fn4, c_fn3, d_fn2, m_fn, f_fn, y_fn, g_fn, _l2, _e10, _t7, _r7, _i5, _o3, _m, _e11, _t8, _r8, _n2, _xn_instances, e_fn, _o4, _e12, _t9, _r9, _i6, _o5, _s3, _bn_instances, a_fn4, n_fn5, u_fn5, l_fn5, _p2, _e13, _t10, _r10, _Bi_instances, i_fn3, o_fn4, _q, _e14, _t11, _r11, _i7, _o6, _s4, _a4, _yr_instances, n_fn6, u_fn6, l_fn6, p_fn5, c_fn4, d_fn3, m_fn2, f_fn2, y_fn2, g_fn2, h_fn, _r12, _unlockParent, _s5, _mutex, _t12, _config, _options, _u2;
-import { app, BrowserWindow, ipcMain, Menu, dialog } from "electron";
+import { app, BrowserWindow, ipcMain, dialog, Menu } from "electron";
 import require$$6, { createHash, randomUUID, randomBytes } from "node:crypto";
-import { readdir, readFile, mkdir } from "node:fs/promises";
+import { readdir, readFile, mkdir, writeFile, unlink, stat } from "node:fs/promises";
 import * as path from "node:path";
 import path__default from "node:path";
 import { fileURLToPath } from "node:url";
@@ -16126,7 +16126,7 @@ const CreateAuthorSchema = object({
   pseudonym: optionalText$1(120),
   dateOfBirth: optionalDate,
   dateOfDeath: optionalDate,
-  biography: optionalText$1(2e3)
+  biography: optionalText$1(500)
 }).strict().superRefine((author, context) => {
   if (author.dateOfBirth && author.dateOfDeath && author.dateOfDeath < author.dateOfBirth) {
     context.addIssue({
@@ -16165,7 +16165,7 @@ class AuthorService {
         const author = await transaction.author.create({
           data: {
             name: data.name,
-            nationality: data.nationality,
+            nationality: data.nationality ?? "",
             pseudonym: data.pseudonym,
             dateOfBirth: data.dateOfBirth,
             dateOfDeath: data.dateOfDeath,
@@ -16282,8 +16282,7 @@ const CreateBookSchema = object({
     literal("")
   ]).optional().transform((value) => value === "" ? void 0 : value),
   language: optionalText(50),
-  synopsis: optionalText(5e3),
-  coverPath: optionalText(2048)
+  synopsis: optionalText(5e3)
 }).strict();
 function handleDatabaseError(error2) {
   if (error2 && typeof error2 === "object" && "code" in error2 && error2.code === "P2002") {
@@ -16292,7 +16291,7 @@ function handleDatabaseError(error2) {
   throw error2;
 }
 class BookService {
-  async createBook(input, librarianId) {
+  async createBook(input, librarianId, coverPath) {
     const result = CreateBookSchema.safeParse(input);
     if (!result.success) {
       const fields = new Set(result.error.issues.map((issue2) => issue2.path[0]));
@@ -16344,7 +16343,7 @@ class BookService {
             numberOfPages: data.numberOfPages,
             language: data.language,
             synopsis: data.synopsis,
-            coverPath: data.coverPath,
+            coverPath: coverPath ?? null,
             isActive: true,
             authors: {
               create: data.authorIds.map((authorId) => ({
@@ -16382,6 +16381,8 @@ const registrationService = new RegistrationService();
 const authorService = new AuthorService();
 const genreService = new GenreService();
 const bookService = new BookService();
+const stagedBookCovers = /* @__PURE__ */ new Map();
+const MAX_BOOK_COVER_BYTES = 5 * 1024 * 1024;
 const sessions = /* @__PURE__ */ new Map();
 const SESSION_IDLE_TIMEOUT_MS = 15 * 60 * 1e3;
 const __dirname$1 = path__default.dirname(fileURLToPath(import.meta.url));
@@ -16444,6 +16445,7 @@ function createWindow() {
       sandbox: true
     }
   });
+  win.maximize();
   const windowId = win.webContents.id;
   win.on("closed", () => {
     sessions.delete(windowId);
@@ -16454,6 +16456,18 @@ function createWindow() {
   } else {
     win.loadFile(path__default.join(RENDERER_DIST, "index.html"));
   }
+}
+function detectBookCoverType(bytes) {
+  if (bytes.length >= 8 && bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]))) {
+    return { extension: "png", mimeType: "image/png" };
+  }
+  if (bytes.length >= 3 && bytes[0] === 255 && bytes[1] === 216 && bytes[2] === 255) {
+    return { extension: "jpg", mimeType: "image/jpeg" };
+  }
+  if (bytes.length >= 12 && bytes.toString("ascii", 0, 4) === "RIFF" && bytes.toString("ascii", 8, 12) === "WEBP") {
+    return { extension: "webp", mimeType: "image/webp" };
+  }
+  return null;
 }
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -16562,7 +16576,98 @@ ipcMain.handle("genre:create", async (event, input) => {
 });
 ipcMain.handle("book:create", async (event, input) => {
   const librarianId = await requireActiveLibrarian(event);
-  return bookService.createBook(input, librarianId);
+  if (input === null || typeof input !== "object" || Array.isArray(input)) {
+    throw new Error("BOOK_INPUT_INVALID");
+  }
+  const bookInput = { ...input };
+  const coverToken = bookInput.coverToken;
+  delete bookInput.coverToken;
+  let stagedCover;
+  if (coverToken !== void 0) {
+    if (typeof coverToken !== "string") {
+      throw new Error("BOOK_COVER_TOKEN_INVALID");
+    }
+    const candidate = stagedBookCovers.get(event.sender.id);
+    if (!candidate || candidate.token !== coverToken || candidate.librarianId !== librarianId) {
+      throw new Error("BOOK_COVER_TOKEN_INVALID");
+    }
+    stagedCover = candidate;
+  }
+  let relativeCoverPath;
+  let absoluteCoverPath;
+  try {
+    if (stagedCover) {
+      const coverDirectory = path__default.join(app.getPath("userData"), "book-covers");
+      const fileName = `${randomUUID()}.${stagedCover.extension}`;
+      await mkdir(coverDirectory, { recursive: true });
+      absoluteCoverPath = path__default.join(coverDirectory, fileName);
+      relativeCoverPath = path__default.posix.join("book-covers", fileName);
+      await writeFile(absoluteCoverPath, stagedCover.bytes, { flag: "wx" });
+    }
+    const book = await bookService.createBook(
+      bookInput,
+      librarianId,
+      relativeCoverPath
+    );
+    if (stagedCover) {
+      stagedBookCovers.delete(event.sender.id);
+    }
+    return book;
+  } catch (error2) {
+    if (absoluteCoverPath) {
+      await unlink(absoluteCoverPath).catch(() => void 0);
+    }
+    throw error2;
+  }
+});
+ipcMain.handle("book:discard-cover", async (event, token) => {
+  const librarianId = await requireActiveLibrarian(event);
+  const staged = stagedBookCovers.get(event.sender.id);
+  if (staged && staged.token === token && staged.librarianId === librarianId) {
+    stagedBookCovers.delete(event.sender.id);
+  }
+  return { success: true };
+});
+ipcMain.handle("book:select-cover", async (event) => {
+  const librarianId = await requireActiveLibrarian(event);
+  const selection = await dialog.showOpenDialog({
+    title: "Selecionar capa do livro",
+    properties: ["openFile"],
+    filters: [
+      {
+        name: "Imagens",
+        extensions: ["jpg", "jpeg", "png", "webp"]
+      }
+    ]
+  });
+  if (selection.canceled || selection.filePaths.length === 0) {
+    return null;
+  }
+  const sourcePath = selection.filePaths[0];
+  const fileInfo = await stat(sourcePath);
+  if (fileInfo.size > MAX_BOOK_COVER_BYTES) {
+    throw new Error("BOOK_COVER_TOO_LARGE");
+  }
+  const bytes = await readFile(sourcePath);
+  if (bytes.length > MAX_BOOK_COVER_BYTES) {
+    throw new Error("BOOK_COVER_TOO_LARGE");
+  }
+  const imageType = detectBookCoverType(bytes);
+  if (!imageType) {
+    throw new Error("BOOK_COVER_FORMAT_INVALID");
+  }
+  const token = randomUUID();
+  stagedBookCovers.set(event.sender.id, {
+    token,
+    librarianId,
+    bytes,
+    ...imageType
+  });
+  return {
+    token,
+    fileName: path__default.basename(sourcePath),
+    previewDataUrl: `data:${imageType.mimeType};base64,${bytes.toString("base64")}`
+  };
 });
 app.whenReady().then(async () => {
   Menu.setApplicationMenu(null);

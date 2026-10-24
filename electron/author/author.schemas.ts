@@ -38,7 +38,7 @@ export const CreateAuthorSchema = z
     pseudonym: optionalText(120),
     dateOfBirth: optionalDate,
     dateOfDeath: optionalDate,
-    biography: optionalText(2000),
+    biography: optionalText(500),
   })
   .strict()
   .superRefine((author, context) => {

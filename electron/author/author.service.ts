@@ -52,7 +52,7 @@ export class AuthorService {
         const author = await transaction.author.create({
           data: {
             name: data.name,
-            nationality: data.nationality,
+            nationality: data.nationality ?? "",
             pseudonym: data.pseudonym,
             dateOfBirth: data.dateOfBirth,
             dateOfDeath: data.dateOfDeath,

@@ -137,6 +137,7 @@ function createWindow() {
       sandbox: true,
     },
   });
+  win.maximize();
 
   const windowId = win.webContents.id;
 
