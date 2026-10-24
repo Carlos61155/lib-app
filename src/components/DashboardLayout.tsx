@@ -21,7 +21,7 @@ const navigationItems = [
 
 export function DashboardLayout({ children }: { children: ReactNode }) {
   const { pathname } = useLocation()
-  const activeItem = pathname === '/authors' ? 'Autores' : 'Usuários'
+  const activeItem = pathname === '/authors' ? 'Autores' : pathname === '/genres' ? 'Gêneros' : 'Usuários'
 
   return (
     <div className="min-h-screen bg-[#eeeeee] lg:grid lg:grid-cols-[254px_minmax(0,1fr)]">
@@ -39,8 +39,9 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
             const className = `flex min-h-[49px] items-center gap-3 rounded-[9px] px-4 text-[14px] font-semibold ${isActive ? 'bg-[#5680dc]' : 'text-white'}`
             const contents = <><Icon aria-hidden="true" className="size-[17px] shrink-0" /><span>{label}</span></>
 
-            if (label === 'Usuários' || label === 'Autores') {
-              return <Link key={label} to={label === 'Autores' ? '/authors' : '/home'} aria-current={isActive ? 'page' : undefined} className={className}>{contents}</Link>
+            if (label === 'Usuários' || label === 'Autores' || label === 'Gêneros') {
+              const to = label === 'Autores' ? '/authors' : label === 'Gêneros' ? '/genres' : '/home'
+              return <Link key={label} to={to} aria-current={isActive ? 'page' : undefined} className={className}>{contents}</Link>
             }
 
             return <div key={label} className={className}>{contents}</div>
