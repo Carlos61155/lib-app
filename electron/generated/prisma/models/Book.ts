@@ -295,6 +295,8 @@ export type BookWhereInput = {
   registrationLogs?: Prisma.RegistrationBookLogListRelationFilter
   authors?: Prisma.BookAuthorListRelationFilter
   genres?: Prisma.BookGenreListRelationFilter
+  copies?: Prisma.CopyListRelationFilter
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogListRelationFilter
 }
 
 export type BookOrderByWithRelationInput = {
@@ -315,6 +317,8 @@ export type BookOrderByWithRelationInput = {
   registrationLogs?: Prisma.RegistrationBookLogOrderByRelationAggregateInput
   authors?: Prisma.BookAuthorOrderByRelationAggregateInput
   genres?: Prisma.BookGenreOrderByRelationAggregateInput
+  copies?: Prisma.CopyOrderByRelationAggregateInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogOrderByRelationAggregateInput
 }
 
 export type BookWhereUniqueInput = Prisma.AtLeast<{
@@ -338,6 +342,8 @@ export type BookWhereUniqueInput = Prisma.AtLeast<{
   registrationLogs?: Prisma.RegistrationBookLogListRelationFilter
   authors?: Prisma.BookAuthorListRelationFilter
   genres?: Prisma.BookGenreListRelationFilter
+  copies?: Prisma.CopyListRelationFilter
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogListRelationFilter
 }, "id" | "isbn">
 
 export type BookOrderByWithAggregationInput = {
@@ -400,6 +406,8 @@ export type BookCreateInput = {
   registrationLogs?: Prisma.RegistrationBookLogCreateNestedManyWithoutBookInput
   authors?: Prisma.BookAuthorCreateNestedManyWithoutBookInput
   genres?: Prisma.BookGenreCreateNestedManyWithoutBookInput
+  copies?: Prisma.CopyCreateNestedManyWithoutBookInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogCreateNestedManyWithoutBookInput
 }
 
 export type BookUncheckedCreateInput = {
@@ -420,6 +428,8 @@ export type BookUncheckedCreateInput = {
   registrationLogs?: Prisma.RegistrationBookLogUncheckedCreateNestedManyWithoutBookInput
   authors?: Prisma.BookAuthorUncheckedCreateNestedManyWithoutBookInput
   genres?: Prisma.BookGenreUncheckedCreateNestedManyWithoutBookInput
+  copies?: Prisma.CopyUncheckedCreateNestedManyWithoutBookInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogUncheckedCreateNestedManyWithoutBookInput
 }
 
 export type BookUpdateInput = {
@@ -440,6 +450,8 @@ export type BookUpdateInput = {
   registrationLogs?: Prisma.RegistrationBookLogUpdateManyWithoutBookNestedInput
   authors?: Prisma.BookAuthorUpdateManyWithoutBookNestedInput
   genres?: Prisma.BookGenreUpdateManyWithoutBookNestedInput
+  copies?: Prisma.CopyUpdateManyWithoutBookNestedInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogUpdateManyWithoutBookNestedInput
 }
 
 export type BookUncheckedUpdateInput = {
@@ -460,6 +472,8 @@ export type BookUncheckedUpdateInput = {
   registrationLogs?: Prisma.RegistrationBookLogUncheckedUpdateManyWithoutBookNestedInput
   authors?: Prisma.BookAuthorUncheckedUpdateManyWithoutBookNestedInput
   genres?: Prisma.BookGenreUncheckedUpdateManyWithoutBookNestedInput
+  copies?: Prisma.CopyUncheckedUpdateManyWithoutBookNestedInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogUncheckedUpdateManyWithoutBookNestedInput
 }
 
 export type BookCreateManyInput = {
@@ -601,6 +615,34 @@ export type BookUpdateOneRequiredWithoutRegistrationLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.BookUpdateToOneWithWhereWithoutRegistrationLogsInput, Prisma.BookUpdateWithoutRegistrationLogsInput>, Prisma.BookUncheckedUpdateWithoutRegistrationLogsInput>
 }
 
+export type BookCreateNestedOneWithoutCopiesInput = {
+  create?: Prisma.XOR<Prisma.BookCreateWithoutCopiesInput, Prisma.BookUncheckedCreateWithoutCopiesInput>
+  connectOrCreate?: Prisma.BookCreateOrConnectWithoutCopiesInput
+  connect?: Prisma.BookWhereUniqueInput
+}
+
+export type BookUpdateOneRequiredWithoutCopiesNestedInput = {
+  create?: Prisma.XOR<Prisma.BookCreateWithoutCopiesInput, Prisma.BookUncheckedCreateWithoutCopiesInput>
+  connectOrCreate?: Prisma.BookCreateOrConnectWithoutCopiesInput
+  upsert?: Prisma.BookUpsertWithoutCopiesInput
+  connect?: Prisma.BookWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BookUpdateToOneWithWhereWithoutCopiesInput, Prisma.BookUpdateWithoutCopiesInput>, Prisma.BookUncheckedUpdateWithoutCopiesInput>
+}
+
+export type BookCreateNestedOneWithoutCopyRegistrationLogsInput = {
+  create?: Prisma.XOR<Prisma.BookCreateWithoutCopyRegistrationLogsInput, Prisma.BookUncheckedCreateWithoutCopyRegistrationLogsInput>
+  connectOrCreate?: Prisma.BookCreateOrConnectWithoutCopyRegistrationLogsInput
+  connect?: Prisma.BookWhereUniqueInput
+}
+
+export type BookUpdateOneRequiredWithoutCopyRegistrationLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.BookCreateWithoutCopyRegistrationLogsInput, Prisma.BookUncheckedCreateWithoutCopyRegistrationLogsInput>
+  connectOrCreate?: Prisma.BookCreateOrConnectWithoutCopyRegistrationLogsInput
+  upsert?: Prisma.BookUpsertWithoutCopyRegistrationLogsInput
+  connect?: Prisma.BookWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BookUpdateToOneWithWhereWithoutCopyRegistrationLogsInput, Prisma.BookUpdateWithoutCopyRegistrationLogsInput>, Prisma.BookUncheckedUpdateWithoutCopyRegistrationLogsInput>
+}
+
 export type BookCreateNestedOneWithoutAuthorsInput = {
   create?: Prisma.XOR<Prisma.BookCreateWithoutAuthorsInput, Prisma.BookUncheckedCreateWithoutAuthorsInput>
   connectOrCreate?: Prisma.BookCreateOrConnectWithoutAuthorsInput
@@ -646,6 +688,8 @@ export type BookCreateWithoutRegistrationLogsInput = {
   updatedAt?: Date | string
   authors?: Prisma.BookAuthorCreateNestedManyWithoutBookInput
   genres?: Prisma.BookGenreCreateNestedManyWithoutBookInput
+  copies?: Prisma.CopyCreateNestedManyWithoutBookInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogCreateNestedManyWithoutBookInput
 }
 
 export type BookUncheckedCreateWithoutRegistrationLogsInput = {
@@ -665,6 +709,8 @@ export type BookUncheckedCreateWithoutRegistrationLogsInput = {
   updatedAt?: Date | string
   authors?: Prisma.BookAuthorUncheckedCreateNestedManyWithoutBookInput
   genres?: Prisma.BookGenreUncheckedCreateNestedManyWithoutBookInput
+  copies?: Prisma.CopyUncheckedCreateNestedManyWithoutBookInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogUncheckedCreateNestedManyWithoutBookInput
 }
 
 export type BookCreateOrConnectWithoutRegistrationLogsInput = {
@@ -700,6 +746,8 @@ export type BookUpdateWithoutRegistrationLogsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   authors?: Prisma.BookAuthorUpdateManyWithoutBookNestedInput
   genres?: Prisma.BookGenreUpdateManyWithoutBookNestedInput
+  copies?: Prisma.CopyUpdateManyWithoutBookNestedInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogUpdateManyWithoutBookNestedInput
 }
 
 export type BookUncheckedUpdateWithoutRegistrationLogsInput = {
@@ -719,6 +767,208 @@ export type BookUncheckedUpdateWithoutRegistrationLogsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   authors?: Prisma.BookAuthorUncheckedUpdateManyWithoutBookNestedInput
   genres?: Prisma.BookGenreUncheckedUpdateManyWithoutBookNestedInput
+  copies?: Prisma.CopyUncheckedUpdateManyWithoutBookNestedInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogUncheckedUpdateManyWithoutBookNestedInput
+}
+
+export type BookCreateWithoutCopiesInput = {
+  id?: string
+  title: string
+  isbn: string
+  publisher: string
+  yearOfPublication: number
+  subTitle?: string | null
+  edition?: string | null
+  numberOfPages?: number | null
+  language?: string | null
+  synopsis?: string | null
+  coverPath?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  registrationLogs?: Prisma.RegistrationBookLogCreateNestedManyWithoutBookInput
+  authors?: Prisma.BookAuthorCreateNestedManyWithoutBookInput
+  genres?: Prisma.BookGenreCreateNestedManyWithoutBookInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogCreateNestedManyWithoutBookInput
+}
+
+export type BookUncheckedCreateWithoutCopiesInput = {
+  id?: string
+  title: string
+  isbn: string
+  publisher: string
+  yearOfPublication: number
+  subTitle?: string | null
+  edition?: string | null
+  numberOfPages?: number | null
+  language?: string | null
+  synopsis?: string | null
+  coverPath?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  registrationLogs?: Prisma.RegistrationBookLogUncheckedCreateNestedManyWithoutBookInput
+  authors?: Prisma.BookAuthorUncheckedCreateNestedManyWithoutBookInput
+  genres?: Prisma.BookGenreUncheckedCreateNestedManyWithoutBookInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogUncheckedCreateNestedManyWithoutBookInput
+}
+
+export type BookCreateOrConnectWithoutCopiesInput = {
+  where: Prisma.BookWhereUniqueInput
+  create: Prisma.XOR<Prisma.BookCreateWithoutCopiesInput, Prisma.BookUncheckedCreateWithoutCopiesInput>
+}
+
+export type BookUpsertWithoutCopiesInput = {
+  update: Prisma.XOR<Prisma.BookUpdateWithoutCopiesInput, Prisma.BookUncheckedUpdateWithoutCopiesInput>
+  create: Prisma.XOR<Prisma.BookCreateWithoutCopiesInput, Prisma.BookUncheckedCreateWithoutCopiesInput>
+  where?: Prisma.BookWhereInput
+}
+
+export type BookUpdateToOneWithWhereWithoutCopiesInput = {
+  where?: Prisma.BookWhereInput
+  data: Prisma.XOR<Prisma.BookUpdateWithoutCopiesInput, Prisma.BookUncheckedUpdateWithoutCopiesInput>
+}
+
+export type BookUpdateWithoutCopiesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  isbn?: Prisma.StringFieldUpdateOperationsInput | string
+  publisher?: Prisma.StringFieldUpdateOperationsInput | string
+  yearOfPublication?: Prisma.IntFieldUpdateOperationsInput | number
+  subTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  numberOfPages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  synopsis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrationLogs?: Prisma.RegistrationBookLogUpdateManyWithoutBookNestedInput
+  authors?: Prisma.BookAuthorUpdateManyWithoutBookNestedInput
+  genres?: Prisma.BookGenreUpdateManyWithoutBookNestedInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogUpdateManyWithoutBookNestedInput
+}
+
+export type BookUncheckedUpdateWithoutCopiesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  isbn?: Prisma.StringFieldUpdateOperationsInput | string
+  publisher?: Prisma.StringFieldUpdateOperationsInput | string
+  yearOfPublication?: Prisma.IntFieldUpdateOperationsInput | number
+  subTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  numberOfPages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  synopsis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrationLogs?: Prisma.RegistrationBookLogUncheckedUpdateManyWithoutBookNestedInput
+  authors?: Prisma.BookAuthorUncheckedUpdateManyWithoutBookNestedInput
+  genres?: Prisma.BookGenreUncheckedUpdateManyWithoutBookNestedInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogUncheckedUpdateManyWithoutBookNestedInput
+}
+
+export type BookCreateWithoutCopyRegistrationLogsInput = {
+  id?: string
+  title: string
+  isbn: string
+  publisher: string
+  yearOfPublication: number
+  subTitle?: string | null
+  edition?: string | null
+  numberOfPages?: number | null
+  language?: string | null
+  synopsis?: string | null
+  coverPath?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  registrationLogs?: Prisma.RegistrationBookLogCreateNestedManyWithoutBookInput
+  authors?: Prisma.BookAuthorCreateNestedManyWithoutBookInput
+  genres?: Prisma.BookGenreCreateNestedManyWithoutBookInput
+  copies?: Prisma.CopyCreateNestedManyWithoutBookInput
+}
+
+export type BookUncheckedCreateWithoutCopyRegistrationLogsInput = {
+  id?: string
+  title: string
+  isbn: string
+  publisher: string
+  yearOfPublication: number
+  subTitle?: string | null
+  edition?: string | null
+  numberOfPages?: number | null
+  language?: string | null
+  synopsis?: string | null
+  coverPath?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  registrationLogs?: Prisma.RegistrationBookLogUncheckedCreateNestedManyWithoutBookInput
+  authors?: Prisma.BookAuthorUncheckedCreateNestedManyWithoutBookInput
+  genres?: Prisma.BookGenreUncheckedCreateNestedManyWithoutBookInput
+  copies?: Prisma.CopyUncheckedCreateNestedManyWithoutBookInput
+}
+
+export type BookCreateOrConnectWithoutCopyRegistrationLogsInput = {
+  where: Prisma.BookWhereUniqueInput
+  create: Prisma.XOR<Prisma.BookCreateWithoutCopyRegistrationLogsInput, Prisma.BookUncheckedCreateWithoutCopyRegistrationLogsInput>
+}
+
+export type BookUpsertWithoutCopyRegistrationLogsInput = {
+  update: Prisma.XOR<Prisma.BookUpdateWithoutCopyRegistrationLogsInput, Prisma.BookUncheckedUpdateWithoutCopyRegistrationLogsInput>
+  create: Prisma.XOR<Prisma.BookCreateWithoutCopyRegistrationLogsInput, Prisma.BookUncheckedCreateWithoutCopyRegistrationLogsInput>
+  where?: Prisma.BookWhereInput
+}
+
+export type BookUpdateToOneWithWhereWithoutCopyRegistrationLogsInput = {
+  where?: Prisma.BookWhereInput
+  data: Prisma.XOR<Prisma.BookUpdateWithoutCopyRegistrationLogsInput, Prisma.BookUncheckedUpdateWithoutCopyRegistrationLogsInput>
+}
+
+export type BookUpdateWithoutCopyRegistrationLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  isbn?: Prisma.StringFieldUpdateOperationsInput | string
+  publisher?: Prisma.StringFieldUpdateOperationsInput | string
+  yearOfPublication?: Prisma.IntFieldUpdateOperationsInput | number
+  subTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  numberOfPages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  synopsis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrationLogs?: Prisma.RegistrationBookLogUpdateManyWithoutBookNestedInput
+  authors?: Prisma.BookAuthorUpdateManyWithoutBookNestedInput
+  genres?: Prisma.BookGenreUpdateManyWithoutBookNestedInput
+  copies?: Prisma.CopyUpdateManyWithoutBookNestedInput
+}
+
+export type BookUncheckedUpdateWithoutCopyRegistrationLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  isbn?: Prisma.StringFieldUpdateOperationsInput | string
+  publisher?: Prisma.StringFieldUpdateOperationsInput | string
+  yearOfPublication?: Prisma.IntFieldUpdateOperationsInput | number
+  subTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  numberOfPages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  language?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  synopsis?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  coverPath?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrationLogs?: Prisma.RegistrationBookLogUncheckedUpdateManyWithoutBookNestedInput
+  authors?: Prisma.BookAuthorUncheckedUpdateManyWithoutBookNestedInput
+  genres?: Prisma.BookGenreUncheckedUpdateManyWithoutBookNestedInput
+  copies?: Prisma.CopyUncheckedUpdateManyWithoutBookNestedInput
 }
 
 export type BookCreateWithoutAuthorsInput = {
@@ -738,6 +988,8 @@ export type BookCreateWithoutAuthorsInput = {
   updatedAt?: Date | string
   registrationLogs?: Prisma.RegistrationBookLogCreateNestedManyWithoutBookInput
   genres?: Prisma.BookGenreCreateNestedManyWithoutBookInput
+  copies?: Prisma.CopyCreateNestedManyWithoutBookInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogCreateNestedManyWithoutBookInput
 }
 
 export type BookUncheckedCreateWithoutAuthorsInput = {
@@ -757,6 +1009,8 @@ export type BookUncheckedCreateWithoutAuthorsInput = {
   updatedAt?: Date | string
   registrationLogs?: Prisma.RegistrationBookLogUncheckedCreateNestedManyWithoutBookInput
   genres?: Prisma.BookGenreUncheckedCreateNestedManyWithoutBookInput
+  copies?: Prisma.CopyUncheckedCreateNestedManyWithoutBookInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogUncheckedCreateNestedManyWithoutBookInput
 }
 
 export type BookCreateOrConnectWithoutAuthorsInput = {
@@ -792,6 +1046,8 @@ export type BookUpdateWithoutAuthorsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrationLogs?: Prisma.RegistrationBookLogUpdateManyWithoutBookNestedInput
   genres?: Prisma.BookGenreUpdateManyWithoutBookNestedInput
+  copies?: Prisma.CopyUpdateManyWithoutBookNestedInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogUpdateManyWithoutBookNestedInput
 }
 
 export type BookUncheckedUpdateWithoutAuthorsInput = {
@@ -811,6 +1067,8 @@ export type BookUncheckedUpdateWithoutAuthorsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrationLogs?: Prisma.RegistrationBookLogUncheckedUpdateManyWithoutBookNestedInput
   genres?: Prisma.BookGenreUncheckedUpdateManyWithoutBookNestedInput
+  copies?: Prisma.CopyUncheckedUpdateManyWithoutBookNestedInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogUncheckedUpdateManyWithoutBookNestedInput
 }
 
 export type BookCreateWithoutGenresInput = {
@@ -830,6 +1088,8 @@ export type BookCreateWithoutGenresInput = {
   updatedAt?: Date | string
   registrationLogs?: Prisma.RegistrationBookLogCreateNestedManyWithoutBookInput
   authors?: Prisma.BookAuthorCreateNestedManyWithoutBookInput
+  copies?: Prisma.CopyCreateNestedManyWithoutBookInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogCreateNestedManyWithoutBookInput
 }
 
 export type BookUncheckedCreateWithoutGenresInput = {
@@ -849,6 +1109,8 @@ export type BookUncheckedCreateWithoutGenresInput = {
   updatedAt?: Date | string
   registrationLogs?: Prisma.RegistrationBookLogUncheckedCreateNestedManyWithoutBookInput
   authors?: Prisma.BookAuthorUncheckedCreateNestedManyWithoutBookInput
+  copies?: Prisma.CopyUncheckedCreateNestedManyWithoutBookInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogUncheckedCreateNestedManyWithoutBookInput
 }
 
 export type BookCreateOrConnectWithoutGenresInput = {
@@ -884,6 +1146,8 @@ export type BookUpdateWithoutGenresInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrationLogs?: Prisma.RegistrationBookLogUpdateManyWithoutBookNestedInput
   authors?: Prisma.BookAuthorUpdateManyWithoutBookNestedInput
+  copies?: Prisma.CopyUpdateManyWithoutBookNestedInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogUpdateManyWithoutBookNestedInput
 }
 
 export type BookUncheckedUpdateWithoutGenresInput = {
@@ -903,6 +1167,8 @@ export type BookUncheckedUpdateWithoutGenresInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrationLogs?: Prisma.RegistrationBookLogUncheckedUpdateManyWithoutBookNestedInput
   authors?: Prisma.BookAuthorUncheckedUpdateManyWithoutBookNestedInput
+  copies?: Prisma.CopyUncheckedUpdateManyWithoutBookNestedInput
+  copyRegistrationLogs?: Prisma.CopyRegistrationLogUncheckedUpdateManyWithoutBookNestedInput
 }
 
 
@@ -914,12 +1180,16 @@ export type BookCountOutputType = {
   registrationLogs: number
   authors: number
   genres: number
+  copies: number
+  copyRegistrationLogs: number
 }
 
 export type BookCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   registrationLogs?: boolean | BookCountOutputTypeCountRegistrationLogsArgs
   authors?: boolean | BookCountOutputTypeCountAuthorsArgs
   genres?: boolean | BookCountOutputTypeCountGenresArgs
+  copies?: boolean | BookCountOutputTypeCountCopiesArgs
+  copyRegistrationLogs?: boolean | BookCountOutputTypeCountCopyRegistrationLogsArgs
 }
 
 /**
@@ -953,6 +1223,20 @@ export type BookCountOutputTypeCountGenresArgs<ExtArgs extends runtime.Types.Ext
   where?: Prisma.BookGenreWhereInput
 }
 
+/**
+ * BookCountOutputType without action
+ */
+export type BookCountOutputTypeCountCopiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CopyWhereInput
+}
+
+/**
+ * BookCountOutputType without action
+ */
+export type BookCountOutputTypeCountCopyRegistrationLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CopyRegistrationLogWhereInput
+}
+
 
 export type BookSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -972,6 +1256,8 @@ export type BookSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   registrationLogs?: boolean | Prisma.Book$registrationLogsArgs<ExtArgs>
   authors?: boolean | Prisma.Book$authorsArgs<ExtArgs>
   genres?: boolean | Prisma.Book$genresArgs<ExtArgs>
+  copies?: boolean | Prisma.Book$copiesArgs<ExtArgs>
+  copyRegistrationLogs?: boolean | Prisma.Book$copyRegistrationLogsArgs<ExtArgs>
   _count?: boolean | Prisma.BookCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["book"]>
 
@@ -1031,6 +1317,8 @@ export type BookInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   registrationLogs?: boolean | Prisma.Book$registrationLogsArgs<ExtArgs>
   authors?: boolean | Prisma.Book$authorsArgs<ExtArgs>
   genres?: boolean | Prisma.Book$genresArgs<ExtArgs>
+  copies?: boolean | Prisma.Book$copiesArgs<ExtArgs>
+  copyRegistrationLogs?: boolean | Prisma.Book$copyRegistrationLogsArgs<ExtArgs>
   _count?: boolean | Prisma.BookCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type BookIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1042,6 +1330,8 @@ export type $BookPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     registrationLogs: Prisma.$RegistrationBookLogPayload<ExtArgs>[]
     authors: Prisma.$BookAuthorPayload<ExtArgs>[]
     genres: Prisma.$BookGenrePayload<ExtArgs>[]
+    copies: Prisma.$CopyPayload<ExtArgs>[]
+    copyRegistrationLogs: Prisma.$CopyRegistrationLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1455,6 +1745,8 @@ export interface Prisma__BookClient<T, Null = never, ExtArgs extends runtime.Typ
   registrationLogs<T extends Prisma.Book$registrationLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Book$registrationLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationBookLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   authors<T extends Prisma.Book$authorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Book$authorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookAuthorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   genres<T extends Prisma.Book$genresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Book$genresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BookGenrePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  copies<T extends Prisma.Book$copiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Book$copiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CopyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  copyRegistrationLogs<T extends Prisma.Book$copyRegistrationLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Book$copyRegistrationLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CopyRegistrationLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1958,6 +2250,54 @@ export type Book$genresArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.BookGenreScalarFieldEnum | Prisma.BookGenreScalarFieldEnum[]
+}
+
+/**
+ * Book.copies
+ */
+export type Book$copiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Copy
+   */
+  select?: Prisma.CopySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Copy
+   */
+  omit?: Prisma.CopyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CopyInclude<ExtArgs> | null
+  where?: Prisma.CopyWhereInput
+  orderBy?: Prisma.CopyOrderByWithRelationInput | Prisma.CopyOrderByWithRelationInput[]
+  cursor?: Prisma.CopyWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CopyScalarFieldEnum | Prisma.CopyScalarFieldEnum[]
+}
+
+/**
+ * Book.copyRegistrationLogs
+ */
+export type Book$copyRegistrationLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CopyRegistrationLog
+   */
+  select?: Prisma.CopyRegistrationLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CopyRegistrationLog
+   */
+  omit?: Prisma.CopyRegistrationLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CopyRegistrationLogInclude<ExtArgs> | null
+  where?: Prisma.CopyRegistrationLogWhereInput
+  orderBy?: Prisma.CopyRegistrationLogOrderByWithRelationInput | Prisma.CopyRegistrationLogOrderByWithRelationInput[]
+  cursor?: Prisma.CopyRegistrationLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CopyRegistrationLogScalarFieldEnum | Prisma.CopyRegistrationLogScalarFieldEnum[]
 }
 
 /**

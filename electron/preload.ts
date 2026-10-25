@@ -51,6 +51,15 @@ type CreateBookInput = {
   coverToken?: string;
 };
 
+type CreateCopiesInput = {
+  bookId: string;
+  quantity: number | string;
+  shelfLocation?: string;
+  conservationCondition?: string;
+  acquisitionDate?: string;
+  acquisitionMethod?: string;
+};
+
 contextBridge.exposeInMainWorld("authAPI", {
   login: (accessCode: string, password: string) =>
     ipcRenderer.invoke("auth:login", { accessCode, password }),
@@ -91,4 +100,10 @@ contextBridge.exposeInMainWorld("authAPI", {
 
   discardBookCover: (token: string) =>
     ipcRenderer.invoke("book:discard-cover", token),
+
+  searchActiveBooks: (query: string) =>
+    ipcRenderer.invoke("copy:search-active-books", query),
+
+  createCopies: (input: CreateCopiesInput) =>
+    ipcRenderer.invoke("copy:create", input),
 });

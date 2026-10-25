@@ -409,6 +409,8 @@ export const ModelName = {
   RegistrationGenreLog: 'RegistrationGenreLog',
   Book: 'Book',
   RegistrationBookLog: 'RegistrationBookLog',
+  Copy: 'Copy',
+  CopyRegistrationLog: 'CopyRegistrationLog',
   BookAuthor: 'BookAuthor',
   BookGenre: 'BookGenre'
 } as const
@@ -426,7 +428,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "person" | "librarian" | "student" | "professor" | "accessLog" | "registrationLog" | "author" | "registrationAuthorLog" | "genre" | "registrationGenreLog" | "book" | "registrationBookLog" | "bookAuthor" | "bookGenre"
+    modelProps: "person" | "librarian" | "student" | "professor" | "accessLog" | "registrationLog" | "author" | "registrationAuthorLog" | "genre" | "registrationGenreLog" | "book" | "registrationBookLog" | "copy" | "copyRegistrationLog" | "bookAuthor" | "bookGenre"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1318,6 +1320,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Copy: {
+      payload: Prisma.$CopyPayload<ExtArgs>
+      fields: Prisma.CopyFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CopyFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CopyFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyPayload>
+        }
+        findFirst: {
+          args: Prisma.CopyFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CopyFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyPayload>
+        }
+        findMany: {
+          args: Prisma.CopyFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyPayload>[]
+        }
+        create: {
+          args: Prisma.CopyCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyPayload>
+        }
+        createMany: {
+          args: Prisma.CopyCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CopyCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyPayload>[]
+        }
+        delete: {
+          args: Prisma.CopyDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyPayload>
+        }
+        update: {
+          args: Prisma.CopyUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyPayload>
+        }
+        deleteMany: {
+          args: Prisma.CopyDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CopyUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CopyUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyPayload>[]
+        }
+        upsert: {
+          args: Prisma.CopyUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyPayload>
+        }
+        aggregate: {
+          args: Prisma.CopyAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCopy>
+        }
+        groupBy: {
+          args: Prisma.CopyGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CopyGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CopyCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CopyCountAggregateOutputType> | number
+        }
+      }
+    }
+    CopyRegistrationLog: {
+      payload: Prisma.$CopyRegistrationLogPayload<ExtArgs>
+      fields: Prisma.CopyRegistrationLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CopyRegistrationLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyRegistrationLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CopyRegistrationLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyRegistrationLogPayload>
+        }
+        findFirst: {
+          args: Prisma.CopyRegistrationLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyRegistrationLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CopyRegistrationLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyRegistrationLogPayload>
+        }
+        findMany: {
+          args: Prisma.CopyRegistrationLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyRegistrationLogPayload>[]
+        }
+        create: {
+          args: Prisma.CopyRegistrationLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyRegistrationLogPayload>
+        }
+        createMany: {
+          args: Prisma.CopyRegistrationLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CopyRegistrationLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyRegistrationLogPayload>[]
+        }
+        delete: {
+          args: Prisma.CopyRegistrationLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyRegistrationLogPayload>
+        }
+        update: {
+          args: Prisma.CopyRegistrationLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyRegistrationLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.CopyRegistrationLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CopyRegistrationLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CopyRegistrationLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyRegistrationLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.CopyRegistrationLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyRegistrationLogPayload>
+        }
+        aggregate: {
+          args: Prisma.CopyRegistrationLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCopyRegistrationLog>
+        }
+        groupBy: {
+          args: Prisma.CopyRegistrationLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CopyRegistrationLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CopyRegistrationLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CopyRegistrationLogCountAggregateOutputType> | number
+        }
+      }
+    }
     BookAuthor: {
       payload: Prisma.$BookAuthorPayload<ExtArgs>
       fields: Prisma.BookAuthorFieldRefs
@@ -1657,6 +1807,33 @@ export const RegistrationBookLogScalarFieldEnum = {
 export type RegistrationBookLogScalarFieldEnum = (typeof RegistrationBookLogScalarFieldEnum)[keyof typeof RegistrationBookLogScalarFieldEnum]
 
 
+export const CopyScalarFieldEnum = {
+  id: 'id',
+  inventoryCode: 'inventoryCode',
+  bookId: 'bookId',
+  status: 'status',
+  shelfLocation: 'shelfLocation',
+  conservationCondition: 'conservationCondition',
+  acquisitionDate: 'acquisitionDate',
+  acquisitionMethod: 'acquisitionMethod',
+  registrationLogId: 'registrationLogId',
+  createdAt: 'createdAt'
+} as const
+
+export type CopyScalarFieldEnum = (typeof CopyScalarFieldEnum)[keyof typeof CopyScalarFieldEnum]
+
+
+export const CopyRegistrationLogScalarFieldEnum = {
+  id: 'id',
+  bookId: 'bookId',
+  createdByLibrarianId: 'createdByLibrarianId',
+  quantity: 'quantity',
+  createdAt: 'createdAt'
+} as const
+
+export type CopyRegistrationLogScalarFieldEnum = (typeof CopyRegistrationLogScalarFieldEnum)[keyof typeof CopyRegistrationLogScalarFieldEnum]
+
+
 export const BookAuthorScalarFieldEnum = {
   bookId: 'bookId',
   authorId: 'authorId'
@@ -1892,6 +2069,8 @@ export type GlobalOmitConfig = {
   registrationGenreLog?: Prisma.RegistrationGenreLogOmit
   book?: Prisma.BookOmit
   registrationBookLog?: Prisma.RegistrationBookLogOmit
+  copy?: Prisma.CopyOmit
+  copyRegistrationLog?: Prisma.CopyRegistrationLogOmit
   bookAuthor?: Prisma.BookAuthorOmit
   bookGenre?: Prisma.BookGenreOmit
 }

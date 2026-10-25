@@ -16,10 +16,7 @@ CREATE TABLE "new_people" (
     "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" DATETIME NOT NULL
 );
--- Older versions did not collect CPF. Preserve those records with a unique
--- migration marker; newly registered people still require a validated CPF.
-INSERT INTO "new_people" ("cpf", "created_at", "email", "id", "name", "updated_at")
-SELECT 'LEGACY-' || "id", "created_at", "email", "id", "name", "updated_at" FROM "people";
+INSERT INTO "new_people" ("created_at", "email", "id", "name", "updated_at") SELECT "created_at", "email", "id", "name", "updated_at" FROM "people";
 DROP TABLE "people";
 ALTER TABLE "new_people" RENAME TO "people";
 CREATE UNIQUE INDEX "people_cpf_key" ON "people"("cpf");

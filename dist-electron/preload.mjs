@@ -18,5 +18,7 @@ electron.contextBridge.exposeInMainWorld("authAPI", {
   listActiveGenres: () => electron.ipcRenderer.invoke("genre:list-active"),
   createBook: (input) => electron.ipcRenderer.invoke("book:create", input),
   selectBookCover: () => electron.ipcRenderer.invoke("book:select-cover"),
-  discardBookCover: (token) => electron.ipcRenderer.invoke("book:discard-cover", token)
+  discardBookCover: (token) => electron.ipcRenderer.invoke("book:discard-cover", token),
+  searchActiveBooks: (query) => electron.ipcRenderer.invoke("copy:search-active-books", query),
+  createCopies: (input) => electron.ipcRenderer.invoke("copy:create", input)
 });

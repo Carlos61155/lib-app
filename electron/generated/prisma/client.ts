@@ -102,6 +102,16 @@ export type Book = Prisma.BookModel
  */
 export type RegistrationBookLog = Prisma.RegistrationBookLogModel
 /**
+ * Model Copy
+ * 
+ */
+export type Copy = Prisma.CopyModel
+/**
+ * Model CopyRegistrationLog
+ * 
+ */
+export type CopyRegistrationLog = Prisma.CopyRegistrationLogModel
+/**
  * Model BookAuthor
  * 
  */

@@ -139,6 +139,41 @@ interface Window {
       success: true;
     }>;
 
+    searchActiveBooks: (query: string) => Promise<
+      {
+        id: string;
+        title: string;
+        isbn: string;
+        authors: {
+          author: {
+            name: string;
+          };
+        }[];
+      }[]
+    >;
+
+    createCopies: (input: {
+      bookId: string;
+      quantity: number | string;
+      shelfLocation?: string;
+      conservationCondition?: string;
+      acquisitionDate?: string;
+      acquisitionMethod?: string;
+    }) => Promise<{
+      book: {
+        id: string;
+        title: string;
+        isActive: boolean;
+      };
+      quantity: number;
+      copies: {
+        id: string;
+        inventoryCode: string;
+        status: string;
+      }[];
+      createdAt: Date;
+    }>;
+
     createBook: (input: {
       title: string;
       isbn: string;

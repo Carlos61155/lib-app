@@ -43,6 +43,7 @@ model Librarian {
   authorRegistrationsMade RegistrationAuthorLog[] @relation("AuthorRegistrationCreatedBy")
   genreRegistrationsMade  RegistrationGenreLog[]  @relation("GenreRegistrationCreatedBy")
   bookRegistrationsMade   RegistrationBookLog[]   @relation("BookRegistrationCreatedBy")
+  copyRegistrationsMade   CopyRegistrationLog[]   @relation("CopyRegistrationCreatedBy")
 
   @@map("librarians")
 }
@@ -181,9 +182,11 @@ model Book {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  registrationLogs RegistrationBookLog[]
-  authors           BookAuthor[]
-  genres            BookGenre[]
+  registrationLogs     RegistrationBookLog[]
+  authors              BookAuthor[]
+  genres               BookGenre[]
+  copies               Copy[]
+  copyRegistrationLogs CopyRegistrationLog[]
 
   @@map("books")
 }
@@ -194,12 +197,48 @@ model RegistrationBookLog {
   createdByLibrarianId String   @map("created_by_librarian_id")
   createdAt            DateTime @default(now()) @map("created_at")
 
-  book                 Book      @relation(fields: [bookId], references: [id], onDelete: Restrict)
-  createdByLibrarian   Librarian @relation("BookRegistrationCreatedBy", fields: [createdByLibrarianId], references: [id], onDelete: Restrict)
+  book               Book      @relation(fields: [bookId], references: [id], onDelete: Restrict)
+  createdByLibrarian Librarian @relation("BookRegistrationCreatedBy", fields: [createdByLibrarianId], references: [id], onDelete: Restrict)
 
   @@index([bookId])
   @@index([createdByLibrarianId, createdAt])
   @@map("registration_book_logs")
+}
+
+model Copy {
+  id                    String    @id @default(uuid())
+  inventoryCode         String    @unique @map("inventory_code")
+  bookId                String    @map("book_id")
+  status                String    @default("AVAILABLE")
+  shelfLocation         String?   @map("shelf_location")
+  conservationCondition String?   @map("conservation_condition")
+  acquisitionDate       DateTime? @map("acquisition_date")
+  acquisitionMethod     String?   @map("acquisition_method")
+  registrationLogId     String    @map("registration_log_id")
+  createdAt             DateTime  @default(now()) @map("created_at")
+
+  book            Book                @relation(fields: [bookId], references: [id], onDelete: Restrict)
+  registrationLog CopyRegistrationLog @relation(fields: [registrationLogId], references: [id], onDelete: Restrict)
+
+  @@index([bookId, status])
+  @@index([registrationLogId])
+  @@map("copies")
+}
+
+model CopyRegistrationLog {
+  id                   String   @id @default(uuid())
+  bookId               String   @map("book_id")
+  createdByLibrarianId String   @map("created_by_librarian_id")
+  quantity             Int
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  book               Book      @relation(fields: [bookId], references: [id], onDelete: Restrict)
+  createdByLibrarian Librarian @relation("CopyRegistrationCreatedBy", fields: [createdByLibrarianId], references: [id], onDelete: Restrict)
+  copies             Copy[]
+
+  @@index([bookId, createdAt])
+  @@index([createdByLibrarianId, createdAt])
+  @@map("copy_registration_logs")
 }
 
 model BookAuthor {

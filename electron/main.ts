@@ -11,6 +11,7 @@ import { GenreService } from "./genre/genre.service";
 import { BookService } from "./book/book.service";
 import { randomUUID } from "node:crypto";
 import { readFile, stat, writeFile, unlink } from "node:fs/promises";
+import { CopyService } from "./copy/copy.service";
 
 const require = createRequire(import.meta.url);
 const { config: loadDotEnv } = require("dotenv") as {
@@ -22,6 +23,7 @@ const registrationService = new RegistrationService();
 const authorService = new AuthorService();
 const genreService = new GenreService();
 const bookService = new BookService();
+const copyService = new CopyService();
 
 type StagedBookCover = {
   token: string;
@@ -457,6 +459,21 @@ ipcMain.handle("book:select-cover", async (event) => {
     fileName: path.basename(sourcePath),
     previewDataUrl: `data:${imageType.mimeType};base64,${bytes.toString("base64")}`,
   };
+});
+
+ipcMain.handle("copy:search-active-books", async (event, query: unknown) => {
+  await requireActiveLibrarian(event);
+
+  if (typeof query !== "string") {
+    throw new Error("COPY_SEARCH_QUERY_INVALID");
+  }
+
+  return copyService.searchActiveBooks(query);
+});
+
+ipcMain.handle("copy:create", async (event, input: unknown) => {
+  const librarianId = await requireActiveLibrarian(event);
+  return copyService.createCopies(input, librarianId);
 });
 
 app
