@@ -154,9 +154,11 @@ interface Window {
 
     createCopies: (input: {
       bookId: string;
-      quantity: number | string;
-      shelfLocation?: string;
-      conservationCondition?: string;
+      copies: {
+        shelfLocation: string;
+        conservationCondition: "NEW" | "GOOD" | "FAIR" | "POOR";
+        observation?: string;
+      }[];
       acquisitionDate?: string;
       acquisitionMethod?: string;
     }) => Promise<{
@@ -170,6 +172,9 @@ interface Window {
         id: string;
         inventoryCode: string;
         status: string;
+        shelfLocation: string | null;
+        conservationCondition: string | null;
+        observation: string | null;
       }[];
       createdAt: Date;
     }>;

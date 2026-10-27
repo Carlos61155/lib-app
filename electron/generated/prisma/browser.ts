@@ -88,6 +88,11 @@ export type Copy = Prisma.CopyModel
  */
 export type CopyRegistrationLog = Prisma.CopyRegistrationLogModel
 /**
+ * Model CopyCodeSequence
+ * 
+ */
+export type CopyCodeSequence = Prisma.CopyCodeSequenceModel
+/**
  * Model BookAuthor
  * 
  */

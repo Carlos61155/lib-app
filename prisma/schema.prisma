@@ -212,6 +212,7 @@ model Copy {
   status                String    @default("AVAILABLE")
   shelfLocation         String?   @map("shelf_location")
   conservationCondition String?   @map("conservation_condition")
+  observation           String?
   acquisitionDate       DateTime? @map("acquisition_date")
   acquisitionMethod     String?   @map("acquisition_method")
   registrationLogId     String    @map("registration_log_id")
@@ -239,6 +240,13 @@ model CopyRegistrationLog {
   @@index([bookId, createdAt])
   @@index([createdByLibrarianId, createdAt])
   @@map("copy_registration_logs")
+}
+
+model CopyCodeSequence {
+  id        Int @id @default(1)
+  lastValue Int @default(0) @map("last_value")
+
+  @@map("copy_code_sequences")
 }
 
 model BookAuthor {

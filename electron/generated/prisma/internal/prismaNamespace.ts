@@ -411,6 +411,7 @@ export const ModelName = {
   RegistrationBookLog: 'RegistrationBookLog',
   Copy: 'Copy',
   CopyRegistrationLog: 'CopyRegistrationLog',
+  CopyCodeSequence: 'CopyCodeSequence',
   BookAuthor: 'BookAuthor',
   BookGenre: 'BookGenre'
 } as const
@@ -428,7 +429,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "person" | "librarian" | "student" | "professor" | "accessLog" | "registrationLog" | "author" | "registrationAuthorLog" | "genre" | "registrationGenreLog" | "book" | "registrationBookLog" | "copy" | "copyRegistrationLog" | "bookAuthor" | "bookGenre"
+    modelProps: "person" | "librarian" | "student" | "professor" | "accessLog" | "registrationLog" | "author" | "registrationAuthorLog" | "genre" | "registrationGenreLog" | "book" | "registrationBookLog" | "copy" | "copyRegistrationLog" | "copyCodeSequence" | "bookAuthor" | "bookGenre"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1468,6 +1469,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CopyCodeSequence: {
+      payload: Prisma.$CopyCodeSequencePayload<ExtArgs>
+      fields: Prisma.CopyCodeSequenceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CopyCodeSequenceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyCodeSequencePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CopyCodeSequenceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyCodeSequencePayload>
+        }
+        findFirst: {
+          args: Prisma.CopyCodeSequenceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyCodeSequencePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CopyCodeSequenceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyCodeSequencePayload>
+        }
+        findMany: {
+          args: Prisma.CopyCodeSequenceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyCodeSequencePayload>[]
+        }
+        create: {
+          args: Prisma.CopyCodeSequenceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyCodeSequencePayload>
+        }
+        createMany: {
+          args: Prisma.CopyCodeSequenceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CopyCodeSequenceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyCodeSequencePayload>[]
+        }
+        delete: {
+          args: Prisma.CopyCodeSequenceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyCodeSequencePayload>
+        }
+        update: {
+          args: Prisma.CopyCodeSequenceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyCodeSequencePayload>
+        }
+        deleteMany: {
+          args: Prisma.CopyCodeSequenceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CopyCodeSequenceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CopyCodeSequenceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyCodeSequencePayload>[]
+        }
+        upsert: {
+          args: Prisma.CopyCodeSequenceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CopyCodeSequencePayload>
+        }
+        aggregate: {
+          args: Prisma.CopyCodeSequenceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCopyCodeSequence>
+        }
+        groupBy: {
+          args: Prisma.CopyCodeSequenceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CopyCodeSequenceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CopyCodeSequenceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CopyCodeSequenceCountAggregateOutputType> | number
+        }
+      }
+    }
     BookAuthor: {
       payload: Prisma.$BookAuthorPayload<ExtArgs>
       fields: Prisma.BookAuthorFieldRefs
@@ -1814,6 +1889,7 @@ export const CopyScalarFieldEnum = {
   status: 'status',
   shelfLocation: 'shelfLocation',
   conservationCondition: 'conservationCondition',
+  observation: 'observation',
   acquisitionDate: 'acquisitionDate',
   acquisitionMethod: 'acquisitionMethod',
   registrationLogId: 'registrationLogId',
@@ -1832,6 +1908,14 @@ export const CopyRegistrationLogScalarFieldEnum = {
 } as const
 
 export type CopyRegistrationLogScalarFieldEnum = (typeof CopyRegistrationLogScalarFieldEnum)[keyof typeof CopyRegistrationLogScalarFieldEnum]
+
+
+export const CopyCodeSequenceScalarFieldEnum = {
+  id: 'id',
+  lastValue: 'lastValue'
+} as const
+
+export type CopyCodeSequenceScalarFieldEnum = (typeof CopyCodeSequenceScalarFieldEnum)[keyof typeof CopyCodeSequenceScalarFieldEnum]
 
 
 export const BookAuthorScalarFieldEnum = {
@@ -2071,6 +2155,7 @@ export type GlobalOmitConfig = {
   registrationBookLog?: Prisma.RegistrationBookLogOmit
   copy?: Prisma.CopyOmit
   copyRegistrationLog?: Prisma.CopyRegistrationLogOmit
+  copyCodeSequence?: Prisma.CopyCodeSequenceOmit
   bookAuthor?: Prisma.BookAuthorOmit
   bookGenre?: Prisma.BookGenreOmit
 }

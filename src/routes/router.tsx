@@ -40,6 +40,13 @@ export const router = createHashRouter([
           return { Component: Books }
         },
       },
+      {
+        path: '/copies',
+        lazy: async () => {
+          const { default: Copies } = await import('../pages/Copies')
+          return { Component: Copies }
+        },
+      },
     ],
   },
 ])

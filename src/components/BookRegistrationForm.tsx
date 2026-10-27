@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, type Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import type { z } from 'zod'
 import { CreateBookSchema } from '../../electron/book/book.schemas'
 
 type BookValues = {
@@ -16,6 +17,7 @@ type BookValues = {
   language: string
   synopsis: string
 }
+type ParsedBookValues = z.infer<typeof CreateBookSchema>
 type TextFieldName = Exclude<keyof BookValues, 'authorIds' | 'genreIds'>
 type Choice = { id: string; name: string }
 type Cover = { token: string; fileName: string; previewDataUrl: string }
@@ -72,7 +74,7 @@ function SearchMultiSelect({ label, placeholder, choices, selectedIds, onChange,
 }
 
 export function BookRegistrationForm({ onSuccess, onCancel }: { onSuccess: (book: BookRegistrationResult) => void; onCancel: () => void }) {
-  const form = useForm<BookValues>({ resolver: zodResolver(CreateBookSchema), defaultValues: { title: '', subTitle: '', authorIds: [], genreIds: [], isbn: '', publisher: '', yearOfPublication: '', edition: '', numberOfPages: '', language: '', synopsis: '' }, mode: 'onSubmit', reValidateMode: 'onChange' })
+  const form = useForm<BookValues, unknown, ParsedBookValues>({ resolver: zodResolver(CreateBookSchema) as unknown as Resolver<BookValues, unknown, ParsedBookValues>, defaultValues: { title: '', subTitle: '', authorIds: [], genreIds: [], isbn: '', publisher: '', yearOfPublication: '', edition: '', numberOfPages: '', language: '', synopsis: '' }, mode: 'onSubmit', reValidateMode: 'onChange' })
   const [authors, setAuthors] = useState<Choice[]>([])
   const [genres, setGenres] = useState<Choice[]>([])
   const [cover, setCover] = useState<Cover | null>(null)
@@ -115,23 +117,36 @@ export function BookRegistrationForm({ onSuccess, onCancel }: { onSuccess: (book
     setCover(null)
   }
 
-  const onSubmit = async (values: BookValues) => {
+  const onSubmit = async (values: ParsedBookValues) => {
+    const optionalTextValue = (value: unknown) =>
+      typeof value === 'string' ? value.trim() : ''
+    const title = optionalTextValue(values.title)
+    const isbn = optionalTextValue(values.isbn)
+    const publisher = optionalTextValue(values.publisher)
+    const subTitle = optionalTextValue(values.subTitle)
+    const edition = optionalTextValue(values.edition)
+    const language = optionalTextValue(values.language)
+    const synopsis = optionalTextValue(values.synopsis)
+    const numberOfPages = values.numberOfPages == null
+      ? ''
+      : String(values.numberOfPages)
+
     try {
       await window.authAPI.createBook({
-        title: values.title.trim(),
-        isbn: values.isbn.trim(),
-        publisher: values.publisher.trim(),
+        title,
+        isbn,
+        publisher,
         yearOfPublication: values.yearOfPublication,
         authorIds: values.authorIds,
         genreIds: values.genreIds,
-        ...(values.subTitle.trim() ? { subTitle: values.subTitle.trim() } : {}),
-        ...(values.edition.trim() ? { edition: values.edition.trim() } : {}),
-        ...(values.numberOfPages.trim() ? { numberOfPages: values.numberOfPages } : {}),
-        ...(values.language.trim() ? { language: values.language.trim() } : {}),
-        ...(values.synopsis.trim() ? { synopsis: values.synopsis.trim() } : {}),
+        ...(subTitle ? { subTitle } : {}),
+        ...(edition ? { edition } : {}),
+        ...(numberOfPages ? { numberOfPages } : {}),
+        ...(language ? { language } : {}),
+        ...(synopsis ? { synopsis } : {}),
         ...(cover ? { coverToken: cover.token } : {}),
       })
-      onSuccess({ title: values.title.trim(), subTitle: values.subTitle.trim(), isbn: values.isbn.trim(), publisher: values.publisher.trim(), yearOfPublication: values.yearOfPublication, edition: values.edition.trim(), numberOfPages: values.numberOfPages, language: values.language.trim(), synopsis: values.synopsis.trim(), authors: selectedAuthors, genres: selectedGenres, ...(cover ? { coverName: cover.fileName } : {}) })
+      onSuccess({ title, subTitle, isbn, publisher, yearOfPublication: String(values.yearOfPublication), edition, numberOfPages, language, synopsis, authors: selectedAuthors, genres: selectedGenres, ...(cover ? { coverName: cover.fileName } : {}) })
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error)
       form.setError('root.server', { type: 'server', message: bookErrorMessage(error) })

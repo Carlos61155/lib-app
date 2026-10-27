@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import { prisma } from "../database";
 import { CreateCopiesSchema } from "./copy.schemas";
 
@@ -13,10 +12,6 @@ function handleDatabaseError(error: unknown): never {
   }
 
   throw error;
-}
-
-function createInventoryCode(): string {
-  return `TOM-${randomUUID().toUpperCase()}`;
 }
 
 export class CopyService {
@@ -55,7 +50,12 @@ export class CopyService {
       const field = issue?.path[0];
 
       if (field === "bookId") throw new Error("COPY_BOOK_REQUIRED");
-      if (field === "quantity") {
+      if (field === "copies" && issue.path.length > 1) {
+        if (issue.path[2] === "shelfLocation") throw new Error("COPY_LOCATION_INVALID");
+        if (issue.path[2] === "conservationCondition") throw new Error("COPY_CONDITION_INVALID");
+        throw new Error("COPY_OBSERVATION_INVALID");
+      }
+      if (field === "copies") {
         throw new Error(
           issue.message === "QUANTITY_LIMIT_EXCEEDED"
             ? "COPY_QUANTITY_LIMIT_EXCEEDED"
@@ -69,11 +69,7 @@ export class CopyService {
             : "COPY_ACQUISITION_DATE_INVALID",
         );
       }
-      if (
-        field === "shelfLocation" ||
-        field === "conservationCondition" ||
-        field === "acquisitionMethod"
-      ) {
+      if (field === "acquisitionMethod") {
         throw new Error("COPY_TEXT_FIELD_INVALID");
       }
 
@@ -92,23 +88,31 @@ export class CopyService {
         if (!book) throw new Error("COPY_BOOK_NOT_FOUND");
         if (!book.isActive) throw new Error("COPY_BOOK_INACTIVE");
 
+        const sequence = await transaction.copyCodeSequence.update({
+          where: { id: 1 },
+          data: { lastValue: { increment: data.copies.length } },
+          select: { lastValue: true },
+        });
+        const firstInventoryNumber = sequence.lastValue - data.copies.length + 1;
+
         const registration = await transaction.copyRegistrationLog.create({
           data: {
             bookId: book.id,
             createdByLibrarianId: librarianId,
-            quantity: data.quantity,
+            quantity: data.copies.length,
           },
         });
 
         const copies = await Promise.all(
-          Array.from({ length: data.quantity }, () =>
+          data.copies.map((copy, index) =>
             transaction.copy.create({
               data: {
-                inventoryCode: createInventoryCode(),
+                inventoryCode: String(firstInventoryNumber + index).padStart(6, "0"),
                 bookId: book.id,
                 status: "AVAILABLE",
-                shelfLocation: data.shelfLocation,
-                conservationCondition: data.conservationCondition,
+                shelfLocation: copy.shelfLocation,
+                conservationCondition: copy.conservationCondition,
+                observation: copy.observation,
                 acquisitionDate: data.acquisitionDate,
                 acquisitionMethod: data.acquisitionMethod,
                 registrationLogId: registration.id,
@@ -117,6 +121,9 @@ export class CopyService {
                 id: true,
                 inventoryCode: true,
                 status: true,
+                shelfLocation: true,
+                conservationCondition: true,
+                observation: true,
               },
             }),
           ),

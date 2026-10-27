@@ -53,9 +53,11 @@ type CreateBookInput = {
 
 type CreateCopiesInput = {
   bookId: string;
-  quantity: number | string;
-  shelfLocation?: string;
-  conservationCondition?: string;
+  copies: {
+    shelfLocation: string;
+    conservationCondition: "NEW" | "GOOD" | "FAIR" | "POOR";
+    observation?: string;
+  }[];
   acquisitionDate?: string;
   acquisitionMethod?: string;
 };

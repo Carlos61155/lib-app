@@ -31,6 +31,7 @@ export type CopyMinAggregateOutputType = {
   status: string | null
   shelfLocation: string | null
   conservationCondition: string | null
+  observation: string | null
   acquisitionDate: Date | null
   acquisitionMethod: string | null
   registrationLogId: string | null
@@ -44,6 +45,7 @@ export type CopyMaxAggregateOutputType = {
   status: string | null
   shelfLocation: string | null
   conservationCondition: string | null
+  observation: string | null
   acquisitionDate: Date | null
   acquisitionMethod: string | null
   registrationLogId: string | null
@@ -57,6 +59,7 @@ export type CopyCountAggregateOutputType = {
   status: number
   shelfLocation: number
   conservationCondition: number
+  observation: number
   acquisitionDate: number
   acquisitionMethod: number
   registrationLogId: number
@@ -72,6 +75,7 @@ export type CopyMinAggregateInputType = {
   status?: true
   shelfLocation?: true
   conservationCondition?: true
+  observation?: true
   acquisitionDate?: true
   acquisitionMethod?: true
   registrationLogId?: true
@@ -85,6 +89,7 @@ export type CopyMaxAggregateInputType = {
   status?: true
   shelfLocation?: true
   conservationCondition?: true
+  observation?: true
   acquisitionDate?: true
   acquisitionMethod?: true
   registrationLogId?: true
@@ -98,6 +103,7 @@ export type CopyCountAggregateInputType = {
   status?: true
   shelfLocation?: true
   conservationCondition?: true
+  observation?: true
   acquisitionDate?: true
   acquisitionMethod?: true
   registrationLogId?: true
@@ -184,6 +190,7 @@ export type CopyGroupByOutputType = {
   status: string
   shelfLocation: string | null
   conservationCondition: string | null
+  observation: string | null
   acquisitionDate: Date | null
   acquisitionMethod: string | null
   registrationLogId: string
@@ -218,6 +225,7 @@ export type CopyWhereInput = {
   status?: Prisma.StringFilter<"Copy"> | string
   shelfLocation?: Prisma.StringNullableFilter<"Copy"> | string | null
   conservationCondition?: Prisma.StringNullableFilter<"Copy"> | string | null
+  observation?: Prisma.StringNullableFilter<"Copy"> | string | null
   acquisitionDate?: Prisma.DateTimeNullableFilter<"Copy"> | Date | string | null
   acquisitionMethod?: Prisma.StringNullableFilter<"Copy"> | string | null
   registrationLogId?: Prisma.StringFilter<"Copy"> | string
@@ -233,6 +241,7 @@ export type CopyOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   shelfLocation?: Prisma.SortOrderInput | Prisma.SortOrder
   conservationCondition?: Prisma.SortOrderInput | Prisma.SortOrder
+  observation?: Prisma.SortOrderInput | Prisma.SortOrder
   acquisitionDate?: Prisma.SortOrderInput | Prisma.SortOrder
   acquisitionMethod?: Prisma.SortOrderInput | Prisma.SortOrder
   registrationLogId?: Prisma.SortOrder
@@ -251,6 +260,7 @@ export type CopyWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.StringFilter<"Copy"> | string
   shelfLocation?: Prisma.StringNullableFilter<"Copy"> | string | null
   conservationCondition?: Prisma.StringNullableFilter<"Copy"> | string | null
+  observation?: Prisma.StringNullableFilter<"Copy"> | string | null
   acquisitionDate?: Prisma.DateTimeNullableFilter<"Copy"> | Date | string | null
   acquisitionMethod?: Prisma.StringNullableFilter<"Copy"> | string | null
   registrationLogId?: Prisma.StringFilter<"Copy"> | string
@@ -266,6 +276,7 @@ export type CopyOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   shelfLocation?: Prisma.SortOrderInput | Prisma.SortOrder
   conservationCondition?: Prisma.SortOrderInput | Prisma.SortOrder
+  observation?: Prisma.SortOrderInput | Prisma.SortOrder
   acquisitionDate?: Prisma.SortOrderInput | Prisma.SortOrder
   acquisitionMethod?: Prisma.SortOrderInput | Prisma.SortOrder
   registrationLogId?: Prisma.SortOrder
@@ -285,6 +296,7 @@ export type CopyScalarWhereWithAggregatesInput = {
   status?: Prisma.StringWithAggregatesFilter<"Copy"> | string
   shelfLocation?: Prisma.StringNullableWithAggregatesFilter<"Copy"> | string | null
   conservationCondition?: Prisma.StringNullableWithAggregatesFilter<"Copy"> | string | null
+  observation?: Prisma.StringNullableWithAggregatesFilter<"Copy"> | string | null
   acquisitionDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Copy"> | Date | string | null
   acquisitionMethod?: Prisma.StringNullableWithAggregatesFilter<"Copy"> | string | null
   registrationLogId?: Prisma.StringWithAggregatesFilter<"Copy"> | string
@@ -297,6 +309,7 @@ export type CopyCreateInput = {
   status?: string
   shelfLocation?: string | null
   conservationCondition?: string | null
+  observation?: string | null
   acquisitionDate?: Date | string | null
   acquisitionMethod?: string | null
   createdAt?: Date | string
@@ -311,6 +324,7 @@ export type CopyUncheckedCreateInput = {
   status?: string
   shelfLocation?: string | null
   conservationCondition?: string | null
+  observation?: string | null
   acquisitionDate?: Date | string | null
   acquisitionMethod?: string | null
   registrationLogId: string
@@ -323,6 +337,7 @@ export type CopyUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   shelfLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conservationCondition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   acquisitionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acquisitionMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -337,6 +352,7 @@ export type CopyUncheckedUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   shelfLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conservationCondition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   acquisitionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acquisitionMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationLogId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -350,6 +366,7 @@ export type CopyCreateManyInput = {
   status?: string
   shelfLocation?: string | null
   conservationCondition?: string | null
+  observation?: string | null
   acquisitionDate?: Date | string | null
   acquisitionMethod?: string | null
   registrationLogId: string
@@ -362,6 +379,7 @@ export type CopyUpdateManyMutationInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   shelfLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conservationCondition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   acquisitionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acquisitionMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -374,6 +392,7 @@ export type CopyUncheckedUpdateManyInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   shelfLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conservationCondition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   acquisitionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acquisitionMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationLogId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -397,6 +416,7 @@ export type CopyCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   shelfLocation?: Prisma.SortOrder
   conservationCondition?: Prisma.SortOrder
+  observation?: Prisma.SortOrder
   acquisitionDate?: Prisma.SortOrder
   acquisitionMethod?: Prisma.SortOrder
   registrationLogId?: Prisma.SortOrder
@@ -410,6 +430,7 @@ export type CopyMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   shelfLocation?: Prisma.SortOrder
   conservationCondition?: Prisma.SortOrder
+  observation?: Prisma.SortOrder
   acquisitionDate?: Prisma.SortOrder
   acquisitionMethod?: Prisma.SortOrder
   registrationLogId?: Prisma.SortOrder
@@ -423,6 +444,7 @@ export type CopyMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   shelfLocation?: Prisma.SortOrder
   conservationCondition?: Prisma.SortOrder
+  observation?: Prisma.SortOrder
   acquisitionDate?: Prisma.SortOrder
   acquisitionMethod?: Prisma.SortOrder
   registrationLogId?: Prisma.SortOrder
@@ -519,6 +541,7 @@ export type CopyCreateWithoutBookInput = {
   status?: string
   shelfLocation?: string | null
   conservationCondition?: string | null
+  observation?: string | null
   acquisitionDate?: Date | string | null
   acquisitionMethod?: string | null
   createdAt?: Date | string
@@ -531,6 +554,7 @@ export type CopyUncheckedCreateWithoutBookInput = {
   status?: string
   shelfLocation?: string | null
   conservationCondition?: string | null
+  observation?: string | null
   acquisitionDate?: Date | string | null
   acquisitionMethod?: string | null
   registrationLogId: string
@@ -572,6 +596,7 @@ export type CopyScalarWhereInput = {
   status?: Prisma.StringFilter<"Copy"> | string
   shelfLocation?: Prisma.StringNullableFilter<"Copy"> | string | null
   conservationCondition?: Prisma.StringNullableFilter<"Copy"> | string | null
+  observation?: Prisma.StringNullableFilter<"Copy"> | string | null
   acquisitionDate?: Prisma.DateTimeNullableFilter<"Copy"> | Date | string | null
   acquisitionMethod?: Prisma.StringNullableFilter<"Copy"> | string | null
   registrationLogId?: Prisma.StringFilter<"Copy"> | string
@@ -584,6 +609,7 @@ export type CopyCreateWithoutRegistrationLogInput = {
   status?: string
   shelfLocation?: string | null
   conservationCondition?: string | null
+  observation?: string | null
   acquisitionDate?: Date | string | null
   acquisitionMethod?: string | null
   createdAt?: Date | string
@@ -597,6 +623,7 @@ export type CopyUncheckedCreateWithoutRegistrationLogInput = {
   status?: string
   shelfLocation?: string | null
   conservationCondition?: string | null
+  observation?: string | null
   acquisitionDate?: Date | string | null
   acquisitionMethod?: string | null
   createdAt?: Date | string
@@ -633,6 +660,7 @@ export type CopyCreateManyBookInput = {
   status?: string
   shelfLocation?: string | null
   conservationCondition?: string | null
+  observation?: string | null
   acquisitionDate?: Date | string | null
   acquisitionMethod?: string | null
   registrationLogId: string
@@ -645,6 +673,7 @@ export type CopyUpdateWithoutBookInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   shelfLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conservationCondition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   acquisitionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acquisitionMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -657,6 +686,7 @@ export type CopyUncheckedUpdateWithoutBookInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   shelfLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conservationCondition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   acquisitionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acquisitionMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationLogId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -669,6 +699,7 @@ export type CopyUncheckedUpdateManyWithoutBookInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   shelfLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conservationCondition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   acquisitionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acquisitionMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationLogId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -682,6 +713,7 @@ export type CopyCreateManyRegistrationLogInput = {
   status?: string
   shelfLocation?: string | null
   conservationCondition?: string | null
+  observation?: string | null
   acquisitionDate?: Date | string | null
   acquisitionMethod?: string | null
   createdAt?: Date | string
@@ -693,6 +725,7 @@ export type CopyUpdateWithoutRegistrationLogInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   shelfLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conservationCondition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   acquisitionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acquisitionMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -706,6 +739,7 @@ export type CopyUncheckedUpdateWithoutRegistrationLogInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   shelfLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conservationCondition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   acquisitionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acquisitionMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -718,6 +752,7 @@ export type CopyUncheckedUpdateManyWithoutRegistrationLogInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   shelfLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   conservationCondition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   acquisitionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acquisitionMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -732,6 +767,7 @@ export type CopySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   status?: boolean
   shelfLocation?: boolean
   conservationCondition?: boolean
+  observation?: boolean
   acquisitionDate?: boolean
   acquisitionMethod?: boolean
   registrationLogId?: boolean
@@ -747,6 +783,7 @@ export type CopySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   status?: boolean
   shelfLocation?: boolean
   conservationCondition?: boolean
+  observation?: boolean
   acquisitionDate?: boolean
   acquisitionMethod?: boolean
   registrationLogId?: boolean
@@ -762,6 +799,7 @@ export type CopySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   status?: boolean
   shelfLocation?: boolean
   conservationCondition?: boolean
+  observation?: boolean
   acquisitionDate?: boolean
   acquisitionMethod?: boolean
   registrationLogId?: boolean
@@ -777,13 +815,14 @@ export type CopySelectScalar = {
   status?: boolean
   shelfLocation?: boolean
   conservationCondition?: boolean
+  observation?: boolean
   acquisitionDate?: boolean
   acquisitionMethod?: boolean
   registrationLogId?: boolean
   createdAt?: boolean
 }
 
-export type CopyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "inventoryCode" | "bookId" | "status" | "shelfLocation" | "conservationCondition" | "acquisitionDate" | "acquisitionMethod" | "registrationLogId" | "createdAt", ExtArgs["result"]["copy"]>
+export type CopyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "inventoryCode" | "bookId" | "status" | "shelfLocation" | "conservationCondition" | "observation" | "acquisitionDate" | "acquisitionMethod" | "registrationLogId" | "createdAt", ExtArgs["result"]["copy"]>
 export type CopyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   book?: boolean | Prisma.BookDefaultArgs<ExtArgs>
   registrationLog?: boolean | Prisma.CopyRegistrationLogDefaultArgs<ExtArgs>
@@ -810,6 +849,7 @@ export type $CopyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     status: string
     shelfLocation: string | null
     conservationCondition: string | null
+    observation: string | null
     acquisitionDate: Date | null
     acquisitionMethod: string | null
     registrationLogId: string
@@ -1245,6 +1285,7 @@ export interface CopyFieldRefs {
   readonly status: Prisma.FieldRef<"Copy", 'String'>
   readonly shelfLocation: Prisma.FieldRef<"Copy", 'String'>
   readonly conservationCondition: Prisma.FieldRef<"Copy", 'String'>
+  readonly observation: Prisma.FieldRef<"Copy", 'String'>
   readonly acquisitionDate: Prisma.FieldRef<"Copy", 'DateTime'>
   readonly acquisitionMethod: Prisma.FieldRef<"Copy", 'String'>
   readonly registrationLogId: Prisma.FieldRef<"Copy", 'String'>

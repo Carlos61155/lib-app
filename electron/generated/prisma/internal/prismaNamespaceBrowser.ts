@@ -65,6 +65,7 @@ export const ModelName = {
   RegistrationBookLog: 'RegistrationBookLog',
   Copy: 'Copy',
   CopyRegistrationLog: 'CopyRegistrationLog',
+  CopyCodeSequence: 'CopyCodeSequence',
   BookAuthor: 'BookAuthor',
   BookGenre: 'BookGenre'
 } as const
@@ -244,6 +245,7 @@ export const CopyScalarFieldEnum = {
   status: 'status',
   shelfLocation: 'shelfLocation',
   conservationCondition: 'conservationCondition',
+  observation: 'observation',
   acquisitionDate: 'acquisitionDate',
   acquisitionMethod: 'acquisitionMethod',
   registrationLogId: 'registrationLogId',
@@ -262,6 +264,14 @@ export const CopyRegistrationLogScalarFieldEnum = {
 } as const
 
 export type CopyRegistrationLogScalarFieldEnum = (typeof CopyRegistrationLogScalarFieldEnum)[keyof typeof CopyRegistrationLogScalarFieldEnum]
+
+
+export const CopyCodeSequenceScalarFieldEnum = {
+  id: 'id',
+  lastValue: 'lastValue'
+} as const
+
+export type CopyCodeSequenceScalarFieldEnum = (typeof CopyCodeSequenceScalarFieldEnum)[keyof typeof CopyCodeSequenceScalarFieldEnum]
 
 
 export const BookAuthorScalarFieldEnum = {

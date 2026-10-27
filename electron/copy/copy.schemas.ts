@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const MAX_COPIES_PER_OPERATION = 20;
+export const MAX_COPIES_PER_OPERATION = 10;
 
 const optionalText = (max: number) =>
   z
@@ -36,13 +36,11 @@ const optionalAcquisitionDate = z
 export const CreateCopiesSchema = z
   .object({
     bookId: z.string().uuid("BOOK_ID_INVALID"),
-    quantity: z.coerce
-      .number()
-      .int("QUANTITY_INVALID")
-      .min(1, "QUANTITY_INVALID")
-      .max(MAX_COPIES_PER_OPERATION, "QUANTITY_LIMIT_EXCEEDED"),
-    shelfLocation: optionalText(100),
-    conservationCondition: optionalText(100),
+    copies: z.array(z.object({
+      shelfLocation: z.string().trim().min(1, "SHELF_LOCATION_REQUIRED").max(100, "TEXT_TOO_LONG"),
+      conservationCondition: z.enum(["NEW", "GOOD", "FAIR", "POOR"]),
+      observation: optionalText(500),
+    }).strict()).min(1, "QUANTITY_INVALID").max(MAX_COPIES_PER_OPERATION, "QUANTITY_LIMIT_EXCEEDED"),
     acquisitionDate: optionalAcquisitionDate,
     acquisitionMethod: optionalText(100),
   })
