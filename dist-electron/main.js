@@ -18,7 +18,7 @@ var __privateWrapper = (obj, member, setter, getter) => ({
   }
 });
 var _a2, _representation, _b, __brand_DbNull, _c2, __brand_JsonNull, _d2, __brand_AnyNull, _e2, _e3, _f, _e4, _g, _e5, _t2, _r2, _i2, _o2, _s2, _a3, _e8_instances, n_fn, u_fn, l_fn, p_fn, c_fn, d_fn, _h, _e6, _t3, _r3, _Li_instances, i_fn, o_fn, s_fn, a_fn, n_fn2, u_fn2, l_fn2, p_fn2, _i3, _e7, _t4, _r4, _j, _e8, _t5, _r5, _i4, _ln_instances, o_fn2, s_fn2, a_fn2, n_fn3, u_fn3, l_fn3, p_fn3, c_fn2, _k, _e9, _t6, _r6, _gr_instances, i_fn2, o_fn3, s_fn3, a_fn3, n_fn4, u_fn4, l_fn4, p_fn4, c_fn3, d_fn2, m_fn, f_fn, y_fn, g_fn, _l2, _e10, _t7, _r7, _i5, _o3, _m, _e11, _t8, _r8, _n2, _xn_instances, e_fn, _o4, _e12, _t9, _r9, _i6, _o5, _s3, _bn_instances, a_fn4, n_fn5, u_fn5, l_fn5, _p2, _e13, _t10, _r10, _Bi_instances, i_fn3, o_fn4, _q, _e14, _t11, _r11, _i7, _o6, _s4, _a4, _yr_instances, n_fn6, u_fn6, l_fn6, p_fn5, c_fn4, d_fn3, m_fn2, f_fn2, y_fn2, g_fn2, h_fn, _r12, _unlockParent, _s5, _mutex, _t12, _config, _options, _u2;
-import { app, BrowserWindow, ipcMain, dialog, Menu } from "electron";
+import { ipcMain, app, dialog, BrowserWindow, Menu } from "electron";
 import require$$6, { createHash, randomUUID, randomBytes } from "node:crypto";
 import { readdir, readFile, mkdir, writeFile, unlink, stat } from "node:fs/promises";
 import * as path from "node:path";
@@ -16532,19 +16532,17 @@ class CopyService {
     }
   }
 }
-const require$1 = createRequire(import.meta.url);
-const { config: loadDotEnv } = require$1("dotenv");
-const authService = new AuthService();
-const registrationService = new RegistrationService();
-const authorService = new AuthorService();
-const genreService = new GenreService();
-const bookService = new BookService();
-const copyService = new CopyService();
-const stagedBookCovers = /* @__PURE__ */ new Map();
-const MAX_BOOK_COVER_BYTES = 5 * 1024 * 1024;
 const sessions = /* @__PURE__ */ new Map();
 const SESSION_IDLE_TIMEOUT_MS = 15 * 60 * 1e3;
-const __dirname$1 = path__default.dirname(fileURLToPath(import.meta.url));
+function getSession(senderId) {
+  return sessions.get(senderId);
+}
+function setSession(senderId, userId) {
+  sessions.set(senderId, { userId, lastActivityAt: Date.now() });
+}
+function deleteSession(senderId) {
+  sessions.delete(senderId);
+}
 async function requireActiveLibrarian(event) {
   if (event.senderFrame !== event.sender.mainFrame) {
     throw new Error("UNAUTHORIZED");
@@ -16559,11 +16557,7 @@ async function requireActiveLibrarian(event) {
   }
   const librarian = await prisma.librarian.findUnique({
     where: { id: session.userId },
-    select: {
-      id: true,
-      isActive: true,
-      mustChangePassword: true
-    }
+    select: { id: true, isActive: true, mustChangePassword: true }
   });
   if (!librarian || !librarian.isActive) {
     sessions.delete(event.sender.id);
@@ -16575,6 +16569,231 @@ async function requireActiveLibrarian(event) {
   session.lastActivityAt = Date.now();
   return librarian.id;
 }
+function registerAuthHandlers(authService2) {
+  function assertMainFrame(event) {
+    if (event.senderFrame !== event.sender.mainFrame) {
+      throw new Error("UNAUTHORIZED");
+    }
+  }
+  ipcMain.handle("auth:login", async (event, input) => {
+    assertMainFrame(event);
+    const result = await authService2.login(input);
+    setSession(event.sender.id, result.user.id);
+    return result;
+  });
+  ipcMain.handle("auth:get-session", async (event) => {
+    assertMainFrame(event);
+    const session = getSession(event.sender.id);
+    if (!session) return null;
+    if (Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
+      deleteSession(event.sender.id);
+      return null;
+    }
+    const user = await prisma.librarian.findUnique({
+      where: { id: session.userId },
+      include: { person: true }
+    });
+    if (!user || !user.isActive) {
+      deleteSession(event.sender.id);
+      return null;
+    }
+    session.lastActivityAt = Date.now();
+    return {
+      user: {
+        id: user.id,
+        name: user.person.name,
+        role: "BIBLIOTECARIO",
+        mustChangePassword: user.mustChangePassword
+      },
+      idleTimeoutMs: SESSION_IDLE_TIMEOUT_MS
+    };
+  });
+  ipcMain.handle("auth:logout", (event) => {
+    assertMainFrame(event);
+    deleteSession(event.sender.id);
+    return { success: true };
+  });
+  ipcMain.handle("auth:activity", (event) => {
+    assertMainFrame(event);
+    const session = getSession(event.sender.id);
+    if (!session || Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
+      deleteSession(event.sender.id);
+      return false;
+    }
+    session.lastActivityAt = Date.now();
+    return true;
+  });
+  ipcMain.handle("auth:change-password", async (event, input) => {
+    assertMainFrame(event);
+    const session = getSession(event.sender.id);
+    if (!session) {
+      throw new Error("NOT_AUTHENTICATED");
+    }
+    if (Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
+      deleteSession(event.sender.id);
+      throw new Error("SESSION_EXPIRED");
+    }
+    await authService2.changePassword(session.userId, input);
+    session.lastActivityAt = Date.now();
+    return { success: true };
+  });
+}
+function registerRegistrationHandlers(registrationService2) {
+  ipcMain.handle("registration:create-student", async (event, input) => {
+    const librarianId = await requireActiveLibrarian(event);
+    return registrationService2.createStudent(input, librarianId);
+  });
+  ipcMain.handle("registration:create-professor", async (event, input) => {
+    const librarianId = await requireActiveLibrarian(event);
+    return registrationService2.createProfessor(input, librarianId);
+  });
+  ipcMain.handle("registration:create-librarian", async (event, input) => {
+    const librarianId = await requireActiveLibrarian(event);
+    return registrationService2.createLibrarian(input, librarianId);
+  });
+}
+function registerAuthorHandlers(authorService2) {
+  ipcMain.handle("author:create", async (event, input) => {
+    const librarianId = await requireActiveLibrarian(event);
+    return authorService2.createAuthor(input, librarianId);
+  });
+  ipcMain.handle("author:list-active", async (event) => {
+    await requireActiveLibrarian(event);
+    return authorService2.listActiveAuthors();
+  });
+}
+function registerGenreHandlers(genreService2) {
+  ipcMain.handle("genre:list-active", async (event) => {
+    await requireActiveLibrarian(event);
+    return genreService2.listActiveGenres();
+  });
+  ipcMain.handle("genre:create", async (event, input) => {
+    const librarianId = await requireActiveLibrarian(event);
+    return genreService2.createGenre(input, librarianId);
+  });
+}
+const stagedBookCovers = /* @__PURE__ */ new Map();
+const MAX_BOOK_COVER_BYTES = 5 * 1024 * 1024;
+function registerBookHandlers(bookService2) {
+  ipcMain.handle("book:create", async (event, input) => {
+    const librarianId = await requireActiveLibrarian(event);
+    if (input === null || typeof input !== "object" || Array.isArray(input)) {
+      throw new Error("BOOK_INPUT_INVALID");
+    }
+    const bookInput = { ...input };
+    const coverToken = bookInput.coverToken;
+    delete bookInput.coverToken;
+    let stagedCover;
+    if (coverToken !== void 0) {
+      if (typeof coverToken !== "string") {
+        throw new Error("BOOK_COVER_TOKEN_INVALID");
+      }
+      const candidate = stagedBookCovers.get(event.sender.id);
+      if (!candidate || candidate.token !== coverToken || candidate.librarianId !== librarianId) {
+        throw new Error("BOOK_COVER_TOKEN_INVALID");
+      }
+      stagedCover = candidate;
+    }
+    let relativeCoverPath;
+    let absoluteCoverPath;
+    try {
+      if (stagedCover) {
+        const coverDirectory = path__default.join(app.getPath("userData"), "book-covers");
+        const fileName = `${randomUUID()}.${stagedCover.extension}`;
+        await mkdir(coverDirectory, { recursive: true });
+        absoluteCoverPath = path__default.join(coverDirectory, fileName);
+        relativeCoverPath = path__default.posix.join("book-covers", fileName);
+        await writeFile(absoluteCoverPath, stagedCover.bytes, { flag: "wx" });
+      }
+      const book = await bookService2.createBook(
+        bookInput,
+        librarianId,
+        relativeCoverPath
+      );
+      if (stagedCover) stagedBookCovers.delete(event.sender.id);
+      return book;
+    } catch (error2) {
+      if (absoluteCoverPath) {
+        await unlink(absoluteCoverPath).catch(() => void 0);
+      }
+      throw error2;
+    }
+  });
+  ipcMain.handle("book:discard-cover", async (event, token) => {
+    const librarianId = await requireActiveLibrarian(event);
+    const staged = stagedBookCovers.get(event.sender.id);
+    if (staged && staged.token === token && staged.librarianId === librarianId) {
+      stagedBookCovers.delete(event.sender.id);
+    }
+    return { success: true };
+  });
+  ipcMain.handle("book:select-cover", async (event) => {
+    const librarianId = await requireActiveLibrarian(event);
+    const selection = await dialog.showOpenDialog({
+      title: "Selecionar capa do livro",
+      properties: ["openFile"],
+      filters: [{ name: "Imagens", extensions: ["jpg", "jpeg", "png", "webp"] }]
+    });
+    if (selection.canceled || selection.filePaths.length === 0) return null;
+    const sourcePath = selection.filePaths[0];
+    const fileInfo = await stat(sourcePath);
+    if (fileInfo.size > MAX_BOOK_COVER_BYTES) {
+      throw new Error("BOOK_COVER_TOO_LARGE");
+    }
+    const bytes = await readFile(sourcePath);
+    if (bytes.length > MAX_BOOK_COVER_BYTES) {
+      throw new Error("BOOK_COVER_TOO_LARGE");
+    }
+    const imageType = detectBookCoverType(bytes);
+    if (!imageType) throw new Error("BOOK_COVER_FORMAT_INVALID");
+    const token = randomUUID();
+    stagedBookCovers.set(event.sender.id, {
+      token,
+      librarianId,
+      bytes,
+      ...imageType
+    });
+    return {
+      token,
+      fileName: path__default.basename(sourcePath),
+      previewDataUrl: `data:${imageType.mimeType};base64,${bytes.toString("base64")}`
+    };
+  });
+}
+function detectBookCoverType(bytes) {
+  if (bytes.length >= 8 && bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]))) {
+    return { extension: "png", mimeType: "image/png" };
+  }
+  if (bytes.length >= 3 && bytes[0] === 255 && bytes[1] === 216 && bytes[2] === 255) {
+    return { extension: "jpg", mimeType: "image/jpeg" };
+  }
+  if (bytes.length >= 12 && bytes.toString("ascii", 0, 4) === "RIFF" && bytes.toString("ascii", 8, 12) === "WEBP") {
+    return { extension: "webp", mimeType: "image/webp" };
+  }
+  return null;
+}
+function registerCopyHandlers(copyService2) {
+  ipcMain.handle("copy:search-active-books", async (event, query) => {
+    await requireActiveLibrarian(event);
+    if (typeof query !== "string") {
+      throw new Error("COPY_SEARCH_QUERY_INVALID");
+    }
+    return copyService2.searchActiveBooks(query);
+  });
+  ipcMain.handle("copy:create", async (event, input) => {
+    const librarianId = await requireActiveLibrarian(event);
+    return copyService2.createCopies(input, librarianId);
+  });
+}
+const require$1 = createRequire(import.meta.url);
+const { config: loadDotEnv } = require$1("dotenv");
+const authService = new AuthService();
+const registrationService = new RegistrationService();
+const authorService = new AuthorService();
+const genreService = new GenreService();
+const bookService = new BookService();
+const copyService = new CopyService();
+const __dirname$1 = path__default.dirname(fileURLToPath(import.meta.url));
 function toSqliteFileUrl(absolutePath) {
   return `file:${absolutePath.replace(/\\/g, "/")}`;
 }
@@ -16596,7 +16815,7 @@ let win;
 function createWindow() {
   win = new BrowserWindow({
     title: "Libapp",
-    autoHideMenuBar: true,
+    autoHideMenuBar: false,
     webPreferences: {
       preload: path__default.join(__dirname$1, "preload.mjs"),
       contextIsolation: true,
@@ -16607,7 +16826,7 @@ function createWindow() {
   win.maximize();
   const windowId = win.webContents.id;
   win.on("closed", () => {
-    sessions.delete(windowId);
+    deleteSession(windowId);
     win = null;
   });
   if (VITE_DEV_SERVER_URL) {
@@ -16615,18 +16834,6 @@ function createWindow() {
   } else {
     win.loadFile(path__default.join(RENDERER_DIST, "index.html"));
   }
-}
-function detectBookCoverType(bytes) {
-  if (bytes.length >= 8 && bytes.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]))) {
-    return { extension: "png", mimeType: "image/png" };
-  }
-  if (bytes.length >= 3 && bytes[0] === 255 && bytes[1] === 216 && bytes[2] === 255) {
-    return { extension: "jpg", mimeType: "image/jpeg" };
-  }
-  if (bytes.length >= 12 && bytes.toString("ascii", 0, 4) === "RIFF" && bytes.toString("ascii", 8, 12) === "WEBP") {
-    return { extension: "webp", mimeType: "image/webp" };
-  }
-  return null;
 }
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -16639,214 +16846,12 @@ app.on("activate", () => {
     createWindow();
   }
 });
-ipcMain.handle("auth:login", async (event, input) => {
-  if (event.senderFrame !== event.sender.mainFrame)
-    throw new Error("UNAUTHORIZED");
-  const result = await authService.login(input);
-  sessions.set(event.sender.id, {
-    userId: result.user.id,
-    lastActivityAt: Date.now()
-  });
-  return result;
-});
-ipcMain.handle("auth:get-session", async (event) => {
-  if (event.senderFrame !== event.sender.mainFrame)
-    throw new Error("UNAUTHORIZED");
-  const session = sessions.get(event.sender.id);
-  if (!session) return null;
-  if (Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
-    sessions.delete(event.sender.id);
-    return null;
-  }
-  const user = await prisma.librarian.findUnique({
-    where: { id: session.userId },
-    include: { person: true }
-  });
-  if (!user || !user.isActive) {
-    sessions.delete(event.sender.id);
-    return null;
-  }
-  session.lastActivityAt = Date.now();
-  return {
-    user: {
-      id: user.id,
-      name: user.person.name,
-      role: "BIBLIOTECARIO",
-      mustChangePassword: user.mustChangePassword
-    },
-    idleTimeoutMs: SESSION_IDLE_TIMEOUT_MS
-  };
-});
-ipcMain.handle("auth:logout", (event) => {
-  sessions.delete(event.sender.id);
-  return { success: true };
-});
-ipcMain.handle("auth:activity", (event) => {
-  if (event.senderFrame !== event.sender.mainFrame)
-    throw new Error("UNAUTHORIZED");
-  const session = sessions.get(event.sender.id);
-  if (!session || Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
-    sessions.delete(event.sender.id);
-    return false;
-  }
-  session.lastActivityAt = Date.now();
-  return true;
-});
-ipcMain.handle("auth:change-password", async (event, input) => {
-  if (event.senderFrame !== event.sender.mainFrame)
-    throw new Error("UNAUTHORIZED");
-  const session = sessions.get(event.sender.id);
-  if (!session) {
-    throw new Error("NOT_AUTHENTICATED");
-  }
-  if (Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
-    sessions.delete(event.sender.id);
-    throw new Error("SESSION_EXPIRED");
-  }
-  await authService.changePassword(session.userId, input);
-  session.lastActivityAt = Date.now();
-  return { success: true };
-});
-ipcMain.handle("registration:create-student", async (event, input) => {
-  const librarianId = await requireActiveLibrarian(event);
-  return registrationService.createStudent(input, librarianId);
-});
-ipcMain.handle(
-  "registration:create-professor",
-  async (event, input) => {
-    const librarianId = await requireActiveLibrarian(event);
-    return registrationService.createProfessor(input, librarianId);
-  }
-);
-ipcMain.handle(
-  "registration:create-librarian",
-  async (event, input) => {
-    const librarianId = await requireActiveLibrarian(event);
-    return registrationService.createLibrarian(input, librarianId);
-  }
-);
-ipcMain.handle("author:create", async (event, input) => {
-  const librarianId = await requireActiveLibrarian(event);
-  return authorService.createAuthor(input, librarianId);
-});
-ipcMain.handle("author:list-active", async (event) => {
-  await requireActiveLibrarian(event);
-  return authorService.listActiveAuthors();
-});
-ipcMain.handle("genre:list-active", async (event) => {
-  await requireActiveLibrarian(event);
-  return genreService.listActiveGenres();
-});
-ipcMain.handle("genre:create", async (event, input) => {
-  const librarianId = await requireActiveLibrarian(event);
-  return genreService.createGenre(input, librarianId);
-});
-ipcMain.handle("book:create", async (event, input) => {
-  const librarianId = await requireActiveLibrarian(event);
-  if (input === null || typeof input !== "object" || Array.isArray(input)) {
-    throw new Error("BOOK_INPUT_INVALID");
-  }
-  const bookInput = { ...input };
-  const coverToken = bookInput.coverToken;
-  delete bookInput.coverToken;
-  let stagedCover;
-  if (coverToken !== void 0) {
-    if (typeof coverToken !== "string") {
-      throw new Error("BOOK_COVER_TOKEN_INVALID");
-    }
-    const candidate = stagedBookCovers.get(event.sender.id);
-    if (!candidate || candidate.token !== coverToken || candidate.librarianId !== librarianId) {
-      throw new Error("BOOK_COVER_TOKEN_INVALID");
-    }
-    stagedCover = candidate;
-  }
-  let relativeCoverPath;
-  let absoluteCoverPath;
-  try {
-    if (stagedCover) {
-      const coverDirectory = path__default.join(app.getPath("userData"), "book-covers");
-      const fileName = `${randomUUID()}.${stagedCover.extension}`;
-      await mkdir(coverDirectory, { recursive: true });
-      absoluteCoverPath = path__default.join(coverDirectory, fileName);
-      relativeCoverPath = path__default.posix.join("book-covers", fileName);
-      await writeFile(absoluteCoverPath, stagedCover.bytes, { flag: "wx" });
-    }
-    const book = await bookService.createBook(
-      bookInput,
-      librarianId,
-      relativeCoverPath
-    );
-    if (stagedCover) {
-      stagedBookCovers.delete(event.sender.id);
-    }
-    return book;
-  } catch (error2) {
-    if (absoluteCoverPath) {
-      await unlink(absoluteCoverPath).catch(() => void 0);
-    }
-    throw error2;
-  }
-});
-ipcMain.handle("book:discard-cover", async (event, token) => {
-  const librarianId = await requireActiveLibrarian(event);
-  const staged = stagedBookCovers.get(event.sender.id);
-  if (staged && staged.token === token && staged.librarianId === librarianId) {
-    stagedBookCovers.delete(event.sender.id);
-  }
-  return { success: true };
-});
-ipcMain.handle("book:select-cover", async (event) => {
-  const librarianId = await requireActiveLibrarian(event);
-  const selection = await dialog.showOpenDialog({
-    title: "Selecionar capa do livro",
-    properties: ["openFile"],
-    filters: [
-      {
-        name: "Imagens",
-        extensions: ["jpg", "jpeg", "png", "webp"]
-      }
-    ]
-  });
-  if (selection.canceled || selection.filePaths.length === 0) {
-    return null;
-  }
-  const sourcePath = selection.filePaths[0];
-  const fileInfo = await stat(sourcePath);
-  if (fileInfo.size > MAX_BOOK_COVER_BYTES) {
-    throw new Error("BOOK_COVER_TOO_LARGE");
-  }
-  const bytes = await readFile(sourcePath);
-  if (bytes.length > MAX_BOOK_COVER_BYTES) {
-    throw new Error("BOOK_COVER_TOO_LARGE");
-  }
-  const imageType = detectBookCoverType(bytes);
-  if (!imageType) {
-    throw new Error("BOOK_COVER_FORMAT_INVALID");
-  }
-  const token = randomUUID();
-  stagedBookCovers.set(event.sender.id, {
-    token,
-    librarianId,
-    bytes,
-    ...imageType
-  });
-  return {
-    token,
-    fileName: path__default.basename(sourcePath),
-    previewDataUrl: `data:${imageType.mimeType};base64,${bytes.toString("base64")}`
-  };
-});
-ipcMain.handle("copy:search-active-books", async (event, query) => {
-  await requireActiveLibrarian(event);
-  if (typeof query !== "string") {
-    throw new Error("COPY_SEARCH_QUERY_INVALID");
-  }
-  return copyService.searchActiveBooks(query);
-});
-ipcMain.handle("copy:create", async (event, input) => {
-  const librarianId = await requireActiveLibrarian(event);
-  return copyService.createCopies(input, librarianId);
-});
+registerAuthHandlers(authService);
+registerRegistrationHandlers(registrationService);
+registerAuthorHandlers(authorService);
+registerGenreHandlers(genreService);
+registerBookHandlers(bookService);
+registerCopyHandlers(copyService);
 app.whenReady().then(async () => {
   Menu.setApplicationMenu(null);
   const provisioningEnvPath = app.isPackaged ? path__default.join(app.getPath("userData"), ".env") : path__default.join(app.getAppPath(), ".env");

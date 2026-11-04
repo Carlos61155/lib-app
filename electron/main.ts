@@ -1,6 +1,6 @@
-import { app, BrowserWindow, dialog, ipcMain, Menu } from "electron";
+import { app, BrowserWindow, dialog, Menu } from "electron";
 import { AuthService } from "./auth/auth.service";
-import { applySqliteMigrations, initializeDatabase, prisma } from "./database";
+import { applySqliteMigrations, initializeDatabase } from "./database";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import path from "node:path";
@@ -9,9 +9,14 @@ import { RegistrationService } from "./registration/registration.service";
 import { AuthorService } from "./author/author.service";
 import { GenreService } from "./genre/genre.service";
 import { BookService } from "./book/book.service";
-import { randomUUID } from "node:crypto";
-import { readFile, stat, writeFile, unlink } from "node:fs/promises";
 import { CopyService } from "./copy/copy.service";
+import { registerAuthHandlers } from "./ipc/auth.handlers";
+import { registerRegistrationHandlers } from "./ipc/registration.handlers";
+import { registerAuthorHandlers } from "./ipc/author.handlers";
+import { registerGenreHandlers } from "./ipc/genre.handlers";
+import { registerBookHandlers } from "./ipc/book.handlers";
+import { registerCopyHandlers } from "./ipc/copy.handlers";
+import { deleteSession } from "./session/session-store";
 
 const require = createRequire(import.meta.url);
 const { config: loadDotEnv } = require("dotenv") as {
@@ -25,66 +30,7 @@ const genreService = new GenreService();
 const bookService = new BookService();
 const copyService = new CopyService();
 
-type StagedBookCover = {
-  token: string;
-  librarianId: string;
-  bytes: Buffer;
-  extension: "jpg" | "png" | "webp";
-  mimeType: "image/jpeg" | "image/png" | "image/webp";
-};
-
-const stagedBookCovers = new Map<number, StagedBookCover>();
-const MAX_BOOK_COVER_BYTES = 5 * 1024 * 1024;
-
-type UserSession = {
-  userId: string;
-  lastActivityAt: number;
-};
-
-const sessions = new Map<number, UserSession>();
-const SESSION_IDLE_TIMEOUT_MS = 15 * 60 * 1000;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-async function requireActiveLibrarian(
-  event: Electron.IpcMainInvokeEvent,
-): Promise<string> {
-  if (event.senderFrame !== event.sender.mainFrame) {
-    throw new Error("UNAUTHORIZED");
-  }
-
-  const session = sessions.get(event.sender.id);
-
-  if (!session) {
-    throw new Error("NOT_AUTHENTICATED");
-  }
-
-  if (Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
-    sessions.delete(event.sender.id);
-    throw new Error("SESSION_EXPIRED");
-  }
-
-  const librarian = await prisma.librarian.findUnique({
-    where: { id: session.userId },
-    select: {
-      id: true,
-      isActive: true,
-      mustChangePassword: true,
-    },
-  });
-
-  if (!librarian || !librarian.isActive) {
-    sessions.delete(event.sender.id);
-    throw new Error("ACCOUNT_UNAVAILABLE");
-  }
-
-  if (librarian.mustChangePassword) {
-    throw new Error("PASSWORD_CHANGE_REQUIRED");
-  }
-
-  session.lastActivityAt = Date.now();
-
-  return librarian.id;
-}
 
 function toSqliteFileUrl(absolutePath: string): string {
   // Keep SQLite paths in Prisma connection-string form on both Windows and Linux.
@@ -144,7 +90,7 @@ function createWindow() {
   const windowId = win.webContents.id;
 
   win.on("closed", () => {
-    sessions.delete(windowId);
+    deleteSession(windowId);
     win = null;
   });
 
@@ -153,39 +99,6 @@ function createWindow() {
   } else {
     win.loadFile(path.join(RENDERER_DIST, "index.html"));
   }
-}
-
-function detectBookCoverType(bytes: Buffer): {
-  extension: "jpg" | "png" | "webp";
-  mimeType: "image/jpeg" | "image/png" | "image/webp";
-} | null {
-  if (
-    bytes.length >= 8 &&
-    bytes
-      .subarray(0, 8)
-      .equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))
-  ) {
-    return { extension: "png", mimeType: "image/png" };
-  }
-
-  if (
-    bytes.length >= 3 &&
-    bytes[0] === 0xff &&
-    bytes[1] === 0xd8 &&
-    bytes[2] === 0xff
-  ) {
-    return { extension: "jpg", mimeType: "image/jpeg" };
-  }
-
-  if (
-    bytes.length >= 12 &&
-    bytes.toString("ascii", 0, 4) === "RIFF" &&
-    bytes.toString("ascii", 8, 12) === "WEBP"
-  ) {
-    return { extension: "webp", mimeType: "image/webp" };
-  }
-
-  return null;
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -206,275 +119,12 @@ app.on("activate", () => {
   }
 });
 
-ipcMain.handle("auth:login", async (event, input) => {
-  if (event.senderFrame !== event.sender.mainFrame)
-    throw new Error("UNAUTHORIZED");
-  const result = await authService.login(input);
-
-  sessions.set(event.sender.id, {
-    userId: result.user.id,
-    lastActivityAt: Date.now(),
-  });
-
-  return result;
-});
-
-ipcMain.handle("auth:get-session", async (event) => {
-  if (event.senderFrame !== event.sender.mainFrame)
-    throw new Error("UNAUTHORIZED");
-  const session = sessions.get(event.sender.id);
-  if (!session) return null;
-  if (Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
-    sessions.delete(event.sender.id);
-    return null;
-  }
-  const user = await prisma.librarian.findUnique({
-    where: { id: session.userId },
-    include: { person: true },
-  });
-  if (!user || !user.isActive) {
-    sessions.delete(event.sender.id);
-    return null;
-  }
-  session.lastActivityAt = Date.now();
-  return {
-    user: {
-      id: user.id,
-      name: user.person.name,
-      role: "BIBLIOTECARIO",
-      mustChangePassword: user.mustChangePassword,
-    },
-    idleTimeoutMs: SESSION_IDLE_TIMEOUT_MS,
-  };
-});
-
-ipcMain.handle("auth:logout", (event) => {
-  sessions.delete(event.sender.id);
-  return { success: true };
-});
-
-ipcMain.handle("auth:activity", (event) => {
-  if (event.senderFrame !== event.sender.mainFrame)
-    throw new Error("UNAUTHORIZED");
-  const session = sessions.get(event.sender.id);
-  if (
-    !session ||
-    Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS
-  ) {
-    sessions.delete(event.sender.id);
-    return false;
-  }
-  session.lastActivityAt = Date.now();
-  return true;
-});
-
-ipcMain.handle("auth:change-password", async (event, input: unknown) => {
-  if (event.senderFrame !== event.sender.mainFrame)
-    throw new Error("UNAUTHORIZED");
-  const session = sessions.get(event.sender.id);
-
-  if (!session) {
-    throw new Error("NOT_AUTHENTICATED");
-  }
-
-  if (Date.now() - session.lastActivityAt >= SESSION_IDLE_TIMEOUT_MS) {
-    sessions.delete(event.sender.id);
-    throw new Error("SESSION_EXPIRED");
-  }
-
-  await authService.changePassword(session.userId, input);
-
-  session.lastActivityAt = Date.now();
-
-  return { success: true };
-});
-
-ipcMain.handle("registration:create-student", async (event, input: unknown) => {
-  const librarianId = await requireActiveLibrarian(event);
-  return registrationService.createStudent(input, librarianId);
-});
-
-ipcMain.handle(
-  "registration:create-professor",
-  async (event, input: unknown) => {
-    const librarianId = await requireActiveLibrarian(event);
-    return registrationService.createProfessor(input, librarianId);
-  },
-);
-
-ipcMain.handle(
-  "registration:create-librarian",
-  async (event, input: unknown) => {
-    const librarianId = await requireActiveLibrarian(event);
-    return registrationService.createLibrarian(input, librarianId);
-  },
-);
-
-ipcMain.handle("author:create", async (event, input: unknown) => {
-  const librarianId = await requireActiveLibrarian(event);
-  return authorService.createAuthor(input, librarianId);
-});
-
-ipcMain.handle("author:list-active", async (event) => {
-  await requireActiveLibrarian(event);
-  return authorService.listActiveAuthors();
-});
-
-ipcMain.handle("genre:list-active", async (event) => {
-  await requireActiveLibrarian(event);
-  return genreService.listActiveGenres();
-});
-
-ipcMain.handle("genre:create", async (event, input: unknown) => {
-  const librarianId = await requireActiveLibrarian(event);
-  return genreService.createGenre(input, librarianId);
-});
-
-ipcMain.handle("book:create", async (event, input: unknown) => {
-  const librarianId = await requireActiveLibrarian(event);
-
-  if (input === null || typeof input !== "object" || Array.isArray(input)) {
-    throw new Error("BOOK_INPUT_INVALID");
-  }
-
-  const bookInput = { ...(input as Record<string, unknown>) };
-  const coverToken = bookInput.coverToken;
-  delete bookInput.coverToken;
-
-  let stagedCover: StagedBookCover | undefined;
-
-  if (coverToken !== undefined) {
-    if (typeof coverToken !== "string") {
-      throw new Error("BOOK_COVER_TOKEN_INVALID");
-    }
-
-    const candidate = stagedBookCovers.get(event.sender.id);
-
-    if (
-      !candidate ||
-      candidate.token !== coverToken ||
-      candidate.librarianId !== librarianId
-    ) {
-      throw new Error("BOOK_COVER_TOKEN_INVALID");
-    }
-
-    stagedCover = candidate;
-  }
-
-  let relativeCoverPath: string | undefined;
-  let absoluteCoverPath: string | undefined;
-
-  try {
-    if (stagedCover) {
-      const coverDirectory = path.join(app.getPath("userData"), "book-covers");
-      const fileName = `${randomUUID()}.${stagedCover.extension}`;
-
-      await mkdir(coverDirectory, { recursive: true });
-
-      absoluteCoverPath = path.join(coverDirectory, fileName);
-      relativeCoverPath = path.posix.join("book-covers", fileName);
-
-      await writeFile(absoluteCoverPath, stagedCover.bytes, { flag: "wx" });
-    }
-
-    const book = await bookService.createBook(
-      bookInput,
-      librarianId,
-      relativeCoverPath,
-    );
-
-    if (stagedCover) {
-      stagedBookCovers.delete(event.sender.id);
-    }
-
-    return book;
-  } catch (error) {
-    if (absoluteCoverPath) {
-      await unlink(absoluteCoverPath).catch(() => undefined);
-    }
-
-    throw error;
-  }
-});
-
-ipcMain.handle("book:discard-cover", async (event, token: unknown) => {
-  const librarianId = await requireActiveLibrarian(event);
-  const staged = stagedBookCovers.get(event.sender.id);
-
-  if (staged && staged.token === token && staged.librarianId === librarianId) {
-    stagedBookCovers.delete(event.sender.id);
-  }
-
-  return { success: true };
-});
-
-ipcMain.handle("book:select-cover", async (event) => {
-  const librarianId = await requireActiveLibrarian(event);
-
-  const selection = await dialog.showOpenDialog({
-    title: "Selecionar capa do livro",
-    properties: ["openFile"],
-    filters: [
-      {
-        name: "Imagens",
-        extensions: ["jpg", "jpeg", "png", "webp"],
-      },
-    ],
-  });
-
-  if (selection.canceled || selection.filePaths.length === 0) {
-    return null;
-  }
-
-  const sourcePath = selection.filePaths[0];
-  const fileInfo = await stat(sourcePath);
-
-  if (fileInfo.size > MAX_BOOK_COVER_BYTES) {
-    throw new Error("BOOK_COVER_TOO_LARGE");
-  }
-
-  const bytes = await readFile(sourcePath);
-
-  if (bytes.length > MAX_BOOK_COVER_BYTES) {
-    throw new Error("BOOK_COVER_TOO_LARGE");
-  }
-
-  const imageType = detectBookCoverType(bytes);
-
-  if (!imageType) {
-    throw new Error("BOOK_COVER_FORMAT_INVALID");
-  }
-
-  const token = randomUUID();
-
-  stagedBookCovers.set(event.sender.id, {
-    token,
-    librarianId,
-    bytes,
-    ...imageType,
-  });
-
-  return {
-    token,
-    fileName: path.basename(sourcePath),
-    previewDataUrl: `data:${imageType.mimeType};base64,${bytes.toString("base64")}`,
-  };
-});
-
-ipcMain.handle("copy:search-active-books", async (event, query: unknown) => {
-  await requireActiveLibrarian(event);
-
-  if (typeof query !== "string") {
-    throw new Error("COPY_SEARCH_QUERY_INVALID");
-  }
-
-  return copyService.searchActiveBooks(query);
-});
-
-ipcMain.handle("copy:create", async (event, input: unknown) => {
-  const librarianId = await requireActiveLibrarian(event);
-  return copyService.createCopies(input, librarianId);
-});
+registerAuthHandlers(authService);
+registerRegistrationHandlers(registrationService);
+registerAuthorHandlers(authorService);
+registerGenreHandlers(genreService);
+registerBookHandlers(bookService);
+registerCopyHandlers(copyService);
 
 app
   .whenReady()
