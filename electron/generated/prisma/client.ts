@@ -6,7 +6,7 @@
 /*
  * This file should be your main import to use Prisma. Through it you get access to all the models, enums, and input types.
  * If you're looking for something you can import in the client-side of your application, please refer to the `browser.ts` file instead.
- * 
+ *
  * 🟢 You can import this file directly.
  */
 
@@ -15,7 +15,7 @@ import * as path from 'node:path'
 import { fileURLToPath } from 'node:url'
 globalThis['__dirname'] = path.dirname(fileURLToPath(import.meta.url))
 
-import * as runtime from "@prisma/client/runtime/library"
+import * as runtime from "@prisma/client/runtime/client"
 import * as $Enums from "./enums.ts"
 import * as $Class from "./internal/class.ts"
 import * as Prisma from "./internal/prismaNamespace.ts"
@@ -28,37 +28,111 @@ export * from "./enums.ts"
  * Type-safe database client for TypeScript
  * @example
  * ```
- * const prisma = new PrismaClient()
- * // Fetch zero or more Users
- * const users = await prisma.user.findMany()
+ * const prisma = new PrismaClient({
+ *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+ * })
+ * // Fetch zero or more People
+ * const people = await prisma.person.findMany()
  * ```
  * 
- * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
+ * Read more in our [docs](https://pris.ly/d/client).
  */
-export const PrismaClient = $Class.getPrismaClientClass(__dirname)
+export const PrismaClient = $Class.getPrismaClientClass()
 export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts extends Prisma.PrismaClientOptions["omit"] = Prisma.PrismaClientOptions["omit"], ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = $Class.PrismaClient<LogOpts, OmitOpts, ExtArgs>
 export { Prisma }
 
-
-// file annotations for bundling tools to include these files
-path.join(__dirname, "query_engine-windows.dll.node")
-path.join(process.cwd(), "electron/generated/prisma/query_engine-windows.dll.node")
-
-// file annotations for bundling tools to include these files
-path.join(__dirname, "libquery_engine-debian-openssl-1.1.x.so.node")
-path.join(process.cwd(), "electron/generated/prisma/libquery_engine-debian-openssl-1.1.x.so.node")
-
-// file annotations for bundling tools to include these files
-path.join(__dirname, "libquery_engine-debian-openssl-3.0.x.so.node")
-path.join(process.cwd(), "electron/generated/prisma/libquery_engine-debian-openssl-3.0.x.so.node")
-
 /**
- * Model User
+ * Model Person
  * 
  */
-export type User = Prisma.UserModel
+export type Person = Prisma.PersonModel
+/**
+ * Model Librarian
+ * 
+ */
+export type Librarian = Prisma.LibrarianModel
+/**
+ * Model Student
+ * 
+ */
+export type Student = Prisma.StudentModel
+/**
+ * Model Professor
+ * 
+ */
+export type Professor = Prisma.ProfessorModel
 /**
  * Model AccessLog
  * 
  */
 export type AccessLog = Prisma.AccessLogModel
+/**
+ * Model RegistrationLog
+ * 
+ */
+export type RegistrationLog = Prisma.RegistrationLogModel
+/**
+ * Model Author
+ * 
+ */
+export type Author = Prisma.AuthorModel
+/**
+ * Model RegistrationAuthorLog
+ * 
+ */
+export type RegistrationAuthorLog = Prisma.RegistrationAuthorLogModel
+/**
+ * Model Genre
+ * 
+ */
+export type Genre = Prisma.GenreModel
+/**
+ * Model RegistrationGenreLog
+ * 
+ */
+export type RegistrationGenreLog = Prisma.RegistrationGenreLogModel
+/**
+ * Model Book
+ * 
+ */
+export type Book = Prisma.BookModel
+/**
+ * Model RegistrationBookLog
+ * 
+ */
+export type RegistrationBookLog = Prisma.RegistrationBookLogModel
+/**
+ * Model Copy
+ * 
+ */
+export type Copy = Prisma.CopyModel
+/**
+ * Model CopyRegistrationLog
+ * 
+ */
+export type CopyRegistrationLog = Prisma.CopyRegistrationLogModel
+/**
+ * Model CopyCodeSequence
+ * 
+ */
+export type CopyCodeSequence = Prisma.CopyCodeSequenceModel
+/**
+ * Model BookAuthor
+ * 
+ */
+export type BookAuthor = Prisma.BookAuthorModel
+/**
+ * Model BookGenre
+ * 
+ */
+export type BookGenre = Prisma.BookGenreModel
+/**
+ * Model LoanRule
+ * 
+ */
+export type LoanRule = Prisma.LoanRuleModel
+/**
+ * Model LoanRuleChangeLog
+ * 
+ */
+export type LoanRuleChangeLog = Prisma.LoanRuleChangeLogModel

@@ -19,6 +19,34 @@ export const router = createHashRouter([
           return { Component: Dashboard }
         },
       },
+      {
+        path: '/authors',
+        lazy: async () => {
+          const { default: Authors } = await import('../pages/Authors')
+          return { Component: Authors }
+        },
+      },
+      {
+        path: '/genres',
+        lazy: async () => {
+          const { default: Genres } = await import('../pages/Genres')
+          return { Component: Genres }
+        },
+      },
+      {
+        path: '/books',
+        lazy: async () => {
+          const { default: Books } = await import('../pages/Books')
+          return { Component: Books }
+        },
+      },
+      {
+        path: '/copies',
+        lazy: async () => {
+          const { default: Copies } = await import('../pages/Copies')
+          return { Component: Copies }
+        },
+      },
     ],
   },
 ])

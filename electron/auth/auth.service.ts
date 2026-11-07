@@ -1,5 +1,9 @@
 import { prisma } from "../database";
-import { ChangePasswordSchema, InitialLibrarianSchema, LoginSchema } from "./auth.schemas";
+import {
+  ChangePasswordSchema,
+  InitialLibrarianSchema,
+  LoginSchema,
+} from "./auth.schemas";
 import { AuthenticatedUser, LoginResult } from "./auth.types";
 import { hashPassword, verifyPassword } from "./password.service";
 
@@ -8,17 +12,26 @@ const LOCK_DURATION_MINUTES = 15;
 
 export class AuthService {
   async provisionInitialLibrarian(input: unknown): Promise<boolean> {
-    if ((await prisma.user.count()) > 0) return false;
+    if ((await prisma.librarian.count()) > 0) return false;
 
     const configuration = input as Record<string, unknown>;
-    const requiredFields = ["name", "email", "accessCode", "password"] as const;
+    const requiredFields = [
+      "name",
+      "email",
+      "cpf",
+      "accessCode",
+      "password",
+    ] as const;
     const missingFields = requiredFields.filter(
-      (field) => typeof configuration?.[field] !== "string" || !configuration[field].trim(),
+      (field) =>
+        typeof configuration?.[field] !== "string" ||
+        !configuration[field].trim(),
     );
     if (missingFields.length > 0) {
       const envNames: Record<(typeof requiredFields)[number], string> = {
         name: "INITIAL_LIBRARIAN_NAME",
         email: "INITIAL_LIBRARIAN_EMAIL",
+        cpf: "INITIAL_LIBRARIAN_CPF",
         accessCode: "INITIAL_LIBRARIAN_ACCESS_CODE",
         password: "INITIAL_LIBRARIAN_PASSWORD",
       };
@@ -33,10 +46,11 @@ export class AuthService {
       throw new Error(issue?.message ?? "INVALID_INPUT");
     }
 
-    const { name, email, accessCode, password } = validate.data;
+    const { name, email, cpf, accessCode, password } = validate.data;
     if (
       email.endsWith(".invalid") ||
       accessCode.startsWith("CHANGE_ME") ||
+      cpf === "CHANGE_ME_VALID_CPF" ||
       password.includes("CHANGE_ME") ||
       password === "TROQUE_POR_UMA_SENHA_TEMPORARIA_FORTE"
     ) {
@@ -45,19 +59,24 @@ export class AuthService {
 
     const passwordHash = await hashPassword(password);
     const user = await prisma.$transaction(async (transaction) => {
-      if ((await transaction.user.count()) > 0) return null;
+      if ((await transaction.librarian.count()) > 0) return null;
 
-      return transaction.user.create({
+      const person = await transaction.person.create({
+        data: { name, email, cpf },
+      });
+      const librarian = await transaction.librarian.create({
         data: {
-          name,
-          email,
+          personId: person.id,
           accessCode,
           passwordHash,
-          role: "BIBLIOTECARIO",
           isActive: true,
           mustChangePassword: true,
         },
       });
+      await transaction.registrationLog.create({
+        data: { personId: person.id, createdByLibrarianId: null },
+      });
+      return librarian;
     });
 
     return user !== null;
@@ -84,7 +103,10 @@ export class AuthService {
 
     const { accessCode, password } = validate.data;
 
-    const user = await prisma.user.findUnique({ where: { accessCode } });
+    const user = await prisma.librarian.findUnique({
+      where: { accessCode },
+      include: { person: true },
+    });
 
     if (!user) {
       await prisma.accessLog.create({
@@ -94,7 +116,7 @@ export class AuthService {
           failureReason: "INVALID_CREDENTIALS",
         },
       });
-      if ((await prisma.user.count()) === 0)
+      if ((await prisma.librarian.count()) === 0)
         throw new Error("NO_CREDENTIALS_CONFIGURED");
       throw new Error("INVALID_CREDENTIALS");
     }
@@ -103,7 +125,7 @@ export class AuthService {
     if (user.lockedUntil && user.lockedUntil > now) {
       await prisma.accessLog.create({
         data: {
-          userId: user.id,
+          librarianId: user.id,
           attemptedAccessCode: accessCode,
           success: false,
           failureReason: "ACCOUNT_LOCKED",
@@ -115,7 +137,7 @@ export class AuthService {
     if (!user.isActive) {
       await prisma.accessLog.create({
         data: {
-          userId: user.id,
+          librarianId: user.id,
           attemptedAccessCode: accessCode,
           success: false,
           failureReason: "ACCOUNT_INACTIVE",
@@ -125,15 +147,16 @@ export class AuthService {
     }
 
     if (!(await verifyPassword(password, user.passwordHash))) {
-      // The compare-and-swap avoids losing increments when login attempts overlap.
       for (let attempt = 0; attempt < 5; attempt += 1) {
-        const latest = await prisma.user.findUnique({ where: { id: user.id } });
+        const latest = await prisma.librarian.findUnique({
+          where: { id: user.id },
+        });
         if (!latest) throw new Error("ACCOUNT_UNAVAILABLE");
         const currentTime = new Date();
         if (latest.lockedUntil && latest.lockedUntil > currentTime) {
           await prisma.accessLog.create({
             data: {
-              userId: user.id,
+              librarianId: user.id,
               attemptedAccessCode: accessCode,
               success: false,
               failureReason: "ACCOUNT_LOCKED",
@@ -150,7 +173,7 @@ export class AuthService {
           failedAttempts >= MAX_FAILED_ATTEMPTS
             ? new Date(currentTime.getTime() + LOCK_DURATION_MINUTES * 60_000)
             : null;
-        const changed = await prisma.user.updateMany({
+        const changed = await prisma.librarian.updateMany({
           where: {
             id: user.id,
             failedLoginAttempts: latest.failedLoginAttempts,
@@ -165,7 +188,7 @@ export class AuthService {
         if (changed.count === 1) {
           await prisma.accessLog.create({
             data: {
-              userId: user.id,
+              librarianId: user.id,
               attemptedAccessCode: accessCode,
               success: false,
               failureReason: "INVALID_CREDENTIALS",
@@ -183,20 +206,20 @@ export class AuthService {
 
     const authenticatedUser: AuthenticatedUser = {
       id: user.id,
-      name: user.name,
+      name: user.person.name,
       accessCode: user.accessCode,
-      role: user.role,
+      role: "BIBLIOTECARIO",
       mustChangePassword: user.mustChangePassword,
     };
 
     await prisma.$transaction([
-      prisma.user.update({
+      prisma.librarian.update({
         where: { id: user.id },
         data: { failedLoginAttempts: 0, lockedUntil: null },
       }),
       prisma.accessLog.create({
         data: {
-          userId: user.id,
+          librarianId: user.id,
           attemptedAccessCode: accessCode,
           success: true,
           failureReason: null,
@@ -227,7 +250,7 @@ export class AuthService {
 
     const { currentPassword, newPassword } = validate.data;
 
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+    const user = await prisma.librarian.findUnique({ where: { id: userId } });
     if (!user || !user.isActive) throw new Error("ACCOUNT_UNAVAILABLE");
     if (!(await verifyPassword(currentPassword, user.passwordHash))) {
       throw new Error("INVALID_CURRENT_PASSWORD");
@@ -237,7 +260,7 @@ export class AuthService {
     }
 
     const newPasswordHash = await hashPassword(newPassword);
-    await prisma.user.update({
+    await prisma.librarian.update({
       where: { id: user.id },
       data: {
         passwordHash: newPasswordHash,

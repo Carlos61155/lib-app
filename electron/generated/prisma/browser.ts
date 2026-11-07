@@ -18,12 +18,97 @@ export { Prisma }
 export * as $Enums from './enums.ts'
 export * from './enums.ts';
 /**
- * Model User
+ * Model Person
  * 
  */
-export type User = Prisma.UserModel
+export type Person = Prisma.PersonModel
+/**
+ * Model Librarian
+ * 
+ */
+export type Librarian = Prisma.LibrarianModel
+/**
+ * Model Student
+ * 
+ */
+export type Student = Prisma.StudentModel
+/**
+ * Model Professor
+ * 
+ */
+export type Professor = Prisma.ProfessorModel
 /**
  * Model AccessLog
  * 
  */
 export type AccessLog = Prisma.AccessLogModel
+/**
+ * Model RegistrationLog
+ * 
+ */
+export type RegistrationLog = Prisma.RegistrationLogModel
+/**
+ * Model Author
+ * 
+ */
+export type Author = Prisma.AuthorModel
+/**
+ * Model RegistrationAuthorLog
+ * 
+ */
+export type RegistrationAuthorLog = Prisma.RegistrationAuthorLogModel
+/**
+ * Model Genre
+ * 
+ */
+export type Genre = Prisma.GenreModel
+/**
+ * Model RegistrationGenreLog
+ * 
+ */
+export type RegistrationGenreLog = Prisma.RegistrationGenreLogModel
+/**
+ * Model Book
+ * 
+ */
+export type Book = Prisma.BookModel
+/**
+ * Model RegistrationBookLog
+ * 
+ */
+export type RegistrationBookLog = Prisma.RegistrationBookLogModel
+/**
+ * Model Copy
+ * 
+ */
+export type Copy = Prisma.CopyModel
+/**
+ * Model CopyRegistrationLog
+ * 
+ */
+export type CopyRegistrationLog = Prisma.CopyRegistrationLogModel
+/**
+ * Model CopyCodeSequence
+ * 
+ */
+export type CopyCodeSequence = Prisma.CopyCodeSequenceModel
+/**
+ * Model BookAuthor
+ * 
+ */
+export type BookAuthor = Prisma.BookAuthorModel
+/**
+ * Model BookGenre
+ * 
+ */
+export type BookGenre = Prisma.BookGenreModel
+/**
+ * Model LoanRule
+ * 
+ */
+export type LoanRule = Prisma.LoanRuleModel
+/**
+ * Model LoanRuleChangeLog
+ * 
+ */
+export type LoanRuleChangeLog = Prisma.LoanRuleChangeLogModel

@@ -24,33 +24,52 @@ export const Decimal = runtime.Decimal
 
 
 export const NullTypes = {
-  DbNull: runtime.objectEnumValues.classes.DbNull as (new (secret: never) => typeof runtime.objectEnumValues.instances.DbNull),
-  JsonNull: runtime.objectEnumValues.classes.JsonNull as (new (secret: never) => typeof runtime.objectEnumValues.instances.JsonNull),
-  AnyNull: runtime.objectEnumValues.classes.AnyNull as (new (secret: never) => typeof runtime.objectEnumValues.instances.AnyNull),
+  DbNull: runtime.NullTypes.DbNull as (new (secret: never) => typeof runtime.DbNull),
+  JsonNull: runtime.NullTypes.JsonNull as (new (secret: never) => typeof runtime.JsonNull),
+  AnyNull: runtime.NullTypes.AnyNull as (new (secret: never) => typeof runtime.AnyNull),
 }
 /**
  * Helper for filtering JSON entries that have `null` on the database (empty on the db)
  *
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
  */
-export const DbNull = runtime.objectEnumValues.instances.DbNull
+export const DbNull = runtime.DbNull
+
 /**
  * Helper for filtering JSON entries that have JSON `null` values (not empty on the db)
  *
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
  */
-export const JsonNull = runtime.objectEnumValues.instances.JsonNull
+export const JsonNull = runtime.JsonNull
+
 /**
  * Helper for filtering JSON entries that are `Prisma.DbNull` or `Prisma.JsonNull`
  *
  * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
  */
-export const AnyNull = runtime.objectEnumValues.instances.AnyNull
+export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  User: 'User',
-  AccessLog: 'AccessLog'
+  Person: 'Person',
+  Librarian: 'Librarian',
+  Student: 'Student',
+  Professor: 'Professor',
+  AccessLog: 'AccessLog',
+  RegistrationLog: 'RegistrationLog',
+  Author: 'Author',
+  RegistrationAuthorLog: 'RegistrationAuthorLog',
+  Genre: 'Genre',
+  RegistrationGenreLog: 'RegistrationGenreLog',
+  Book: 'Book',
+  RegistrationBookLog: 'RegistrationBookLog',
+  Copy: 'Copy',
+  CopyRegistrationLog: 'CopyRegistrationLog',
+  CopyCodeSequence: 'CopyCodeSequence',
+  BookAuthor: 'BookAuthor',
+  BookGenre: 'BookGenre',
+  LoanRule: 'LoanRule',
+  LoanRuleChangeLog: 'LoanRuleChangeLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -66,13 +85,23 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const UserScalarFieldEnum = {
+export const PersonScalarFieldEnum = {
   id: 'id',
+  cpf: 'cpf',
   name: 'name',
   email: 'email',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PersonScalarFieldEnum = (typeof PersonScalarFieldEnum)[keyof typeof PersonScalarFieldEnum]
+
+
+export const LibrarianScalarFieldEnum = {
+  id: 'id',
+  personId: 'personId',
   accessCode: 'accessCode',
   passwordHash: 'passwordHash',
-  role: 'role',
   isActive: 'isActive',
   mustChangePassword: 'mustChangePassword',
   failedLoginAttempts: 'failedLoginAttempts',
@@ -82,12 +111,38 @@ export const UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 } as const
 
-export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+export type LibrarianScalarFieldEnum = (typeof LibrarianScalarFieldEnum)[keyof typeof LibrarianScalarFieldEnum]
+
+
+export const StudentScalarFieldEnum = {
+  id: 'id',
+  personId: 'personId',
+  registrationNumber: 'registrationNumber',
+  course: 'course',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeof StudentScalarFieldEnum]
+
+
+export const ProfessorScalarFieldEnum = {
+  id: 'id',
+  personId: 'personId',
+  department: 'department',
+  registrationNumber: 'registrationNumber',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProfessorScalarFieldEnum = (typeof ProfessorScalarFieldEnum)[keyof typeof ProfessorScalarFieldEnum]
 
 
 export const AccessLogScalarFieldEnum = {
   id: 'id',
-  userId: 'userId',
+  librarianId: 'librarianId',
   attemptedAccessCode: 'attemptedAccessCode',
   success: 'success',
   failureReason: 'failureReason',
@@ -95,6 +150,173 @@ export const AccessLogScalarFieldEnum = {
 } as const
 
 export type AccessLogScalarFieldEnum = (typeof AccessLogScalarFieldEnum)[keyof typeof AccessLogScalarFieldEnum]
+
+
+export const RegistrationLogScalarFieldEnum = {
+  id: 'id',
+  personId: 'personId',
+  createdByLibrarianId: 'createdByLibrarianId',
+  createdAt: 'createdAt'
+} as const
+
+export type RegistrationLogScalarFieldEnum = (typeof RegistrationLogScalarFieldEnum)[keyof typeof RegistrationLogScalarFieldEnum]
+
+
+export const AuthorScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  nationality: 'nationality',
+  pseudonym: 'pseudonym',
+  dateOfBirth: 'dateOfBirth',
+  dateOfDeath: 'dateOfDeath',
+  biography: 'biography',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AuthorScalarFieldEnum = (typeof AuthorScalarFieldEnum)[keyof typeof AuthorScalarFieldEnum]
+
+
+export const RegistrationAuthorLogScalarFieldEnum = {
+  id: 'id',
+  authorId: 'authorId',
+  createdByLibrarianId: 'createdByLibrarianId',
+  createdAt: 'createdAt'
+} as const
+
+export type RegistrationAuthorLogScalarFieldEnum = (typeof RegistrationAuthorLogScalarFieldEnum)[keyof typeof RegistrationAuthorLogScalarFieldEnum]
+
+
+export const GenreScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GenreScalarFieldEnum = (typeof GenreScalarFieldEnum)[keyof typeof GenreScalarFieldEnum]
+
+
+export const RegistrationGenreLogScalarFieldEnum = {
+  id: 'id',
+  genreId: 'genreId',
+  createdByLibrarianId: 'createdByLibrarianId',
+  createdAt: 'createdAt'
+} as const
+
+export type RegistrationGenreLogScalarFieldEnum = (typeof RegistrationGenreLogScalarFieldEnum)[keyof typeof RegistrationGenreLogScalarFieldEnum]
+
+
+export const BookScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  isbn: 'isbn',
+  publisher: 'publisher',
+  yearOfPublication: 'yearOfPublication',
+  subTitle: 'subTitle',
+  edition: 'edition',
+  numberOfPages: 'numberOfPages',
+  language: 'language',
+  synopsis: 'synopsis',
+  coverPath: 'coverPath',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BookScalarFieldEnum = (typeof BookScalarFieldEnum)[keyof typeof BookScalarFieldEnum]
+
+
+export const RegistrationBookLogScalarFieldEnum = {
+  id: 'id',
+  bookId: 'bookId',
+  createdByLibrarianId: 'createdByLibrarianId',
+  createdAt: 'createdAt'
+} as const
+
+export type RegistrationBookLogScalarFieldEnum = (typeof RegistrationBookLogScalarFieldEnum)[keyof typeof RegistrationBookLogScalarFieldEnum]
+
+
+export const CopyScalarFieldEnum = {
+  id: 'id',
+  inventoryCode: 'inventoryCode',
+  bookId: 'bookId',
+  status: 'status',
+  shelfLocation: 'shelfLocation',
+  conservationCondition: 'conservationCondition',
+  observation: 'observation',
+  acquisitionDate: 'acquisitionDate',
+  acquisitionMethod: 'acquisitionMethod',
+  registrationLogId: 'registrationLogId',
+  createdAt: 'createdAt'
+} as const
+
+export type CopyScalarFieldEnum = (typeof CopyScalarFieldEnum)[keyof typeof CopyScalarFieldEnum]
+
+
+export const CopyRegistrationLogScalarFieldEnum = {
+  id: 'id',
+  bookId: 'bookId',
+  createdByLibrarianId: 'createdByLibrarianId',
+  quantity: 'quantity',
+  createdAt: 'createdAt'
+} as const
+
+export type CopyRegistrationLogScalarFieldEnum = (typeof CopyRegistrationLogScalarFieldEnum)[keyof typeof CopyRegistrationLogScalarFieldEnum]
+
+
+export const CopyCodeSequenceScalarFieldEnum = {
+  id: 'id',
+  lastValue: 'lastValue'
+} as const
+
+export type CopyCodeSequenceScalarFieldEnum = (typeof CopyCodeSequenceScalarFieldEnum)[keyof typeof CopyCodeSequenceScalarFieldEnum]
+
+
+export const BookAuthorScalarFieldEnum = {
+  bookId: 'bookId',
+  authorId: 'authorId'
+} as const
+
+export type BookAuthorScalarFieldEnum = (typeof BookAuthorScalarFieldEnum)[keyof typeof BookAuthorScalarFieldEnum]
+
+
+export const BookGenreScalarFieldEnum = {
+  bookId: 'bookId',
+  genreId: 'genreId'
+} as const
+
+export type BookGenreScalarFieldEnum = (typeof BookGenreScalarFieldEnum)[keyof typeof BookGenreScalarFieldEnum]
+
+
+export const LoanRuleScalarFieldEnum = {
+  id: 'id',
+  profile: 'profile',
+  loanPeriodDays: 'loanPeriodDays',
+  maxSimultaneousLoans: 'maxSimultaneousLoans',
+  maxRenewals: 'maxRenewals',
+  renewalPeriodDays: 'renewalPeriodDays',
+  blockingDaysPerOverdueDay: 'blockingDaysPerOverdueDay',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LoanRuleScalarFieldEnum = (typeof LoanRuleScalarFieldEnum)[keyof typeof LoanRuleScalarFieldEnum]
+
+
+export const LoanRuleChangeLogScalarFieldEnum = {
+  id: 'id',
+  loanRuleId: 'loanRuleId',
+  librarianId: 'librarianId',
+  previousValues: 'previousValues',
+  newValues: 'newValues',
+  createdAt: 'createdAt'
+} as const
+
+export type LoanRuleChangeLogScalarFieldEnum = (typeof LoanRuleChangeLogScalarFieldEnum)[keyof typeof LoanRuleChangeLogScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -1,22 +1,34 @@
 generator client {
-  provider      = "prisma-client"
-  output        = "../electron/generated/prisma"
-  // Keep native for development/build-host use and include engines for Mint 20.x and 21.x/22.x.
-  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
+  provider = "prisma-client"
+  output   = "../electron/generated/prisma"
 }
 
 datasource db {
   provider = "sqlite"
-  url      = env("DATABASE_URL")
 }
 
-model User {
+model Person {
+  id        String   @id @default(uuid())
+  cpf       String   @unique
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  librarian Librarian?
+  student   Student?
+  professor Professor?
+
+  registrationLogs RegistrationLog[]
+
+  @@map("people")
+}
+
+model Librarian {
   id                  String    @id @default(uuid())
-  name                String
-  email               String    @unique
-  accessCode          String    @unique
+  personId            String    @unique @map("person_id")
+  accessCode          String    @unique @map("access_code")
   passwordHash        String    @map("password_hash")
-  role                Role      @default(BIBLIOTECARIO)
   isActive            Boolean   @default(true) @map("is_active")
   mustChangePassword  Boolean   @default(true) @map("must_change_password")
   failedLoginAttempts Int       @default(0) @map("failed_login_attempts")
@@ -25,24 +37,279 @@ model User {
   createdAt           DateTime  @default(now()) @map("created_at")
   updatedAt           DateTime  @updatedAt @map("updated_at")
 
-  accessLogs AccessLog[]
+  person                  Person                  @relation(fields: [personId], references: [id], onDelete: Restrict)
+  accessLogs              AccessLog[]
+  registrationsMade       RegistrationLog[]       @relation("RegistrationCreatedBy")
+  authorRegistrationsMade RegistrationAuthorLog[] @relation("AuthorRegistrationCreatedBy")
+  genreRegistrationsMade  RegistrationGenreLog[]  @relation("GenreRegistrationCreatedBy")
+  bookRegistrationsMade   RegistrationBookLog[]   @relation("BookRegistrationCreatedBy")
+  copyRegistrationsMade   CopyRegistrationLog[]   @relation("CopyRegistrationCreatedBy")
+  loanRuleChangeLogs      LoanRuleChangeLog[]
 
-  @@map("users")
+  @@map("librarians")
+}
+
+model Student {
+  id                 String   @id @default(uuid())
+  personId           String   @unique @map("person_id")
+  registrationNumber String   @unique @map("registration_number")
+  course             String
+  isActive           Boolean  @default(true) @map("is_active")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  person Person @relation(fields: [personId], references: [id], onDelete: Restrict)
+
+  @@map("students")
+}
+
+model Professor {
+  id                 String   @id @default(uuid())
+  personId           String   @unique @map("person_id")
+  department         String
+  registrationNumber String   @unique @map("registration_number")
+  isActive           Boolean  @default(true) @map("is_active")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  person Person @relation(fields: [personId], references: [id], onDelete: Restrict)
+
+  @@map("professors")
 }
 
 model AccessLog {
   id                  String   @id @default(uuid())
-  userId              String?  @map("user_id")
+  librarianId         String?  @map("librarian_id")
   attemptedAccessCode String   @map("attempted_access_code")
   success             Boolean
   failureReason       String?  @map("failure_reason")
   createdAt           DateTime @default(now()) @map("created_at")
 
-  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  librarian Librarian? @relation(fields: [librarianId], references: [id], onDelete: SetNull)
 
   @@map("access_logs")
 }
 
-enum Role {
-  BIBLIOTECARIO
+model RegistrationLog {
+  id                   String   @id @default(uuid())
+  personId             String   @map("person_id")
+  createdByLibrarianId String?  @map("created_by_librarian_id")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  person             Person     @relation(fields: [personId], references: [id], onDelete: Restrict)
+  createdByLibrarian Librarian? @relation("RegistrationCreatedBy", fields: [createdByLibrarianId], references: [id], onDelete: Restrict)
+
+  @@index([personId])
+  @@index([createdByLibrarianId, createdAt])
+  @@map("registration_logs")
+}
+
+model Author {
+  id          String    @id @default(uuid())
+  name        String
+  nationality String
+  pseudonym   String?
+  dateOfBirth DateTime? @map("date_of_birth")
+  dateOfDeath DateTime? @map("date_of_death")
+  biography   String?
+  isActive    Boolean   @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  registrationLogs RegistrationAuthorLog[]
+  books            BookAuthor[]
+
+  @@map("authors")
+}
+
+model RegistrationAuthorLog {
+  id                   String   @id @default(uuid())
+  authorId             String   @map("author_id")
+  createdByLibrarianId String   @map("created_by_librarian_id")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  author             Author    @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  createdByLibrarian Librarian @relation("AuthorRegistrationCreatedBy", fields: [createdByLibrarianId], references: [id], onDelete: Restrict)
+
+  @@index([authorId])
+  @@index([createdByLibrarianId, createdAt])
+  @@map("registration_author_logs")
+}
+
+model Genre {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+  isActive    Boolean @default(true) @map("is_active")
+
+  createdAt             DateTime               @default(now()) @map("created_at")
+  updatedAt             DateTime               @updatedAt @map("updated_at")
+  registrationGenreLogs RegistrationGenreLog[]
+  books                 BookGenre[]
+
+  @@map("genres")
+}
+
+model RegistrationGenreLog {
+  id                   String   @id @default(uuid())
+  genreId              String   @map("genre_id")
+  createdByLibrarianId String   @map("created_by_librarian_id")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  genre              Genre     @relation(fields: [genreId], references: [id], onDelete: Restrict)
+  createdByLibrarian Librarian @relation("GenreRegistrationCreatedBy", fields: [createdByLibrarianId], references: [id], onDelete: Restrict)
+
+  @@index([genreId])
+  @@index([createdByLibrarianId, createdAt])
+  @@map("registration_genre_logs")
+}
+
+model Book {
+  id                String @id @default(uuid())
+  title             String
+  isbn              String @unique
+  publisher         String
+  yearOfPublication Int    @map("year_of_publication")
+
+  subTitle      String?
+  edition       String?
+  numberOfPages Int?    @map("number_of_pages")
+  language      String?
+  synopsis      String?
+  coverPath     String? @map("cover_path")
+
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  registrationLogs     RegistrationBookLog[]
+  authors              BookAuthor[]
+  genres               BookGenre[]
+  copies               Copy[]
+  copyRegistrationLogs CopyRegistrationLog[]
+
+  @@map("books")
+}
+
+model RegistrationBookLog {
+  id                   String   @id @default(uuid())
+  bookId               String   @map("book_id")
+  createdByLibrarianId String   @map("created_by_librarian_id")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  book               Book      @relation(fields: [bookId], references: [id], onDelete: Restrict)
+  createdByLibrarian Librarian @relation("BookRegistrationCreatedBy", fields: [createdByLibrarianId], references: [id], onDelete: Restrict)
+
+  @@index([bookId])
+  @@index([createdByLibrarianId, createdAt])
+  @@map("registration_book_logs")
+}
+
+model Copy {
+  id                    String    @id @default(uuid())
+  inventoryCode         String    @unique @map("inventory_code")
+  bookId                String    @map("book_id")
+  status                String    @default("AVAILABLE")
+  shelfLocation         String?   @map("shelf_location")
+  conservationCondition String?   @map("conservation_condition")
+  observation           String?
+  acquisitionDate       DateTime? @map("acquisition_date")
+  acquisitionMethod     String?   @map("acquisition_method")
+  registrationLogId     String    @map("registration_log_id")
+  createdAt             DateTime  @default(now()) @map("created_at")
+
+  book            Book                @relation(fields: [bookId], references: [id], onDelete: Restrict)
+  registrationLog CopyRegistrationLog @relation(fields: [registrationLogId], references: [id], onDelete: Restrict)
+
+  @@index([bookId, status])
+  @@index([registrationLogId])
+  @@map("copies")
+}
+
+model CopyRegistrationLog {
+  id                   String   @id @default(uuid())
+  bookId               String   @map("book_id")
+  createdByLibrarianId String   @map("created_by_librarian_id")
+  quantity             Int
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  book               Book      @relation(fields: [bookId], references: [id], onDelete: Restrict)
+  createdByLibrarian Librarian @relation("CopyRegistrationCreatedBy", fields: [createdByLibrarianId], references: [id], onDelete: Restrict)
+  copies             Copy[]
+
+  @@index([bookId, createdAt])
+  @@index([createdByLibrarianId, createdAt])
+  @@map("copy_registration_logs")
+}
+
+model CopyCodeSequence {
+  id        Int @id @default(1)
+  lastValue Int @default(0) @map("last_value")
+
+  @@map("copy_code_sequences")
+}
+
+model BookAuthor {
+  bookId   String @map("book_id")
+  authorId String @map("author_id")
+
+  book   Book   @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  author Author @relation(fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@id([bookId, authorId])
+  @@index([authorId])
+  @@map("book_authors")
+}
+
+model BookGenre {
+  bookId  String @map("book_id")
+  genreId String @map("genre_id")
+
+  book  Book  @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  genre Genre @relation(fields: [genreId], references: [id], onDelete: Restrict)
+
+  @@id([bookId, genreId])
+  @@index([genreId])
+  @@map("book_genres")
+}
+
+enum LoanProfile {
+  STUDENT
+  PROFESSOR
+
+  @@map("loan_profiles")
+}
+
+model LoanRule {
+  id                        String      @id @default(uuid())
+  profile                   LoanProfile @unique
+  loanPeriodDays            Int         @map("loan_period_days")
+  maxSimultaneousLoans      Int         @map("max_simultaneous_loans")
+  maxRenewals               Int         @map("max_renewals")
+  renewalPeriodDays         Int         @map("renewal_period_days")
+  blockingDaysPerOverdueDay Int         @default(2) @map("blocking_days_per_overdue_day")
+  createdAt                 DateTime    @default(now()) @map("created_at")
+  updatedAt                 DateTime    @updatedAt @map("updated_at")
+
+  changeLogs LoanRuleChangeLog[]
+
+  @@map("loan_rules")
+}
+
+model LoanRuleChangeLog {
+  id          String @id @default(uuid())
+  loanRuleId  String @map("loan_rule_id")
+  librarianId String @map("librarian_id")
+
+  previousValues String   @map("previous_values")
+  newValues      String   @map("new_values")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  loanRule  LoanRule  @relation(fields: [loanRuleId], references: [id], onDelete: Restrict)
+  librarian Librarian @relation(fields: [librarianId], references: [id], onDelete: Restrict)
+
+  @@index([loanRuleId, createdAt])
+  @@index([librarianId, createdAt])
+  @@map("loan_rule_change_logs")
 }
