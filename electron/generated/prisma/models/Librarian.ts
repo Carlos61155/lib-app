@@ -271,6 +271,7 @@ export type LibrarianWhereInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogListRelationFilter
   bookRegistrationsMade?: Prisma.RegistrationBookLogListRelationFilter
   copyRegistrationsMade?: Prisma.CopyRegistrationLogListRelationFilter
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogListRelationFilter
 }
 
 export type LibrarianOrderByWithRelationInput = {
@@ -292,6 +293,7 @@ export type LibrarianOrderByWithRelationInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogOrderByRelationAggregateInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogOrderByRelationAggregateInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogOrderByRelationAggregateInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogOrderByRelationAggregateInput
 }
 
 export type LibrarianWhereUniqueInput = Prisma.AtLeast<{
@@ -316,6 +318,7 @@ export type LibrarianWhereUniqueInput = Prisma.AtLeast<{
   genreRegistrationsMade?: Prisma.RegistrationGenreLogListRelationFilter
   bookRegistrationsMade?: Prisma.RegistrationBookLogListRelationFilter
   copyRegistrationsMade?: Prisma.CopyRegistrationLogListRelationFilter
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogListRelationFilter
 }, "id" | "personId" | "accessCode">
 
 export type LibrarianOrderByWithAggregationInput = {
@@ -372,6 +375,7 @@ export type LibrarianCreateInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogCreateNestedManyWithoutCreatedByLibrarianInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogCreateNestedManyWithoutCreatedByLibrarianInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogCreateNestedManyWithoutCreatedByLibrarianInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogCreateNestedManyWithoutLibrarianInput
 }
 
 export type LibrarianUncheckedCreateInput = {
@@ -392,6 +396,7 @@ export type LibrarianUncheckedCreateInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUncheckedCreateNestedManyWithoutLibrarianInput
 }
 
 export type LibrarianUpdateInput = {
@@ -412,6 +417,7 @@ export type LibrarianUpdateInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUpdateManyWithoutCreatedByLibrarianNestedInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUpdateManyWithoutCreatedByLibrarianNestedInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUpdateManyWithoutCreatedByLibrarianNestedInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUpdateManyWithoutLibrarianNestedInput
 }
 
 export type LibrarianUncheckedUpdateInput = {
@@ -432,6 +438,7 @@ export type LibrarianUncheckedUpdateInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUncheckedUpdateManyWithoutLibrarianNestedInput
 }
 
 export type LibrarianCreateManyInput = {
@@ -671,6 +678,20 @@ export type LibrarianUpdateOneRequiredWithoutCopyRegistrationsMadeNestedInput = 
   update?: Prisma.XOR<Prisma.XOR<Prisma.LibrarianUpdateToOneWithWhereWithoutCopyRegistrationsMadeInput, Prisma.LibrarianUpdateWithoutCopyRegistrationsMadeInput>, Prisma.LibrarianUncheckedUpdateWithoutCopyRegistrationsMadeInput>
 }
 
+export type LibrarianCreateNestedOneWithoutLoanRuleChangeLogsInput = {
+  create?: Prisma.XOR<Prisma.LibrarianCreateWithoutLoanRuleChangeLogsInput, Prisma.LibrarianUncheckedCreateWithoutLoanRuleChangeLogsInput>
+  connectOrCreate?: Prisma.LibrarianCreateOrConnectWithoutLoanRuleChangeLogsInput
+  connect?: Prisma.LibrarianWhereUniqueInput
+}
+
+export type LibrarianUpdateOneRequiredWithoutLoanRuleChangeLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.LibrarianCreateWithoutLoanRuleChangeLogsInput, Prisma.LibrarianUncheckedCreateWithoutLoanRuleChangeLogsInput>
+  connectOrCreate?: Prisma.LibrarianCreateOrConnectWithoutLoanRuleChangeLogsInput
+  upsert?: Prisma.LibrarianUpsertWithoutLoanRuleChangeLogsInput
+  connect?: Prisma.LibrarianWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LibrarianUpdateToOneWithWhereWithoutLoanRuleChangeLogsInput, Prisma.LibrarianUpdateWithoutLoanRuleChangeLogsInput>, Prisma.LibrarianUncheckedUpdateWithoutLoanRuleChangeLogsInput>
+}
+
 export type LibrarianCreateWithoutPersonInput = {
   id?: string
   accessCode: string
@@ -688,6 +709,7 @@ export type LibrarianCreateWithoutPersonInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogCreateNestedManyWithoutCreatedByLibrarianInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogCreateNestedManyWithoutCreatedByLibrarianInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogCreateNestedManyWithoutCreatedByLibrarianInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogCreateNestedManyWithoutLibrarianInput
 }
 
 export type LibrarianUncheckedCreateWithoutPersonInput = {
@@ -707,6 +729,7 @@ export type LibrarianUncheckedCreateWithoutPersonInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUncheckedCreateNestedManyWithoutLibrarianInput
 }
 
 export type LibrarianCreateOrConnectWithoutPersonInput = {
@@ -742,6 +765,7 @@ export type LibrarianUpdateWithoutPersonInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUpdateManyWithoutCreatedByLibrarianNestedInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUpdateManyWithoutCreatedByLibrarianNestedInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUpdateManyWithoutCreatedByLibrarianNestedInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUpdateManyWithoutLibrarianNestedInput
 }
 
 export type LibrarianUncheckedUpdateWithoutPersonInput = {
@@ -761,6 +785,7 @@ export type LibrarianUncheckedUpdateWithoutPersonInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUncheckedUpdateManyWithoutLibrarianNestedInput
 }
 
 export type LibrarianCreateWithoutAccessLogsInput = {
@@ -780,6 +805,7 @@ export type LibrarianCreateWithoutAccessLogsInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogCreateNestedManyWithoutCreatedByLibrarianInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogCreateNestedManyWithoutCreatedByLibrarianInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogCreateNestedManyWithoutCreatedByLibrarianInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogCreateNestedManyWithoutLibrarianInput
 }
 
 export type LibrarianUncheckedCreateWithoutAccessLogsInput = {
@@ -799,6 +825,7 @@ export type LibrarianUncheckedCreateWithoutAccessLogsInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUncheckedCreateNestedManyWithoutLibrarianInput
 }
 
 export type LibrarianCreateOrConnectWithoutAccessLogsInput = {
@@ -834,6 +861,7 @@ export type LibrarianUpdateWithoutAccessLogsInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUpdateManyWithoutCreatedByLibrarianNestedInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUpdateManyWithoutCreatedByLibrarianNestedInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUpdateManyWithoutCreatedByLibrarianNestedInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUpdateManyWithoutLibrarianNestedInput
 }
 
 export type LibrarianUncheckedUpdateWithoutAccessLogsInput = {
@@ -853,6 +881,7 @@ export type LibrarianUncheckedUpdateWithoutAccessLogsInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUncheckedUpdateManyWithoutLibrarianNestedInput
 }
 
 export type LibrarianCreateWithoutRegistrationsMadeInput = {
@@ -872,6 +901,7 @@ export type LibrarianCreateWithoutRegistrationsMadeInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogCreateNestedManyWithoutCreatedByLibrarianInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogCreateNestedManyWithoutCreatedByLibrarianInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogCreateNestedManyWithoutCreatedByLibrarianInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogCreateNestedManyWithoutLibrarianInput
 }
 
 export type LibrarianUncheckedCreateWithoutRegistrationsMadeInput = {
@@ -891,6 +921,7 @@ export type LibrarianUncheckedCreateWithoutRegistrationsMadeInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUncheckedCreateNestedManyWithoutLibrarianInput
 }
 
 export type LibrarianCreateOrConnectWithoutRegistrationsMadeInput = {
@@ -926,6 +957,7 @@ export type LibrarianUpdateWithoutRegistrationsMadeInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUpdateManyWithoutCreatedByLibrarianNestedInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUpdateManyWithoutCreatedByLibrarianNestedInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUpdateManyWithoutCreatedByLibrarianNestedInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUpdateManyWithoutLibrarianNestedInput
 }
 
 export type LibrarianUncheckedUpdateWithoutRegistrationsMadeInput = {
@@ -945,6 +977,7 @@ export type LibrarianUncheckedUpdateWithoutRegistrationsMadeInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUncheckedUpdateManyWithoutLibrarianNestedInput
 }
 
 export type LibrarianCreateWithoutAuthorRegistrationsMadeInput = {
@@ -964,6 +997,7 @@ export type LibrarianCreateWithoutAuthorRegistrationsMadeInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogCreateNestedManyWithoutCreatedByLibrarianInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogCreateNestedManyWithoutCreatedByLibrarianInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogCreateNestedManyWithoutCreatedByLibrarianInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogCreateNestedManyWithoutLibrarianInput
 }
 
 export type LibrarianUncheckedCreateWithoutAuthorRegistrationsMadeInput = {
@@ -983,6 +1017,7 @@ export type LibrarianUncheckedCreateWithoutAuthorRegistrationsMadeInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUncheckedCreateNestedManyWithoutLibrarianInput
 }
 
 export type LibrarianCreateOrConnectWithoutAuthorRegistrationsMadeInput = {
@@ -1018,6 +1053,7 @@ export type LibrarianUpdateWithoutAuthorRegistrationsMadeInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUpdateManyWithoutCreatedByLibrarianNestedInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUpdateManyWithoutCreatedByLibrarianNestedInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUpdateManyWithoutCreatedByLibrarianNestedInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUpdateManyWithoutLibrarianNestedInput
 }
 
 export type LibrarianUncheckedUpdateWithoutAuthorRegistrationsMadeInput = {
@@ -1037,6 +1073,7 @@ export type LibrarianUncheckedUpdateWithoutAuthorRegistrationsMadeInput = {
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUncheckedUpdateManyWithoutLibrarianNestedInput
 }
 
 export type LibrarianCreateWithoutGenreRegistrationsMadeInput = {
@@ -1056,6 +1093,7 @@ export type LibrarianCreateWithoutGenreRegistrationsMadeInput = {
   authorRegistrationsMade?: Prisma.RegistrationAuthorLogCreateNestedManyWithoutCreatedByLibrarianInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogCreateNestedManyWithoutCreatedByLibrarianInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogCreateNestedManyWithoutCreatedByLibrarianInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogCreateNestedManyWithoutLibrarianInput
 }
 
 export type LibrarianUncheckedCreateWithoutGenreRegistrationsMadeInput = {
@@ -1075,6 +1113,7 @@ export type LibrarianUncheckedCreateWithoutGenreRegistrationsMadeInput = {
   authorRegistrationsMade?: Prisma.RegistrationAuthorLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUncheckedCreateNestedManyWithoutLibrarianInput
 }
 
 export type LibrarianCreateOrConnectWithoutGenreRegistrationsMadeInput = {
@@ -1110,6 +1149,7 @@ export type LibrarianUpdateWithoutGenreRegistrationsMadeInput = {
   authorRegistrationsMade?: Prisma.RegistrationAuthorLogUpdateManyWithoutCreatedByLibrarianNestedInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUpdateManyWithoutCreatedByLibrarianNestedInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUpdateManyWithoutCreatedByLibrarianNestedInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUpdateManyWithoutLibrarianNestedInput
 }
 
 export type LibrarianUncheckedUpdateWithoutGenreRegistrationsMadeInput = {
@@ -1129,6 +1169,7 @@ export type LibrarianUncheckedUpdateWithoutGenreRegistrationsMadeInput = {
   authorRegistrationsMade?: Prisma.RegistrationAuthorLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUncheckedUpdateManyWithoutLibrarianNestedInput
 }
 
 export type LibrarianCreateWithoutBookRegistrationsMadeInput = {
@@ -1148,6 +1189,7 @@ export type LibrarianCreateWithoutBookRegistrationsMadeInput = {
   authorRegistrationsMade?: Prisma.RegistrationAuthorLogCreateNestedManyWithoutCreatedByLibrarianInput
   genreRegistrationsMade?: Prisma.RegistrationGenreLogCreateNestedManyWithoutCreatedByLibrarianInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogCreateNestedManyWithoutCreatedByLibrarianInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogCreateNestedManyWithoutLibrarianInput
 }
 
 export type LibrarianUncheckedCreateWithoutBookRegistrationsMadeInput = {
@@ -1167,6 +1209,7 @@ export type LibrarianUncheckedCreateWithoutBookRegistrationsMadeInput = {
   authorRegistrationsMade?: Prisma.RegistrationAuthorLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUncheckedCreateNestedManyWithoutLibrarianInput
 }
 
 export type LibrarianCreateOrConnectWithoutBookRegistrationsMadeInput = {
@@ -1202,6 +1245,7 @@ export type LibrarianUpdateWithoutBookRegistrationsMadeInput = {
   authorRegistrationsMade?: Prisma.RegistrationAuthorLogUpdateManyWithoutCreatedByLibrarianNestedInput
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUpdateManyWithoutCreatedByLibrarianNestedInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUpdateManyWithoutCreatedByLibrarianNestedInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUpdateManyWithoutLibrarianNestedInput
 }
 
 export type LibrarianUncheckedUpdateWithoutBookRegistrationsMadeInput = {
@@ -1221,6 +1265,7 @@ export type LibrarianUncheckedUpdateWithoutBookRegistrationsMadeInput = {
   authorRegistrationsMade?: Prisma.RegistrationAuthorLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
   copyRegistrationsMade?: Prisma.CopyRegistrationLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUncheckedUpdateManyWithoutLibrarianNestedInput
 }
 
 export type LibrarianCreateWithoutCopyRegistrationsMadeInput = {
@@ -1240,6 +1285,7 @@ export type LibrarianCreateWithoutCopyRegistrationsMadeInput = {
   authorRegistrationsMade?: Prisma.RegistrationAuthorLogCreateNestedManyWithoutCreatedByLibrarianInput
   genreRegistrationsMade?: Prisma.RegistrationGenreLogCreateNestedManyWithoutCreatedByLibrarianInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogCreateNestedManyWithoutCreatedByLibrarianInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogCreateNestedManyWithoutLibrarianInput
 }
 
 export type LibrarianUncheckedCreateWithoutCopyRegistrationsMadeInput = {
@@ -1259,6 +1305,7 @@ export type LibrarianUncheckedCreateWithoutCopyRegistrationsMadeInput = {
   authorRegistrationsMade?: Prisma.RegistrationAuthorLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUncheckedCreateNestedManyWithoutLibrarianInput
 }
 
 export type LibrarianCreateOrConnectWithoutCopyRegistrationsMadeInput = {
@@ -1294,6 +1341,7 @@ export type LibrarianUpdateWithoutCopyRegistrationsMadeInput = {
   authorRegistrationsMade?: Prisma.RegistrationAuthorLogUpdateManyWithoutCreatedByLibrarianNestedInput
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUpdateManyWithoutCreatedByLibrarianNestedInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUpdateManyWithoutCreatedByLibrarianNestedInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUpdateManyWithoutLibrarianNestedInput
 }
 
 export type LibrarianUncheckedUpdateWithoutCopyRegistrationsMadeInput = {
@@ -1313,6 +1361,103 @@ export type LibrarianUncheckedUpdateWithoutCopyRegistrationsMadeInput = {
   authorRegistrationsMade?: Prisma.RegistrationAuthorLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
   genreRegistrationsMade?: Prisma.RegistrationGenreLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
   bookRegistrationsMade?: Prisma.RegistrationBookLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
+  loanRuleChangeLogs?: Prisma.LoanRuleChangeLogUncheckedUpdateManyWithoutLibrarianNestedInput
+}
+
+export type LibrarianCreateWithoutLoanRuleChangeLogsInput = {
+  id?: string
+  accessCode: string
+  passwordHash: string
+  isActive?: boolean
+  mustChangePassword?: boolean
+  failedLoginAttempts?: number
+  lastFailedLoginAt?: Date | string | null
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  person: Prisma.PersonCreateNestedOneWithoutLibrarianInput
+  accessLogs?: Prisma.AccessLogCreateNestedManyWithoutLibrarianInput
+  registrationsMade?: Prisma.RegistrationLogCreateNestedManyWithoutCreatedByLibrarianInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogCreateNestedManyWithoutCreatedByLibrarianInput
+  genreRegistrationsMade?: Prisma.RegistrationGenreLogCreateNestedManyWithoutCreatedByLibrarianInput
+  bookRegistrationsMade?: Prisma.RegistrationBookLogCreateNestedManyWithoutCreatedByLibrarianInput
+  copyRegistrationsMade?: Prisma.CopyRegistrationLogCreateNestedManyWithoutCreatedByLibrarianInput
+}
+
+export type LibrarianUncheckedCreateWithoutLoanRuleChangeLogsInput = {
+  id?: string
+  personId: string
+  accessCode: string
+  passwordHash: string
+  isActive?: boolean
+  mustChangePassword?: boolean
+  failedLoginAttempts?: number
+  lastFailedLoginAt?: Date | string | null
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accessLogs?: Prisma.AccessLogUncheckedCreateNestedManyWithoutLibrarianInput
+  registrationsMade?: Prisma.RegistrationLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
+  genreRegistrationsMade?: Prisma.RegistrationGenreLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
+  bookRegistrationsMade?: Prisma.RegistrationBookLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
+  copyRegistrationsMade?: Prisma.CopyRegistrationLogUncheckedCreateNestedManyWithoutCreatedByLibrarianInput
+}
+
+export type LibrarianCreateOrConnectWithoutLoanRuleChangeLogsInput = {
+  where: Prisma.LibrarianWhereUniqueInput
+  create: Prisma.XOR<Prisma.LibrarianCreateWithoutLoanRuleChangeLogsInput, Prisma.LibrarianUncheckedCreateWithoutLoanRuleChangeLogsInput>
+}
+
+export type LibrarianUpsertWithoutLoanRuleChangeLogsInput = {
+  update: Prisma.XOR<Prisma.LibrarianUpdateWithoutLoanRuleChangeLogsInput, Prisma.LibrarianUncheckedUpdateWithoutLoanRuleChangeLogsInput>
+  create: Prisma.XOR<Prisma.LibrarianCreateWithoutLoanRuleChangeLogsInput, Prisma.LibrarianUncheckedCreateWithoutLoanRuleChangeLogsInput>
+  where?: Prisma.LibrarianWhereInput
+}
+
+export type LibrarianUpdateToOneWithWhereWithoutLoanRuleChangeLogsInput = {
+  where?: Prisma.LibrarianWhereInput
+  data: Prisma.XOR<Prisma.LibrarianUpdateWithoutLoanRuleChangeLogsInput, Prisma.LibrarianUncheckedUpdateWithoutLoanRuleChangeLogsInput>
+}
+
+export type LibrarianUpdateWithoutLoanRuleChangeLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  accessCode?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lastFailedLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  person?: Prisma.PersonUpdateOneRequiredWithoutLibrarianNestedInput
+  accessLogs?: Prisma.AccessLogUpdateManyWithoutLibrarianNestedInput
+  registrationsMade?: Prisma.RegistrationLogUpdateManyWithoutCreatedByLibrarianNestedInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogUpdateManyWithoutCreatedByLibrarianNestedInput
+  genreRegistrationsMade?: Prisma.RegistrationGenreLogUpdateManyWithoutCreatedByLibrarianNestedInput
+  bookRegistrationsMade?: Prisma.RegistrationBookLogUpdateManyWithoutCreatedByLibrarianNestedInput
+  copyRegistrationsMade?: Prisma.CopyRegistrationLogUpdateManyWithoutCreatedByLibrarianNestedInput
+}
+
+export type LibrarianUncheckedUpdateWithoutLoanRuleChangeLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  personId?: Prisma.StringFieldUpdateOperationsInput | string
+  accessCode?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lastFailedLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accessLogs?: Prisma.AccessLogUncheckedUpdateManyWithoutLibrarianNestedInput
+  registrationsMade?: Prisma.RegistrationLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
+  authorRegistrationsMade?: Prisma.RegistrationAuthorLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
+  genreRegistrationsMade?: Prisma.RegistrationGenreLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
+  bookRegistrationsMade?: Prisma.RegistrationBookLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
+  copyRegistrationsMade?: Prisma.CopyRegistrationLogUncheckedUpdateManyWithoutCreatedByLibrarianNestedInput
 }
 
 
@@ -1327,6 +1472,7 @@ export type LibrarianCountOutputType = {
   genreRegistrationsMade: number
   bookRegistrationsMade: number
   copyRegistrationsMade: number
+  loanRuleChangeLogs: number
 }
 
 export type LibrarianCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1336,6 +1482,7 @@ export type LibrarianCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensi
   genreRegistrationsMade?: boolean | LibrarianCountOutputTypeCountGenreRegistrationsMadeArgs
   bookRegistrationsMade?: boolean | LibrarianCountOutputTypeCountBookRegistrationsMadeArgs
   copyRegistrationsMade?: boolean | LibrarianCountOutputTypeCountCopyRegistrationsMadeArgs
+  loanRuleChangeLogs?: boolean | LibrarianCountOutputTypeCountLoanRuleChangeLogsArgs
 }
 
 /**
@@ -1390,6 +1537,13 @@ export type LibrarianCountOutputTypeCountCopyRegistrationsMadeArgs<ExtArgs exten
   where?: Prisma.CopyRegistrationLogWhereInput
 }
 
+/**
+ * LibrarianCountOutputType without action
+ */
+export type LibrarianCountOutputTypeCountLoanRuleChangeLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LoanRuleChangeLogWhereInput
+}
+
 
 export type LibrarianSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1410,6 +1564,7 @@ export type LibrarianSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   genreRegistrationsMade?: boolean | Prisma.Librarian$genreRegistrationsMadeArgs<ExtArgs>
   bookRegistrationsMade?: boolean | Prisma.Librarian$bookRegistrationsMadeArgs<ExtArgs>
   copyRegistrationsMade?: boolean | Prisma.Librarian$copyRegistrationsMadeArgs<ExtArgs>
+  loanRuleChangeLogs?: boolean | Prisma.Librarian$loanRuleChangeLogsArgs<ExtArgs>
   _count?: boolean | Prisma.LibrarianCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["librarian"]>
 
@@ -1466,6 +1621,7 @@ export type LibrarianInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   genreRegistrationsMade?: boolean | Prisma.Librarian$genreRegistrationsMadeArgs<ExtArgs>
   bookRegistrationsMade?: boolean | Prisma.Librarian$bookRegistrationsMadeArgs<ExtArgs>
   copyRegistrationsMade?: boolean | Prisma.Librarian$copyRegistrationsMadeArgs<ExtArgs>
+  loanRuleChangeLogs?: boolean | Prisma.Librarian$loanRuleChangeLogsArgs<ExtArgs>
   _count?: boolean | Prisma.LibrarianCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LibrarianIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1485,6 +1641,7 @@ export type $LibrarianPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     genreRegistrationsMade: Prisma.$RegistrationGenreLogPayload<ExtArgs>[]
     bookRegistrationsMade: Prisma.$RegistrationBookLogPayload<ExtArgs>[]
     copyRegistrationsMade: Prisma.$CopyRegistrationLogPayload<ExtArgs>[]
+    loanRuleChangeLogs: Prisma.$LoanRuleChangeLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1899,6 +2056,7 @@ export interface Prisma__LibrarianClient<T, Null = never, ExtArgs extends runtim
   genreRegistrationsMade<T extends Prisma.Librarian$genreRegistrationsMadeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Librarian$genreRegistrationsMadeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationGenreLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bookRegistrationsMade<T extends Prisma.Librarian$bookRegistrationsMadeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Librarian$bookRegistrationsMadeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationBookLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   copyRegistrationsMade<T extends Prisma.Librarian$copyRegistrationsMadeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Librarian$copyRegistrationsMadeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CopyRegistrationLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  loanRuleChangeLogs<T extends Prisma.Librarian$loanRuleChangeLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Librarian$loanRuleChangeLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoanRuleChangeLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2479,6 +2637,30 @@ export type Librarian$copyRegistrationsMadeArgs<ExtArgs extends runtime.Types.Ex
   take?: number
   skip?: number
   distinct?: Prisma.CopyRegistrationLogScalarFieldEnum | Prisma.CopyRegistrationLogScalarFieldEnum[]
+}
+
+/**
+ * Librarian.loanRuleChangeLogs
+ */
+export type Librarian$loanRuleChangeLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LoanRuleChangeLog
+   */
+  select?: Prisma.LoanRuleChangeLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LoanRuleChangeLog
+   */
+  omit?: Prisma.LoanRuleChangeLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LoanRuleChangeLogInclude<ExtArgs> | null
+  where?: Prisma.LoanRuleChangeLogWhereInput
+  orderBy?: Prisma.LoanRuleChangeLogOrderByWithRelationInput | Prisma.LoanRuleChangeLogOrderByWithRelationInput[]
+  cursor?: Prisma.LoanRuleChangeLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LoanRuleChangeLogScalarFieldEnum | Prisma.LoanRuleChangeLogScalarFieldEnum[]
 }
 
 /**

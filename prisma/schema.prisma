@@ -44,6 +44,7 @@ model Librarian {
   genreRegistrationsMade  RegistrationGenreLog[]  @relation("GenreRegistrationCreatedBy")
   bookRegistrationsMade   RegistrationBookLog[]   @relation("BookRegistrationCreatedBy")
   copyRegistrationsMade   CopyRegistrationLog[]   @relation("CopyRegistrationCreatedBy")
+  loanRuleChangeLogs      LoanRuleChangeLog[]
 
   @@map("librarians")
 }
@@ -271,4 +272,44 @@ model BookGenre {
   @@id([bookId, genreId])
   @@index([genreId])
   @@map("book_genres")
+}
+
+enum LoanProfile {
+  STUDENT
+  PROFESSOR
+
+  @@map("loan_profiles")
+}
+
+model LoanRule {
+  id                        String      @id @default(uuid())
+  profile                   LoanProfile @unique
+  loanPeriodDays            Int         @map("loan_period_days")
+  maxSimultaneousLoans      Int         @map("max_simultaneous_loans")
+  maxRenewals               Int         @map("max_renewals")
+  renewalPeriodDays         Int         @map("renewal_period_days")
+  blockingDaysPerOverdueDay Int         @default(2) @map("blocking_days_per_overdue_day")
+  createdAt                 DateTime    @default(now()) @map("created_at")
+  updatedAt                 DateTime    @updatedAt @map("updated_at")
+
+  changeLogs LoanRuleChangeLog[]
+
+  @@map("loan_rules")
+}
+
+model LoanRuleChangeLog {
+  id          String @id @default(uuid())
+  loanRuleId  String @map("loan_rule_id")
+  librarianId String @map("librarian_id")
+
+  previousValues String   @map("previous_values")
+  newValues      String   @map("new_values")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  loanRule  LoanRule  @relation(fields: [loanRuleId], references: [id], onDelete: Restrict)
+  librarian Librarian @relation(fields: [librarianId], references: [id], onDelete: Restrict)
+
+  @@index([loanRuleId, createdAt])
+  @@index([librarianId, createdAt])
+  @@map("loan_rule_change_logs")
 }

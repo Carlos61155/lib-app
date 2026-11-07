@@ -62,6 +62,17 @@ type CreateCopiesInput = {
   acquisitionMethod?: string;
 };
 
+type LoanProfile = "STUDENT" | "PROFESSOR";
+
+type UpdateLoanRuleInput = {
+  profile: LoanProfile;
+  loanPeriodDays: number;
+  maxSimultaneousLoans: number;
+  maxRenewals: number;
+  renewalPeriodDays: number;
+  blockingDaysPerOverdueDay: number;
+};
+
 contextBridge.exposeInMainWorld("authAPI", {
   login: (accessCode: string, password: string) =>
     ipcRenderer.invoke("auth:login", { accessCode, password }),
@@ -108,4 +119,9 @@ contextBridge.exposeInMainWorld("authAPI", {
 
   createCopies: (input: CreateCopiesInput) =>
     ipcRenderer.invoke("copy:create", input),
+
+  listLoanRules: () => ipcRenderer.invoke("loan-rules:list"),
+
+  updateLoanRule: (input: UpdateLoanRuleInput) =>
+    ipcRenderer.invoke("loan-rules:update", input),
 });

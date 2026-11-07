@@ -236,5 +236,37 @@ interface Window {
         };
       }[];
     }>;
+    listLoanRules: () => Promise<
+      {
+        id: string;
+        profile: "STUDENT" | "PROFESSOR";
+        loanPeriodDays: number;
+        maxSimultaneousLoans: number;
+        maxRenewals: number;
+        renewalPeriodDays: number;
+        blockingDaysPerOverdueDay: number;
+        createdAt: Date;
+        updatedAt: Date;
+      }[]
+    >;
+
+    updateLoanRule: (input: {
+      profile: "STUDENT" | "PROFESSOR";
+      loanPeriodDays: number;
+      maxSimultaneousLoans: number;
+      maxRenewals: number;
+      renewalPeriodDays: number;
+      blockingDaysPerOverdueDay: number;
+    }) => Promise<{
+      id: string;
+      profile: "STUDENT" | "PROFESSOR";
+      loanPeriodDays: number;
+      maxSimultaneousLoans: number;
+      maxRenewals: number;
+      renewalPeriodDays: number;
+      blockingDaysPerOverdueDay: number;
+      createdAt: Date;
+      updatedAt: Date;
+    }>;
   };
 }

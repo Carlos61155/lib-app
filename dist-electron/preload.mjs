@@ -20,5 +20,7 @@ electron.contextBridge.exposeInMainWorld("authAPI", {
   selectBookCover: () => electron.ipcRenderer.invoke("book:select-cover"),
   discardBookCover: (token) => electron.ipcRenderer.invoke("book:discard-cover", token),
   searchActiveBooks: (query) => electron.ipcRenderer.invoke("copy:search-active-books", query),
-  createCopies: (input) => electron.ipcRenderer.invoke("copy:create", input)
+  createCopies: (input) => electron.ipcRenderer.invoke("copy:create", input),
+  listLoanRules: () => electron.ipcRenderer.invoke("loan-rules:list"),
+  updateLoanRule: (input) => electron.ipcRenderer.invoke("loan-rules:update", input)
 });

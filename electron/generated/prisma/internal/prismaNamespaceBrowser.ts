@@ -67,7 +67,9 @@ export const ModelName = {
   CopyRegistrationLog: 'CopyRegistrationLog',
   CopyCodeSequence: 'CopyCodeSequence',
   BookAuthor: 'BookAuthor',
-  BookGenre: 'BookGenre'
+  BookGenre: 'BookGenre',
+  LoanRule: 'LoanRule',
+  LoanRuleChangeLog: 'LoanRuleChangeLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -288,6 +290,33 @@ export const BookGenreScalarFieldEnum = {
 } as const
 
 export type BookGenreScalarFieldEnum = (typeof BookGenreScalarFieldEnum)[keyof typeof BookGenreScalarFieldEnum]
+
+
+export const LoanRuleScalarFieldEnum = {
+  id: 'id',
+  profile: 'profile',
+  loanPeriodDays: 'loanPeriodDays',
+  maxSimultaneousLoans: 'maxSimultaneousLoans',
+  maxRenewals: 'maxRenewals',
+  renewalPeriodDays: 'renewalPeriodDays',
+  blockingDaysPerOverdueDay: 'blockingDaysPerOverdueDay',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LoanRuleScalarFieldEnum = (typeof LoanRuleScalarFieldEnum)[keyof typeof LoanRuleScalarFieldEnum]
+
+
+export const LoanRuleChangeLogScalarFieldEnum = {
+  id: 'id',
+  loanRuleId: 'loanRuleId',
+  librarianId: 'librarianId',
+  previousValues: 'previousValues',
+  newValues: 'newValues',
+  createdAt: 'createdAt'
+} as const
+
+export type LoanRuleChangeLogScalarFieldEnum = (typeof LoanRuleChangeLogScalarFieldEnum)[keyof typeof LoanRuleChangeLogScalarFieldEnum]
 
 
 export const SortOrder = {

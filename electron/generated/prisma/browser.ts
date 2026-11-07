@@ -102,3 +102,13 @@ export type BookAuthor = Prisma.BookAuthorModel
  * 
  */
 export type BookGenre = Prisma.BookGenreModel
+/**
+ * Model LoanRule
+ * 
+ */
+export type LoanRule = Prisma.LoanRuleModel
+/**
+ * Model LoanRuleChangeLog
+ * 
+ */
+export type LoanRuleChangeLog = Prisma.LoanRuleChangeLogModel

@@ -1,6 +1,10 @@
 import { app, BrowserWindow, dialog, Menu } from "electron";
 import { AuthService } from "./auth/auth.service";
-import { applySqliteMigrations, initializeDatabase } from "./database";
+import {
+  applySqliteMigrations,
+  initializeDatabase,
+  prisma,
+} from "./database";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import path from "node:path";
@@ -17,6 +21,9 @@ import { registerGenreHandlers } from "./ipc/genre.handlers";
 import { registerBookHandlers } from "./ipc/book.handlers";
 import { registerCopyHandlers } from "./ipc/copy.handlers";
 import { deleteSession } from "./session/session-store";
+import { LoanRuleService } from "./loan/loan-rules/loan.rules.service";
+import { ensureDefaultLoanRules } from "./loan/loan-rules/loan.rules.seed";
+import { registerLoanHandlers } from "./ipc/loan.handlers";
 
 const require = createRequire(import.meta.url);
 const { config: loadDotEnv } = require("dotenv") as {
@@ -29,6 +36,7 @@ const authorService = new AuthorService();
 const genreService = new GenreService();
 const bookService = new BookService();
 const copyService = new CopyService();
+const loanRuleService = new LoanRuleService();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -125,6 +133,7 @@ registerAuthorHandlers(authorService);
 registerGenreHandlers(genreService);
 registerBookHandlers(bookService);
 registerCopyHandlers(copyService);
+registerLoanHandlers(loanRuleService);
 
 app
   .whenReady()
@@ -169,6 +178,7 @@ app
       ? path.join(app.getAppPath(), "prisma", "migrations")
       : path.resolve(app.getAppPath(), "prisma", "migrations");
     await applySqliteMigrations(migrationsDirectory);
+    await ensureDefaultLoanRules(prisma);
 
     const librarianCreated = await authService.provisionInitialLibrarian({
       name: process.env.INITIAL_LIBRARIAN_NAME,
