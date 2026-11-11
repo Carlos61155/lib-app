@@ -9172,6 +9172,10 @@ client.makeStrictEnum({
   Serializable: "Serializable"
 });
 client.Extensions.defineExtension;
+const LoanProfile = {
+  STUDENT: "STUDENT",
+  PROFESSOR: "PROFESSOR"
+};
 globalThis["__dirname"] = path.dirname(fileURLToPath(import.meta.url));
 const PrismaClient = getPrismaClientClass();
 var __defProp2 = Object.defineProperty;
@@ -16421,6 +16425,18 @@ const CreateCopiesSchema = object({
   acquisitionDate: optionalAcquisitionDate,
   acquisitionMethod: optionalText(100)
 }).strict();
+const SearchCopiesSchema = object({
+  inventoryCode: string().trim().min(1).optional(),
+  status: string().trim().min(1).optional(),
+  shelfLocation: string().trim().min(2, "SHELF_LOCATION_MIN_LENGTH").optional(),
+  conservationCondition: string().trim().min(1).optional(),
+  bookId: string().uuid("BOOK_ID_INVALID").optional()
+}).strict().refine(
+  (filters) => Boolean(
+    filters.inventoryCode || filters.status || filters.shelfLocation || filters.conservationCondition || filters.bookId
+  ),
+  { message: "SEARCH_CRITERIA_REQUIRED" }
+);
 function handleDatabaseError(error2) {
   if (error2 && typeof error2 === "object" && "code" in error2 && error2.code === "P2002") {
     throw new Error("DUPLICATE_INVENTORY_CODE");
@@ -16451,6 +16467,33 @@ class CopyService {
       take: 20
     });
   }
+  async searchBooksForCopyFilter(query) {
+    const term = query.trim();
+    return prisma.book.findMany({
+      where: term ? {
+        OR: [
+          { title: { contains: term } },
+          { isbn: { contains: term } },
+          { authors: { some: { author: { name: { contains: term } } } } }
+        ]
+      } : {},
+      select: {
+        id: true,
+        title: true,
+        isbn: true,
+        isActive: true,
+        authors: {
+          select: {
+            author: {
+              select: { name: true }
+            }
+          }
+        }
+      },
+      orderBy: { title: "asc" },
+      take: 20
+    });
+  }
   async createCopies(input, librarianId) {
     const result = CreateCopiesSchema.safeParse(input);
     if (!result.success) {
@@ -16458,8 +16501,10 @@ class CopyService {
       const field = issue2 == null ? void 0 : issue2.path[0];
       if (field === "bookId") throw new Error("COPY_BOOK_REQUIRED");
       if (field === "copies" && issue2.path.length > 1) {
-        if (issue2.path[2] === "shelfLocation") throw new Error("COPY_LOCATION_INVALID");
-        if (issue2.path[2] === "conservationCondition") throw new Error("COPY_CONDITION_INVALID");
+        if (issue2.path[2] === "shelfLocation")
+          throw new Error("COPY_LOCATION_INVALID");
+        if (issue2.path[2] === "conservationCondition")
+          throw new Error("COPY_CONDITION_INVALID");
         throw new Error("COPY_OBSERVATION_INVALID");
       }
       if (field === "copies") {
@@ -16503,7 +16548,10 @@ class CopyService {
           data.copies.map(
             (copy, index) => transaction.copy.create({
               data: {
-                inventoryCode: String(firstInventoryNumber + index).padStart(6, "0"),
+                inventoryCode: String(firstInventoryNumber + index).padStart(
+                  6,
+                  "0"
+                ),
                 bookId: book.id,
                 status: "AVAILABLE",
                 shelfLocation: copy.shelfLocation,
@@ -16537,6 +16585,79 @@ class CopyService {
       }
       handleDatabaseError(error2);
     }
+  }
+  async searchCopies(input) {
+    const parsed = SearchCopiesSchema.safeParse(input);
+    if (!parsed.success) {
+      const issue2 = parsed.error.issues[0];
+      if ((issue2 == null ? void 0 : issue2.message) === "SEARCH_CRITERIA_REQUIRED") {
+        throw new Error("COPY_SEARCH_CRITERIA_REQUIRED");
+      }
+      if ((issue2 == null ? void 0 : issue2.message) === "SHELF_LOCATION_MIN_LENGTH") {
+        throw new Error("COPY_SEARCH_LOCATION_TOO_SHORT");
+      }
+      if ((issue2 == null ? void 0 : issue2.path[0]) === "bookId") {
+        throw new Error("COPY_SEARCH_BOOK_ID_INVALID");
+      }
+      throw new Error("COPY_SEARCH_FILTERS_INVALID");
+    }
+    const filters = parsed.data;
+    return prisma.copy.findMany({
+      where: {
+        ...filters.inventoryCode ? { inventoryCode: filters.inventoryCode } : {},
+        ...filters.status ? { status: filters.status } : {},
+        ...filters.shelfLocation ? { shelfLocation: { contains: filters.shelfLocation } } : {},
+        ...filters.conservationCondition ? { conservationCondition: filters.conservationCondition } : {},
+        ...filters.bookId ? { bookId: filters.bookId } : {}
+      },
+      select: {
+        id: true,
+        inventoryCode: true,
+        status: true,
+        shelfLocation: true,
+        book: {
+          select: {
+            title: true,
+            isActive: true
+          }
+        }
+      },
+      orderBy: { inventoryCode: "asc" }
+    });
+  }
+  async getCopyDetails(copyId) {
+    if (!copyId) {
+      throw new Error("COPY_ID_REQUIRED");
+    }
+    const copy = await prisma.copy.findUnique({
+      where: { id: copyId },
+      select: {
+        id: true,
+        inventoryCode: true,
+        status: true,
+        shelfLocation: true,
+        conservationCondition: true,
+        acquisitionDate: true,
+        book: {
+          select: {
+            title: true,
+            isbn: true,
+            publisher: true,
+            yearOfPublication: true,
+            isActive: true,
+            authors: {
+              select: {
+                author: { select: { name: true } }
+              }
+            }
+          }
+        }
+      }
+    });
+    if (!copy) {
+      throw new Error("COPY_NOT_FOUND");
+    }
+    return copy;
   }
 }
 const sessions = /* @__PURE__ */ new Map();
@@ -16791,6 +16912,27 @@ function registerCopyHandlers(copyService2) {
     const librarianId = await requireActiveLibrarian(event);
     return copyService2.createCopies(input, librarianId);
   });
+  ipcMain.handle("copy:search", async (event, filters) => {
+    await requireActiveLibrarian(event);
+    return copyService2.searchCopies(filters);
+  });
+  ipcMain.handle("copy:details", async (event, copyId) => {
+    await requireActiveLibrarian(event);
+    if (typeof copyId !== "string") {
+      throw new Error("COPY_ID_INVALID");
+    }
+    return copyService2.getCopyDetails(copyId);
+  });
+  ipcMain.handle(
+    "copy:search-books-for-filter",
+    async (event, query) => {
+      await requireActiveLibrarian(event);
+      if (typeof query !== "string") {
+        throw new Error("COPY_BOOK_SEARCH_QUERY_INVALID");
+      }
+      return copyService2.searchBooksForCopyFilter(query);
+    }
+  );
 }
 const LoanProfileSchema = _enum(["STUDENT", "PROFESSOR"]);
 const MAX_LOAN_PERIOD_DAYS = 60;
@@ -16864,6 +17006,35 @@ class LoanRuleService {
       });
     });
   }
+}
+const INITIAL_LOAN_RULES = [
+  {
+    profile: LoanProfile.STUDENT,
+    loanPeriodDays: 30,
+    maxSimultaneousLoans: 3,
+    maxRenewals: 2,
+    renewalPeriodDays: 15,
+    blockingDaysPerOverdueDay: 2
+  },
+  {
+    profile: LoanProfile.PROFESSOR,
+    loanPeriodDays: 60,
+    maxSimultaneousLoans: 5,
+    maxRenewals: 4,
+    renewalPeriodDays: 30,
+    blockingDaysPerOverdueDay: 2
+  }
+];
+async function ensureDefaultLoanRules(client2) {
+  await client2.$transaction(async (transaction) => {
+    for (const rule of INITIAL_LOAN_RULES) {
+      await transaction.loanRule.upsert({
+        where: { profile: rule.profile },
+        create: rule,
+        update: {}
+      });
+    }
+  });
 }
 function registerLoanHandlers(loanRuleService2) {
   ipcMain.handle("loan-rules:list", async (event) => {
@@ -16967,6 +17138,7 @@ app.whenReady().then(async () => {
   await initializeDatabase(databaseUrl);
   const migrationsDirectory = app.isPackaged ? path__default.join(app.getAppPath(), "prisma", "migrations") : path__default.resolve(app.getAppPath(), "prisma", "migrations");
   await applySqliteMigrations(migrationsDirectory);
+  await ensureDefaultLoanRules(prisma);
   const librarianCreated = await authService.provisionInitialLibrarian({
     name: process.env.INITIAL_LIBRARIAN_NAME,
     email: process.env.INITIAL_LIBRARIAN_EMAIL,
