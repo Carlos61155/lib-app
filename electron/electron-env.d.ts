@@ -268,5 +268,59 @@ interface Window {
       createdAt: Date;
       updatedAt: Date;
     }>;
+
+    searchCopies: (filters: {
+      inventoryCode?: string;
+      status?: string;
+      shelfLocation?: string;
+      conservationCondition?: string;
+      bookId?: string;
+    }) => Promise<
+      {
+        id: string;
+        inventoryCode: string;
+        status: string;
+        shelfLocation: string | null;
+        book: {
+          title: string;
+          isActive: boolean;
+        };
+      }[]
+    >;
+
+    getCopyDetails: (copyId: string) => Promise<{
+      id: string;
+      inventoryCode: string;
+      status: string;
+      shelfLocation: string | null;
+      conservationCondition: string | null;
+      acquisitionDate: Date | null;
+      book: {
+        title: string;
+        isbn: string;
+        publisher: string;
+        yearOfPublication: number;
+        isActive: boolean;
+        authors: {
+          author: {
+            name: string;
+          };
+        }[];
+      };
+    }>;
+
+    searchBooksForCopyFilter: (query: string) => Promise<
+      {
+        id: string;
+        title: string;
+        isbn: string;
+        isActive: boolean;
+        authors: {
+          author: {
+            name: string;
+          };
+        }[];
+      }[]
+    >;
   };
 }

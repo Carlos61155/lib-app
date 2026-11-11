@@ -1,5 +1,6 @@
 import { prisma } from "../database";
 import { CreateCopiesSchema } from "./copy.schemas";
+import { SearchCopiesSchema } from "./copy-search.schemas";
 
 function handleDatabaseError(error: unknown): never {
   if (
@@ -42,6 +43,37 @@ export class CopyService {
     });
   }
 
+  async searchBooksForCopyFilter(query: string) {
+    const term = query.trim();
+
+    return prisma.book.findMany({
+      where: term
+        ? {
+            OR: [
+              { title: { contains: term } },
+              { isbn: { contains: term } },
+              { authors: { some: { author: { name: { contains: term } } } } },
+            ],
+          }
+        : {},
+      select: {
+        id: true,
+        title: true,
+        isbn: true,
+        isActive: true,
+        authors: {
+          select: {
+            author: {
+              select: { name: true },
+            },
+          },
+        },
+      },
+      orderBy: { title: "asc" },
+      take: 20,
+    });
+  }
+
   async createCopies(input: unknown, librarianId: string) {
     const result = CreateCopiesSchema.safeParse(input);
 
@@ -51,8 +83,10 @@ export class CopyService {
 
       if (field === "bookId") throw new Error("COPY_BOOK_REQUIRED");
       if (field === "copies" && issue.path.length > 1) {
-        if (issue.path[2] === "shelfLocation") throw new Error("COPY_LOCATION_INVALID");
-        if (issue.path[2] === "conservationCondition") throw new Error("COPY_CONDITION_INVALID");
+        if (issue.path[2] === "shelfLocation")
+          throw new Error("COPY_LOCATION_INVALID");
+        if (issue.path[2] === "conservationCondition")
+          throw new Error("COPY_CONDITION_INVALID");
         throw new Error("COPY_OBSERVATION_INVALID");
       }
       if (field === "copies") {
@@ -93,7 +127,8 @@ export class CopyService {
           data: { lastValue: { increment: data.copies.length } },
           select: { lastValue: true },
         });
-        const firstInventoryNumber = sequence.lastValue - data.copies.length + 1;
+        const firstInventoryNumber =
+          sequence.lastValue - data.copies.length + 1;
 
         const registration = await transaction.copyRegistrationLog.create({
           data: {
@@ -107,7 +142,10 @@ export class CopyService {
           data.copies.map((copy, index) =>
             transaction.copy.create({
               data: {
-                inventoryCode: String(firstInventoryNumber + index).padStart(6, "0"),
+                inventoryCode: String(firstInventoryNumber + index).padStart(
+                  6,
+                  "0",
+                ),
                 bookId: book.id,
                 status: "AVAILABLE",
                 shelfLocation: copy.shelfLocation,
@@ -146,5 +184,96 @@ export class CopyService {
 
       handleDatabaseError(error);
     }
+  }
+
+  async searchCopies(input: unknown) {
+    const parsed = SearchCopiesSchema.safeParse(input);
+
+    if (!parsed.success) {
+      const issue = parsed.error.issues[0];
+
+      if (issue?.message === "SEARCH_CRITERIA_REQUIRED") {
+        throw new Error("COPY_SEARCH_CRITERIA_REQUIRED");
+      }
+
+      if (issue?.message === "SHELF_LOCATION_MIN_LENGTH") {
+        throw new Error("COPY_SEARCH_LOCATION_TOO_SHORT");
+      }
+
+      if (issue?.path[0] === "bookId") {
+        throw new Error("COPY_SEARCH_BOOK_ID_INVALID");
+      }
+
+      throw new Error("COPY_SEARCH_FILTERS_INVALID");
+    }
+
+    const filters = parsed.data;
+
+    return prisma.copy.findMany({
+      where: {
+        ...(filters.inventoryCode
+          ? { inventoryCode: filters.inventoryCode }
+          : {}),
+        ...(filters.status ? { status: filters.status } : {}),
+        ...(filters.shelfLocation
+          ? { shelfLocation: { contains: filters.shelfLocation } }
+          : {}),
+        ...(filters.conservationCondition
+          ? { conservationCondition: filters.conservationCondition }
+          : {}),
+        ...(filters.bookId ? { bookId: filters.bookId } : {}),
+      },
+      select: {
+        id: true,
+        inventoryCode: true,
+        status: true,
+        shelfLocation: true,
+        book: {
+          select: {
+            title: true,
+            isActive: true,
+          },
+        },
+      },
+      orderBy: { inventoryCode: "asc" },
+    });
+  }
+
+  async getCopyDetails(copyId: string) {
+    if (!copyId) {
+      throw new Error("COPY_ID_REQUIRED");
+    }
+
+    const copy = await prisma.copy.findUnique({
+      where: { id: copyId },
+      select: {
+        id: true,
+        inventoryCode: true,
+        status: true,
+        shelfLocation: true,
+        conservationCondition: true,
+        acquisitionDate: true,
+        book: {
+          select: {
+            title: true,
+            isbn: true,
+            publisher: true,
+            yearOfPublication: true,
+            isActive: true,
+            authors: {
+              select: {
+                author: { select: { name: true } },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!copy) {
+      throw new Error("COPY_NOT_FOUND");
+    }
+
+    return copy;
   }
 }
