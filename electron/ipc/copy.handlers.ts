@@ -17,4 +17,32 @@ export function registerCopyHandlers(copyService: CopyService): void {
     const librarianId = await requireActiveLibrarian(event);
     return copyService.createCopies(input, librarianId);
   });
+
+  ipcMain.handle("copy:search", async (event, filters: unknown) => {
+    await requireActiveLibrarian(event);
+    return copyService.searchCopies(filters);
+  });
+
+  ipcMain.handle("copy:details", async (event, copyId: unknown) => {
+    await requireActiveLibrarian(event);
+
+    if (typeof copyId !== "string") {
+      throw new Error("COPY_ID_INVALID");
+    }
+
+    return copyService.getCopyDetails(copyId);
+  });
+
+  ipcMain.handle(
+    "copy:search-books-for-filter",
+    async (event, query: unknown) => {
+      await requireActiveLibrarian(event);
+
+      if (typeof query !== "string") {
+        throw new Error("COPY_BOOK_SEARCH_QUERY_INVALID");
+      }
+
+      return copyService.searchBooksForCopyFilter(query);
+    },
+  );
 }
