@@ -47,6 +47,13 @@ export const router = createHashRouter([
           return { Component: Copies }
         },
       },
+      {
+        path: '/loan-rules',
+        lazy: async () => {
+          const { default: LoanRules } = await import('../pages/LoanRules')
+          return { Component: LoanRules }
+        },
+      },
     ],
   },
 ])

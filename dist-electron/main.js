@@ -9172,6 +9172,10 @@ client.makeStrictEnum({
   Serializable: "Serializable"
 });
 client.Extensions.defineExtension;
+const LoanProfile = {
+  STUDENT: "STUDENT",
+  PROFESSOR: "PROFESSOR"
+};
 globalThis["__dirname"] = path.dirname(fileURLToPath(import.meta.url));
 const PrismaClient = getPrismaClientClass();
 var __defProp2 = Object.defineProperty;
@@ -16865,6 +16869,35 @@ class LoanRuleService {
     });
   }
 }
+const INITIAL_LOAN_RULES = [
+  {
+    profile: LoanProfile.STUDENT,
+    loanPeriodDays: 30,
+    maxSimultaneousLoans: 3,
+    maxRenewals: 2,
+    renewalPeriodDays: 15,
+    blockingDaysPerOverdueDay: 2
+  },
+  {
+    profile: LoanProfile.PROFESSOR,
+    loanPeriodDays: 60,
+    maxSimultaneousLoans: 5,
+    maxRenewals: 4,
+    renewalPeriodDays: 30,
+    blockingDaysPerOverdueDay: 2
+  }
+];
+async function ensureDefaultLoanRules(client2) {
+  await client2.$transaction(async (transaction) => {
+    for (const rule of INITIAL_LOAN_RULES) {
+      await transaction.loanRule.upsert({
+        where: { profile: rule.profile },
+        create: rule,
+        update: {}
+      });
+    }
+  });
+}
 function registerLoanHandlers(loanRuleService2) {
   ipcMain.handle("loan-rules:list", async (event) => {
     await requireActiveLibrarian(event);
@@ -16967,6 +17000,7 @@ app.whenReady().then(async () => {
   await initializeDatabase(databaseUrl);
   const migrationsDirectory = app.isPackaged ? path__default.join(app.getAppPath(), "prisma", "migrations") : path__default.resolve(app.getAppPath(), "prisma", "migrations");
   await applySqliteMigrations(migrationsDirectory);
+  await ensureDefaultLoanRules(prisma);
   const librarianCreated = await authService.provisionInitialLibrarian({
     name: process.env.INITIAL_LIBRARIAN_NAME,
     email: process.env.INITIAL_LIBRARIAN_EMAIL,

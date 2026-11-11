@@ -21,7 +21,7 @@ const navigationItems = [
 
 export function DashboardLayout({ children }: { children: ReactNode }) {
   const { pathname } = useLocation()
-  const activeItem = pathname === '/authors' ? 'Autores' : pathname === '/genres' ? 'Gêneros' : pathname === '/books' ? 'Livros' : pathname === '/copies' ? 'Exemplares' : 'Usuários'
+  const activeItem = pathname === '/authors' ? 'Autores' : pathname === '/genres' ? 'Gêneros' : pathname === '/books' ? 'Livros' : pathname === '/copies' ? 'Exemplares' : pathname === '/loan-rules' ? 'Regras de empréstimo' : 'Usuários'
 
   return (
     <div className="min-h-screen bg-[#eeeeee] lg:grid lg:grid-cols-[254px_minmax(0,1fr)]">
@@ -39,12 +39,12 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
             const className = `flex min-h-[49px] items-center gap-3 rounded-[9px] px-4 text-[14px] font-semibold ${isActive ? 'bg-[#5680dc]' : 'text-white'}`
             const contents = <><Icon aria-hidden="true" className="size-[17px] shrink-0" /><span>{label}</span></>
 
-            if (label === 'Usuários' || label === 'Autores' || label === 'Gêneros' || label === 'Livros' || label === 'Exemplares') {
+            if (label !== 'Regras de empréstimo') {
               const to = label === 'Autores' ? '/authors' : label === 'Gêneros' ? '/genres' : label === 'Livros' ? '/books' : label === 'Exemplares' ? '/copies' : '/home'
               return <Link key={label} to={to} aria-current={isActive ? 'page' : undefined} className={className}>{contents}</Link>
             }
 
-            return <div key={label} className={className}>{contents}</div>
+            return <Link key={label} to="/loan-rules" aria-current={isActive ? 'page' : undefined} className={className}>{contents}</Link>
           })}
         </nav>
 
