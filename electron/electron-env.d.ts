@@ -322,5 +322,27 @@ interface Window {
         }[];
       }[]
     >;
+
+    searchBooks: (filters: {
+      title?: string;
+      author?: string;
+      genre?: string;
+      publisher?: string;
+      isbn?: string;
+      yearOfPublication?: string;
+      availableOnly?: boolean;
+    }) => Promise<
+      Awaited<
+        ReturnType<import("./book/book.service").BookService["searchBooks"]>
+      >
+    >;
+
+    getBookSearchDetails: (
+      bookId: string,
+    ) => Promise<
+      Awaited<
+        ReturnType<import("./book/book.service").BookService["getBookDetails"]>
+      >
+    >;
   };
 }

@@ -1,5 +1,6 @@
 import { prisma } from "../database";
 import { CreateBookSchema } from "./book.schemas";
+import { SearchBooksSchema } from "./book-search.schemas";
 
 function handleDatabaseError(error: unknown): never {
   if (
@@ -122,5 +123,167 @@ export class BookService {
     } catch (error) {
       handleDatabaseError(error);
     }
+  }
+
+  async searchBooks(input: unknown) {
+    const parsed = SearchBooksSchema.safeParse(input);
+
+    if (!parsed.success) {
+      const issue = parsed.error.issues[0];
+
+      if (issue?.message === "SEARCH_CRITERIA_REQUIRED") {
+        throw new Error("BOOK_SEARCH_CRITERIA_REQUIRED");
+      }
+      if (issue?.message === "SEARCH_TEXT_TOO_SHORT") {
+        throw new Error("BOOK_SEARCH_TEXT_TOO_SHORT");
+      }
+      if (issue?.message === "SEARCH_YEAR_CANNOT_BE_FUTURE") {
+        throw new Error("BOOK_SEARCH_YEAR_CANNOT_BE_FUTURE");
+      }
+      if (issue?.path[0] === "yearOfPublication") {
+        throw new Error("BOOK_SEARCH_YEAR_INVALID");
+      }
+      if (issue?.path[0] === "isbn") {
+        throw new Error("BOOK_SEARCH_ISBN_INVALID");
+      }
+      throw new Error("BOOK_SEARCH_FILTERS_INVALID");
+    }
+
+    const filters = parsed.data;
+
+    const books = await prisma.book.findMany({
+      where: {
+        ...(filters.title ? { title: { contains: filters.title } } : {}),
+        ...(filters.author
+          ? {
+              authors: {
+                some: {
+                  author: { name: { contains: filters.author } },
+                },
+              },
+            }
+          : {}),
+        ...(filters.genre
+          ? {
+              genres: {
+                some: {
+                  genre: { name: { contains: filters.genre } },
+                },
+              },
+            }
+          : {}),
+        ...(filters.publisher
+          ? { publisher: { contains: filters.publisher } }
+          : {}),
+        ...(filters.isbn ? { isbn: filters.isbn } : {}),
+        ...(filters.yearOfPublication !== undefined
+          ? { yearOfPublication: filters.yearOfPublication }
+          : {}),
+        ...(filters.availableOnly
+          ? {
+              isActive: true,
+              copies: { some: { status: "AVAILABLE" } },
+            }
+          : {}),
+      },
+      select: {
+        id: true,
+        title: true,
+        subTitle: true,
+        isbn: true,
+        publisher: true,
+        yearOfPublication: true,
+        edition: true,
+        numberOfPages: true,
+        language: true,
+        synopsis: true,
+        coverPath: true,
+        isActive: true,
+        authors: {
+          select: { author: { select: { id: true, name: true } } },
+        },
+        genres: {
+          select: { genre: { select: { id: true, name: true } } },
+        },
+        copies: {
+          select: {
+            id: true,
+            inventoryCode: true,
+            shelfLocation: true,
+            status: true,
+          },
+          orderBy: { inventoryCode: "asc" },
+        },
+      },
+      orderBy: { title: "asc" },
+    });
+
+    return books.map((book) => {
+      const totalCopies = book.copies.length;
+      const availableCopies = book.isActive
+        ? book.copies.filter((copy) => copy.status === "AVAILABLE").length
+        : 0;
+
+      return {
+        ...book,
+        authors: book.authors.map(({ author }) => author),
+        genres: book.genres.map(({ genre }) => genre),
+        totalCopies,
+        availableCopies,
+        copies: book.copies.map((copy) => ({
+          ...copy,
+          status: copy.status,
+        })),
+      };
+    });
+  }
+
+  async getBookDetails(bookId: string) {
+    if (!bookId.trim()) throw new Error("BOOK_ID_INVALID");
+
+    const book = await prisma.book.findUnique({
+      where: { id: bookId },
+      select: {
+        id: true,
+        title: true,
+        subTitle: true,
+        isbn: true,
+        publisher: true,
+        yearOfPublication: true,
+        edition: true,
+        numberOfPages: true,
+        language: true,
+        synopsis: true,
+        coverPath: true,
+        isActive: true,
+        authors: {
+          select: { author: { select: { id: true, name: true } } },
+        },
+        genres: {
+          select: { genre: { select: { id: true, name: true } } },
+        },
+        copies: {
+          select: {
+            id: true,
+            inventoryCode: true,
+            shelfLocation: true,
+            status: true,
+          },
+          orderBy: { inventoryCode: "asc" },
+        },
+      },
+    });
+
+    if (!book) throw new Error("BOOK_NOT_FOUND");
+
+    return {
+      ...book,
+      authors: book.authors.map(({ author }) => author),
+      genres: book.genres.map(({ genre }) => genre),
+      totalCopies: book.copies.length,
+      availableCopies: book.isActive
+        ? book.copies.filter((copy) => copy.status === "AVAILABLE").length
+        : 0,
+    };
   }
 }
