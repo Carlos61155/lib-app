@@ -17,6 +17,21 @@ const stagedBookCovers = new Map<number, StagedBookCover>();
 const MAX_BOOK_COVER_BYTES = 5 * 1024 * 1024;
 
 export function registerBookHandlers(bookService: BookService): void {
+  ipcMain.handle("book:search", async (event, filters: unknown) => {
+    await requireActiveLibrarian(event);
+    return bookService.searchBooks(filters);
+  });
+
+  ipcMain.handle("book:search-details", async (event, bookId: unknown) => {
+    await requireActiveLibrarian(event);
+
+    if (typeof bookId !== "string") {
+      throw new Error("BOOK_ID_INVALID");
+    }
+
+    return bookService.getBookDetails(bookId);
+  });
+
   ipcMain.handle("book:create", async (event, input: unknown) => {
     const librarianId = await requireActiveLibrarian(event);
 
@@ -51,7 +66,10 @@ export function registerBookHandlers(bookService: BookService): void {
 
     try {
       if (stagedCover) {
-        const coverDirectory = path.join(app.getPath("userData"), "book-covers");
+        const coverDirectory = path.join(
+          app.getPath("userData"),
+          "book-covers",
+        );
         const fileName = `${randomUUID()}.${stagedCover.extension}`;
         await mkdir(coverDirectory, { recursive: true });
 
@@ -80,7 +98,11 @@ export function registerBookHandlers(bookService: BookService): void {
     const librarianId = await requireActiveLibrarian(event);
     const staged = stagedBookCovers.get(event.sender.id);
 
-    if (staged && staged.token === token && staged.librarianId === librarianId) {
+    if (
+      staged &&
+      staged.token === token &&
+      staged.librarianId === librarianId
+    ) {
       stagedBookCovers.delete(event.sender.id);
     }
 
@@ -92,7 +114,9 @@ export function registerBookHandlers(bookService: BookService): void {
     const selection = await dialog.showOpenDialog({
       title: "Selecionar capa do livro",
       properties: ["openFile"],
-      filters: [{ name: "Imagens", extensions: ["jpg", "jpeg", "png", "webp"] }],
+      filters: [
+        { name: "Imagens", extensions: ["jpg", "jpeg", "png", "webp"] },
+      ],
     });
 
     if (selection.canceled || selection.filePaths.length === 0) return null;
@@ -140,7 +164,12 @@ function detectBookCoverType(bytes: Buffer): {
     return { extension: "png", mimeType: "image/png" };
   }
 
-  if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) {
+  if (
+    bytes.length >= 3 &&
+    bytes[0] === 0xff &&
+    bytes[1] === 0xd8 &&
+    bytes[2] === 0xff
+  ) {
     return { extension: "jpg", mimeType: "image/jpeg" };
   }
 

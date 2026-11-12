@@ -73,6 +73,16 @@ type UpdateLoanRuleInput = {
   blockingDaysPerOverdueDay: number;
 };
 
+type SearchBooksFilters = {
+  title?: string;
+  author?: string;
+  genre?: string;
+  publisher?: string;
+  isbn?: string;
+  yearOfPublication?: string;
+  availableOnly?: boolean;
+};
+
 contextBridge.exposeInMainWorld("authAPI", {
   login: (accessCode: string, password: string) =>
     ipcRenderer.invoke("auth:login", { accessCode, password }),
@@ -124,4 +134,24 @@ contextBridge.exposeInMainWorld("authAPI", {
 
   updateLoanRule: (input: UpdateLoanRuleInput) =>
     ipcRenderer.invoke("loan-rules:update", input),
+
+  searchCopies: (filters: {
+    inventoryCode?: string;
+    status?: string;
+    shelfLocation?: string;
+    conservationCondition?: string;
+    bookId?: string;
+  }) => ipcRenderer.invoke("copy:search", filters),
+
+  getCopyDetails: (copyId: string) =>
+    ipcRenderer.invoke("copy:details", copyId),
+
+  searchBooksForCopyFilter: (query: string) =>
+    ipcRenderer.invoke("copy:search-books-for-filter", query),
+
+  searchBooks: (filters: SearchBooksFilters) =>
+    ipcRenderer.invoke("book:search", filters),
+
+  getBookSearchDetails: (bookId: string) =>
+    ipcRenderer.invoke("book:search-details", bookId),
 });
