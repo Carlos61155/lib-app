@@ -6,7 +6,6 @@ type LoanRule = Awaited<ReturnType<typeof window.authAPI.listLoanRules>>[number]
 type RuleValues = Pick<LoanRule, 'loanPeriodDays' | 'maxSimultaneousLoans' | 'maxRenewals' | 'renewalPeriodDays' | 'blockingDaysPerOverdueDay'>
 
 const emptyValues: RuleValues = { loanPeriodDays: 30, maxSimultaneousLoans: 3, maxRenewals: 2, renewalPeriodDays: 15, blockingDaysPerOverdueDay: 2 }
-const fieldClass = 'h-[42px] w-full rounded-[7px] border border-[#cbd1dc] bg-white px-[10px] text-[13px] text-[#34415a] outline-none focus:border-[#315bbd] focus:ring-2 focus:ring-[#315bbd]/15'
 
 function valuesFromRule(rule: LoanRule): RuleValues {
   return {

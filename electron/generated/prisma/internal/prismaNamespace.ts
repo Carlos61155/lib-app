@@ -2162,6 +2162,13 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
 
 
 /**
+ * Reference to a field of type 'LoanProfile'
+ */
+export type EnumLoanProfileFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoanProfile'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>

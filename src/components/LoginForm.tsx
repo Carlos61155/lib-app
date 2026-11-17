@@ -61,7 +61,7 @@ export function LoginForm() {
           form.reset({ username, password: '', newPassword: '', confirmPassword: '' })
           return
         }
-        navigate('/home')
+        navigate('/users/register')
       } catch (error) {
         const message = errorMessage(error)
         if (message.includes('ACCOUNT_LOCKED')) {
@@ -88,7 +88,7 @@ export function LoginForm() {
     try {
       await window.authAPI.changePassword(temporaryPassword, newPassword)
       setTemporaryPassword('')
-      navigate('/home')
+      navigate('/users/register')
     } catch (error) {
       const message = errorMessage(error)
       if (message.includes('PASSWORD_TOO_SHORT')) {

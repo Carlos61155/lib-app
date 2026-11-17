@@ -44,10 +44,10 @@ export default function Copies() {
         </div>
         <div className="flex flex-col gap-3 sm:flex-row">
           <button type="button" onClick={() => { setRegistered(null); setCopyMessage('') }} className="h-[42px] rounded-[8px] border border-[#c6cedb] bg-white px-5 text-[12px] font-semibold text-[#19294c]">Adicionar mais exemplares</button>
-          <button type="button" onClick={() => navigate('/home')} className="h-[42px] min-w-[110px] rounded-[8px] bg-[#315bbd] px-5 text-[12px] font-semibold text-white">Concluir</button>
+          <button type="button" onClick={() => navigate('/users/register')} className="h-[42px] min-w-[110px] rounded-[8px] bg-[#315bbd] px-5 text-[12px] font-semibold text-white">Concluir</button>
         </div>
       </div>
       </section>
-    </> : <div className="print:hidden"><CopyRegistrationForm onSuccess={setRegistered} onCancel={() => navigate('/home')} /></div>}
+    </> : <div className="print:hidden"><CopyRegistrationForm onSuccess={setRegistered} onCancel={() => navigate('/users/register')} /></div>}
   </DashboardLayout>
 }

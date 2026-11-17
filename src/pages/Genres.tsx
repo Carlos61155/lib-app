@@ -25,9 +25,9 @@ export default function Genres() {
         <p role="status" className="mt-[10px] rounded-[9px] bg-[#e5f5ee] px-[13px] py-[14px] text-[12px] font-semibold text-[#096644]">Gênero registrado com sucesso.</p>
         <div className="mt-[23px] flex flex-col justify-end gap-3 sm:flex-row">
           <button type="button" onClick={() => setRegisteredGenre(null)} className="h-[45px] rounded-[9px] border border-[#315bbd] bg-white px-[14px] text-[12px] font-semibold text-[#19294c]">Cadastrar outro gênero</button>
-          <button type="button" onClick={() => navigate('/home')} className="h-[45px] min-w-[113px] rounded-[9px] bg-[#2e56b2] px-6 text-[12px] font-semibold text-white">Concluir</button>
+          <button type="button" onClick={() => navigate('/users/register')} className="h-[45px] min-w-[113px] rounded-[9px] bg-[#2e56b2] px-6 text-[12px] font-semibold text-white">Concluir</button>
         </div>
-      </section> : <GenreRegistrationForm onSuccess={setRegisteredGenre} onCancel={() => navigate('/home')} />}
+      </section> : <GenreRegistrationForm onSuccess={setRegisteredGenre} onCancel={() => navigate('/users/register')} />}
     </div>
   </DashboardLayout>
 }

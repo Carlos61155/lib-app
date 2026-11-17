@@ -198,6 +198,23 @@ export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedIntNullableFilter<$PrismaModel>
 }
 
+export type EnumLoanProfileFilter<$PrismaModel = never> = {
+  equals?: $Enums.LoanProfile | Prisma.EnumLoanProfileFieldRefInput<$PrismaModel>
+  in?: $Enums.LoanProfile[]
+  notIn?: $Enums.LoanProfile[]
+  not?: Prisma.NestedEnumLoanProfileFilter<$PrismaModel> | $Enums.LoanProfile
+}
+
+export type EnumLoanProfileWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LoanProfile | Prisma.EnumLoanProfileFieldRefInput<$PrismaModel>
+  in?: $Enums.LoanProfile[]
+  notIn?: $Enums.LoanProfile[]
+  not?: Prisma.NestedEnumLoanProfileWithAggregatesFilter<$PrismaModel> | $Enums.LoanProfile
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLoanProfileFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLoanProfileFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[]
@@ -397,6 +414,23 @@ export type NestedFloatNullableFilter<$PrismaModel = never> = {
   gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   not?: Prisma.NestedFloatNullableFilter<$PrismaModel> | number | null
+}
+
+export type NestedEnumLoanProfileFilter<$PrismaModel = never> = {
+  equals?: $Enums.LoanProfile | Prisma.EnumLoanProfileFieldRefInput<$PrismaModel>
+  in?: $Enums.LoanProfile[]
+  notIn?: $Enums.LoanProfile[]
+  not?: Prisma.NestedEnumLoanProfileFilter<$PrismaModel> | $Enums.LoanProfile
+}
+
+export type NestedEnumLoanProfileWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.LoanProfile | Prisma.EnumLoanProfileFieldRefInput<$PrismaModel>
+  in?: $Enums.LoanProfile[]
+  notIn?: $Enums.LoanProfile[]
+  not?: Prisma.NestedEnumLoanProfileWithAggregatesFilter<$PrismaModel> | $Enums.LoanProfile
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumLoanProfileFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumLoanProfileFilter<$PrismaModel>
 }
 
 

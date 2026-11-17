@@ -44,7 +44,7 @@ export type LoanRuleSumAggregateOutputType = {
 
 export type LoanRuleMinAggregateOutputType = {
   id: string | null
-  profile: string | null
+  profile: $Enums.LoanProfile | null
   loanPeriodDays: number | null
   maxSimultaneousLoans: number | null
   maxRenewals: number | null
@@ -56,7 +56,7 @@ export type LoanRuleMinAggregateOutputType = {
 
 export type LoanRuleMaxAggregateOutputType = {
   id: string | null
-  profile: string | null
+  profile: $Enums.LoanProfile | null
   loanPeriodDays: number | null
   maxSimultaneousLoans: number | null
   maxRenewals: number | null
@@ -221,7 +221,7 @@ export type LoanRuleGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 
 export type LoanRuleGroupByOutputType = {
   id: string
-  profile: string
+  profile: $Enums.LoanProfile
   loanPeriodDays: number
   maxSimultaneousLoans: number
   maxRenewals: number
@@ -256,7 +256,7 @@ export type LoanRuleWhereInput = {
   OR?: Prisma.LoanRuleWhereInput[]
   NOT?: Prisma.LoanRuleWhereInput | Prisma.LoanRuleWhereInput[]
   id?: Prisma.StringFilter<"LoanRule"> | string
-  profile?: Prisma.StringFilter<"LoanRule"> | string
+  profile?: Prisma.EnumLoanProfileFilter<"LoanRule"> | $Enums.LoanProfile
   loanPeriodDays?: Prisma.IntFilter<"LoanRule"> | number
   maxSimultaneousLoans?: Prisma.IntFilter<"LoanRule"> | number
   maxRenewals?: Prisma.IntFilter<"LoanRule"> | number
@@ -282,7 +282,7 @@ export type LoanRuleOrderByWithRelationInput = {
 
 export type LoanRuleWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  profile?: string
+  profile?: $Enums.LoanProfile
   AND?: Prisma.LoanRuleWhereInput | Prisma.LoanRuleWhereInput[]
   OR?: Prisma.LoanRuleWhereInput[]
   NOT?: Prisma.LoanRuleWhereInput | Prisma.LoanRuleWhereInput[]
@@ -318,7 +318,7 @@ export type LoanRuleScalarWhereWithAggregatesInput = {
   OR?: Prisma.LoanRuleScalarWhereWithAggregatesInput[]
   NOT?: Prisma.LoanRuleScalarWhereWithAggregatesInput | Prisma.LoanRuleScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"LoanRule"> | string
-  profile?: Prisma.StringWithAggregatesFilter<"LoanRule"> | string
+  profile?: Prisma.EnumLoanProfileWithAggregatesFilter<"LoanRule"> | $Enums.LoanProfile
   loanPeriodDays?: Prisma.IntWithAggregatesFilter<"LoanRule"> | number
   maxSimultaneousLoans?: Prisma.IntWithAggregatesFilter<"LoanRule"> | number
   maxRenewals?: Prisma.IntWithAggregatesFilter<"LoanRule"> | number
@@ -330,7 +330,7 @@ export type LoanRuleScalarWhereWithAggregatesInput = {
 
 export type LoanRuleCreateInput = {
   id?: string
-  profile: string
+  profile: $Enums.LoanProfile
   loanPeriodDays: number
   maxSimultaneousLoans: number
   maxRenewals: number
@@ -343,7 +343,7 @@ export type LoanRuleCreateInput = {
 
 export type LoanRuleUncheckedCreateInput = {
   id?: string
-  profile: string
+  profile: $Enums.LoanProfile
   loanPeriodDays: number
   maxSimultaneousLoans: number
   maxRenewals: number
@@ -356,7 +356,7 @@ export type LoanRuleUncheckedCreateInput = {
 
 export type LoanRuleUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  profile?: Prisma.StringFieldUpdateOperationsInput | string
+  profile?: Prisma.EnumLoanProfileFieldUpdateOperationsInput | $Enums.LoanProfile
   loanPeriodDays?: Prisma.IntFieldUpdateOperationsInput | number
   maxSimultaneousLoans?: Prisma.IntFieldUpdateOperationsInput | number
   maxRenewals?: Prisma.IntFieldUpdateOperationsInput | number
@@ -369,7 +369,7 @@ export type LoanRuleUpdateInput = {
 
 export type LoanRuleUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  profile?: Prisma.StringFieldUpdateOperationsInput | string
+  profile?: Prisma.EnumLoanProfileFieldUpdateOperationsInput | $Enums.LoanProfile
   loanPeriodDays?: Prisma.IntFieldUpdateOperationsInput | number
   maxSimultaneousLoans?: Prisma.IntFieldUpdateOperationsInput | number
   maxRenewals?: Prisma.IntFieldUpdateOperationsInput | number
@@ -382,7 +382,7 @@ export type LoanRuleUncheckedUpdateInput = {
 
 export type LoanRuleCreateManyInput = {
   id?: string
-  profile: string
+  profile: $Enums.LoanProfile
   loanPeriodDays: number
   maxSimultaneousLoans: number
   maxRenewals: number
@@ -394,7 +394,7 @@ export type LoanRuleCreateManyInput = {
 
 export type LoanRuleUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  profile?: Prisma.StringFieldUpdateOperationsInput | string
+  profile?: Prisma.EnumLoanProfileFieldUpdateOperationsInput | $Enums.LoanProfile
   loanPeriodDays?: Prisma.IntFieldUpdateOperationsInput | number
   maxSimultaneousLoans?: Prisma.IntFieldUpdateOperationsInput | number
   maxRenewals?: Prisma.IntFieldUpdateOperationsInput | number
@@ -406,7 +406,7 @@ export type LoanRuleUpdateManyMutationInput = {
 
 export type LoanRuleUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  profile?: Prisma.StringFieldUpdateOperationsInput | string
+  profile?: Prisma.EnumLoanProfileFieldUpdateOperationsInput | $Enums.LoanProfile
   loanPeriodDays?: Prisma.IntFieldUpdateOperationsInput | number
   maxSimultaneousLoans?: Prisma.IntFieldUpdateOperationsInput | number
   maxRenewals?: Prisma.IntFieldUpdateOperationsInput | number
@@ -473,6 +473,10 @@ export type LoanRuleScalarRelationFilter = {
   isNot?: Prisma.LoanRuleWhereInput
 }
 
+export type EnumLoanProfileFieldUpdateOperationsInput = {
+  set?: $Enums.LoanProfile
+}
+
 export type LoanRuleCreateNestedOneWithoutChangeLogsInput = {
   create?: Prisma.XOR<Prisma.LoanRuleCreateWithoutChangeLogsInput, Prisma.LoanRuleUncheckedCreateWithoutChangeLogsInput>
   connectOrCreate?: Prisma.LoanRuleCreateOrConnectWithoutChangeLogsInput
@@ -489,7 +493,7 @@ export type LoanRuleUpdateOneRequiredWithoutChangeLogsNestedInput = {
 
 export type LoanRuleCreateWithoutChangeLogsInput = {
   id?: string
-  profile: string
+  profile: $Enums.LoanProfile
   loanPeriodDays: number
   maxSimultaneousLoans: number
   maxRenewals: number
@@ -501,7 +505,7 @@ export type LoanRuleCreateWithoutChangeLogsInput = {
 
 export type LoanRuleUncheckedCreateWithoutChangeLogsInput = {
   id?: string
-  profile: string
+  profile: $Enums.LoanProfile
   loanPeriodDays: number
   maxSimultaneousLoans: number
   maxRenewals: number
@@ -529,7 +533,7 @@ export type LoanRuleUpdateToOneWithWhereWithoutChangeLogsInput = {
 
 export type LoanRuleUpdateWithoutChangeLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  profile?: Prisma.StringFieldUpdateOperationsInput | string
+  profile?: Prisma.EnumLoanProfileFieldUpdateOperationsInput | $Enums.LoanProfile
   loanPeriodDays?: Prisma.IntFieldUpdateOperationsInput | number
   maxSimultaneousLoans?: Prisma.IntFieldUpdateOperationsInput | number
   maxRenewals?: Prisma.IntFieldUpdateOperationsInput | number
@@ -541,7 +545,7 @@ export type LoanRuleUpdateWithoutChangeLogsInput = {
 
 export type LoanRuleUncheckedUpdateWithoutChangeLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  profile?: Prisma.StringFieldUpdateOperationsInput | string
+  profile?: Prisma.EnumLoanProfileFieldUpdateOperationsInput | $Enums.LoanProfile
   loanPeriodDays?: Prisma.IntFieldUpdateOperationsInput | number
   maxSimultaneousLoans?: Prisma.IntFieldUpdateOperationsInput | number
   maxRenewals?: Prisma.IntFieldUpdateOperationsInput | number
@@ -647,7 +651,7 @@ export type $LoanRulePayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    profile: string
+    profile: $Enums.LoanProfile
     loanPeriodDays: number
     maxSimultaneousLoans: number
     maxRenewals: number
@@ -1080,7 +1084,7 @@ export interface Prisma__LoanRuleClient<T, Null = never, ExtArgs extends runtime
  */
 export interface LoanRuleFieldRefs {
   readonly id: Prisma.FieldRef<"LoanRule", 'String'>
-  readonly profile: Prisma.FieldRef<"LoanRule", 'String'>
+  readonly profile: Prisma.FieldRef<"LoanRule", 'LoanProfile'>
   readonly loanPeriodDays: Prisma.FieldRef<"LoanRule", 'Int'>
   readonly maxSimultaneousLoans: Prisma.FieldRef<"LoanRule", 'Int'>
   readonly maxRenewals: Prisma.FieldRef<"LoanRule", 'Int'>

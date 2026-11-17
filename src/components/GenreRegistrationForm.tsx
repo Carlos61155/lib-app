@@ -4,7 +4,7 @@ import { CreateGenreSchema } from '../../electron/genre/genre.schemas'
 
 type GenreValues = {
   name: string
-  description: string
+  description?: string
 }
 
 const fieldClass = 'h-[52px] w-full rounded-[10px] border border-[#315bbd] bg-white px-[10px] text-[14px] font-medium text-[#19294c] placeholder:text-[#69768f] focus:outline-none focus:ring-2 focus:ring-[#315bbd]/20'
@@ -19,15 +19,15 @@ function genreErrorMessage(error: unknown) {
   return 'Não foi possível cadastrar o gênero. Confira os dados e tente novamente.'
 }
 
-export function GenreRegistrationForm({ onSuccess, onCancel }: { onSuccess: (genre: GenreValues) => void; onCancel: () => void }) {
+export function GenreRegistrationForm({ onSuccess, onCancel }: { onSuccess: (genre: { name: string; description: string }) => void; onCancel: () => void }) {
   const form = useForm<GenreValues>({ resolver: zodResolver(CreateGenreSchema), defaultValues: { name: '', description: '' }, mode: 'onSubmit', reValidateMode: 'onChange' })
   const name = form.watch('name')
-  const description = form.watch('description')
+  const description = form.watch('description') ?? ''
 
   const onSubmit = async (values: GenreValues) => {
     try {
-      await window.authAPI.createGenre({ name: values.name.trim(), ...(values.description.trim() ? { description: values.description.trim() } : {}) })
-      onSuccess({ name: values.name.trim(), description: values.description.trim() })
+      await window.authAPI.createGenre({ name: values.name.trim(), ...(values.description?.trim() ? { description: values.description.trim() } : {}) })
+      onSuccess({ name: values.name.trim(), description: values.description?.trim() ?? '' })
     } catch (error) {
       form.setError('root.server', { type: 'server', message: genreErrorMessage(error) })
     }

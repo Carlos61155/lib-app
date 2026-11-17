@@ -6,7 +6,7 @@ export function SessionTimeoutGuard() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (location.pathname !== '/home') return
+    if (location.pathname === '/') return
 
     let cancelled = false
     let timeoutId: number | undefined
