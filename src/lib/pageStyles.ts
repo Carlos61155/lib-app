@@ -1,0 +1,10 @@
+/** Shared page scale copied from the CopySearch layout and controls. */
+export const pageContentClass = 'mx-auto w-full max-w-[1000px]'
+export const pageTitleClass = 'text-[22px] font-bold leading-[27px] tracking-[-0.5px] text-[#19294c]'
+export const pageDescriptionClass = 'text-[12px] leading-[17px] text-[#718096]'
+export const pageCardClass = 'rounded-[12px] bg-white px-5 py-5 shadow-[0_8px_28px_rgba(24,43,82,0.06)] sm:px-7 lg:px-[30px]'
+export const pageSectionTitleClass = 'text-[14px] font-bold leading-5 text-[#19294c]'
+export const pageLabelClass = 'flex min-w-0 flex-col gap-[7px] text-[12px] font-semibold leading-4 text-[#19294c]'
+export const pageFieldClass = 'h-[42px] w-full min-w-0 rounded-[8px] border border-[#c6cedb] bg-white px-[10px] text-[13px] font-medium text-[#19294c] placeholder:text-[#8792a5] outline-none transition focus:border-[#315bbd] focus:ring-2 focus:ring-[#315bbd]/20 aria-[invalid=true]:border-[#c43d4b] aria-[invalid=true]:focus:ring-[#c43d4b]/20'
+export const pagePrimaryButtonClass = 'inline-flex min-h-[38px] items-center justify-center rounded-[8px] bg-[#315bbd] px-4 text-[11px] font-semibold text-white transition hover:bg-[#294fa9] disabled:cursor-not-allowed disabled:opacity-60'
+export const pageSecondaryButtonClass = 'inline-flex min-h-[38px] items-center justify-center rounded-[8px] border border-[#c6cedb] bg-white px-4 text-[11px] font-semibold text-[#19294c] transition hover:bg-[#f7f9fc] disabled:cursor-not-allowed disabled:opacity-60'

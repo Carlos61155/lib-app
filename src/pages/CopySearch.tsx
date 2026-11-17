@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { AlertCircle, ArrowLeft, BookOpen, CheckCircle2, ChevronDown, CircleHelp, LoaderCircle, Search, X } from 'lucide-react'
 import { DashboardLayout } from '@/components/DashboardLayout'
+import { pageCardClass, pageContentClass, pageDescriptionClass, pageFieldClass, pageLabelClass, pageTitleClass } from '@/lib/pageStyles'
 
 type CopyStatus = 'AVAILABLE' | 'LOANED' | 'BORROWED' | string
 type BookChoice = Awaited<ReturnType<typeof window.authAPI.searchBooksForCopyFilter>>[number]
@@ -31,8 +32,8 @@ const statusLabels: Record<string, string> = {
   AVAILABLE: 'Disponível', LOANED: 'Emprestado', BORROWED: 'Emprestado', OVERDUE: 'Em atraso', LATE: 'Em atraso',
 }
 
-const fieldClass = 'h-[42px] w-full min-w-0 rounded-[8px] border border-[#c6cedb] bg-white px-[10px] text-[13px] font-medium text-[#19294c] placeholder:text-[#8792a5] outline-none transition focus:border-[#315bbd] focus:ring-2 focus:ring-[#315bbd]/20 aria-[invalid=true]:border-[#c43d4b] aria-[invalid=true]:focus:ring-[#c43d4b]/20'
-const labelClass = 'flex min-w-0 flex-col gap-[7px] text-[12px] font-semibold leading-4 text-[#19294c]'
+const fieldClass = pageFieldClass
+const labelClass = pageLabelClass
 
 function errorText(error: unknown) {
   const message = error instanceof Error ? error.message : String(error)
@@ -107,29 +108,29 @@ function CopyDetailsView({ copyId, searchState }: { copyId: string; searchState?
   const authorNames = copy?.book.authors.map(({ author }) => author.name).join(', ')
 
   return (
-    <div className="mx-auto w-full max-w-[1000px]">
+    <div className={pageContentClass}>
       <button type="button" onClick={backToResults} className="mb-4 inline-flex items-center gap-2 text-[12px] font-semibold text-[#315bbd] hover:underline">
         <ArrowLeft aria-hidden="true" className="size-4" /> Voltar aos resultados
       </button>
       {loading ? (
-        <div role="status" className="flex min-h-[250px] items-center justify-center gap-2 rounded-[12px] bg-white text-[13px] text-[#718096] shadow-[0_8px_28px_rgba(24,43,82,0.06)]">
+        <div role="status" className={`${pageCardClass} flex min-h-[250px] items-center justify-center gap-2 text-[12px] text-[#718096]`}>
           <LoaderCircle aria-hidden="true" className="size-4 animate-spin" /> Carregando exemplar...
         </div>
       ) : error ? (
-        <div role="alert" className="rounded-[12px] border border-[#f1c4c8] bg-white p-5 text-[13px] text-[#a52836]">{error}</div>
+        <div role="alert" className={`${pageCardClass} border border-[#f1c4c8] text-[12px] text-[#a52836]`}>{error}</div>
       ) : copy ? (
         <>
           <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
             <div>
               <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#315bbd]">Acervo</p>
-              <h1 className="mt-1 text-[22px] font-bold leading-[27px] tracking-[-0.5px] text-[#19294c]">Exemplar {copy.inventoryCode}</h1>
+              <h1 className={`mt-1 ${pageTitleClass}`}>Exemplar {copy.inventoryCode}</h1>
             </div>
             <span className={`mt-1 inline-flex rounded-full px-3 py-1 text-[11px] font-semibold ${getStatusClass(copy.status)}`}>
               {getStatusLabel(copy.status)}
             </span>
           </div>
 
-          <section className="rounded-[12px] bg-white px-5 py-5 shadow-[0_8px_28px_rgba(24,43,82,0.06)] sm:px-7">
+          <section className={pageCardClass}>
             <h2 className="text-[14px] font-bold text-[#19294c]">Dados do exemplar</h2>
             <dl className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2 lg:grid-cols-4">
               <DetailField label="Código de tombo" value={copy.inventoryCode} />
@@ -141,7 +142,7 @@ function CopyDetailsView({ copyId, searchState }: { copyId: string; searchState?
             </dl>
           </section>
 
-          <section className="mt-3 rounded-[12px] bg-white px-5 py-5 shadow-[0_8px_28px_rgba(24,43,82,0.06)] sm:px-7">
+          <section className={`mt-3 ${pageCardClass}`}>
             <h2 className="text-[14px] font-bold text-[#19294c]">Livro a que pertence</h2>
             <dl className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2 lg:grid-cols-4">
               <DetailField label="Título" value={copy.book.title} />
@@ -152,7 +153,7 @@ function CopyDetailsView({ copyId, searchState }: { copyId: string; searchState?
             </dl>
           </section>
 
-          <section className="mt-3 rounded-[12px] bg-white px-5 py-5 shadow-[0_8px_28px_rgba(24,43,82,0.06)] sm:px-7">
+          <section className={`mt-3 ${pageCardClass}`}>
             <h2 className="text-[14px] font-bold text-[#19294c]">Empréstimo atual</h2>
             <p className="mt-2 text-[12px] leading-5 text-[#718096]">
               {copy.status === 'AVAILABLE'
@@ -278,17 +279,17 @@ function CopySearchForm({ initialState }: { initialState?: SearchState }) {
   }
 
   return (
-    <div className="mx-auto w-full max-w-[1000px]">
+    <div className={pageContentClass}>
       <div className="mb-4 flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-[#315bbd]">Acervo</p>
-          <h1 className="mt-1 text-[22px] font-bold leading-[27px] tracking-[-0.5px] text-[#19294c]">Buscar Exemplar</h1>
-          <p className="mt-1 text-[12px] leading-[17px] text-[#718096]">Localize uma cópia física e verifique a situação atual do acervo.</p>
+          <h1 className={`mt-1 ${pageTitleClass}`}>Buscar Exemplar</h1>
+          <p className={`mt-1 ${pageDescriptionClass}`}>Localize uma cópia física e verifique a situação atual do acervo.</p>
         </div>
         <span className="mb-1 inline-flex items-center gap-2 text-[10px] font-medium text-[#718096]"><span className="size-[7px] rounded-full bg-[#36a976]" />Dados atualizados em tempo real</span>
       </div>
 
-      <form onSubmit={handleSearch} noValidate className="rounded-[12px] bg-white px-5 py-5 shadow-[0_8px_28px_rgba(24,43,82,0.06)] sm:px-7 lg:px-[30px] lg:py-[22px]">
+      <form onSubmit={handleSearch} noValidate className={`${pageCardClass} lg:py-[22px]`}>
         <div className="mb-4 flex items-start gap-3">
           <span className="flex size-[34px] shrink-0 items-center justify-center rounded-[8px] bg-[#eef3ff] text-[#315bbd]"><Search aria-hidden="true" className="size-4" /></span>
           <div>
@@ -368,7 +369,7 @@ function CopySearchForm({ initialState }: { initialState?: SearchState }) {
         </div>
       </form>
 
-      <section aria-live="polite" className="mt-3 rounded-[12px] bg-white px-5 py-5 shadow-[0_8px_28px_rgba(24,43,82,0.06)] sm:px-7 lg:px-[30px]">
+      <section aria-live="polite" className={`mt-3 ${pageCardClass}`}>
         {hasSearched && results.length > 0 ? (
           <>
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2">

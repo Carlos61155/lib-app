@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { FormProvider, useForm, useFormContext, useController } from 'react-hook-form'
 import type { RegistrationSuccessData } from '@/components/RegistrationSuccess'
+import { pageCardClass, pageFieldClass, pageLabelClass, pagePrimaryButtonClass, pageSecondaryButtonClass } from '@/lib/pageStyles'
 
 const profiles = ['Aluno', 'Professor', 'Bibliotecário'] as const
 type Profile = (typeof profiles)[number]
@@ -47,7 +48,7 @@ function RegistrationField({ name, label, placeholder, type = 'text', validate }
   const errorId = `${name}-error`
 
   return (
-    <label className="flex min-w-0 flex-col gap-[10px] text-[13px] font-semibold leading-4 text-[#19294c]">
+    <label className={pageLabelClass}>
       <span>{label} <span aria-hidden="true">*</span></span>
       <input
         {...field}
@@ -56,7 +57,7 @@ function RegistrationField({ name, label, placeholder, type = 'text', validate }
         placeholder={placeholder}
         aria-invalid={fieldState.invalid}
         aria-describedby={fieldState.error ? errorId : undefined}
-        className={`h-[52px] w-full rounded-[10px] border bg-white px-[10px] text-[14px] font-medium text-[#19294c] placeholder:text-[#69768f] focus:outline-none ${fieldState.invalid ? 'border-[#B42331]' : 'border-[#315bbd]'}`}
+        className={`${pageFieldClass} ${fieldState.invalid ? 'border-[#B42331]' : ''}`}
       />
       {fieldState.error && <span id={errorId} role="alert" className="text-[12px] font-normal text-[#B42331]">{fieldState.error.message}</span>}
     </label>
@@ -67,7 +68,7 @@ function StudentProfessorFields({ profile }: { profile: 'Aluno' | 'Professor' })
   return (
     <>
       <RegistrationField name="name" label="Nome completo" placeholder="Digite o nome completo" validate={(value) => value.length <= 120 || 'Use no máximo 120 caracteres.'} />
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-7">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <RegistrationField name="cpf" label="CPF" placeholder="000.000.000-00" validate={(value) => cpfIsValid(value) || 'Informe um CPF válido.'} />
         <RegistrationField name="email" label="E-mail" placeholder="email@example.com" type="email" validate={(value) => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) && value.length <= 254) || 'Informe um e-mail válido.'} />
         <RegistrationField name="registrationNumber" label="Matrícula" placeholder="Digite a matrícula" validate={(value) => value.length <= 40 || 'Use no máximo 40 caracteres.'} />
@@ -85,7 +86,7 @@ function LibrarianFields() {
   return (
     <>
       <RegistrationField name="name" label="Nome completo" placeholder="Digite o nome completo" validate={(value) => value.length <= 120 || 'Use no máximo 120 caracteres.'} />
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-7">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <RegistrationField name="cpf" label="CPF" placeholder="000.000.000-00" validate={(value) => cpfIsValid(value) || 'Informe um CPF válido.'} />
         <RegistrationField name="email" label="E-mail" placeholder="email@example.com" type="email" validate={(value) => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) && value.length <= 254) || 'Informe um e-mail válido.'} />
       </div>
@@ -143,27 +144,27 @@ export function UserRegistrationForm({ onSuccess }: { onSuccess: (data: Registra
   }
 
   return (
-    <section className="mx-auto mt-[50px] w-full max-w-[724px] rounded-[9px] bg-white px-5 py-7 sm:px-7 lg:px-[29px] lg:pb-[39px] lg:pt-[43px]">
+    <section className={`mx-auto w-full max-w-[1000px] ${pageCardClass}`}>
       <FormProvider {...form}>
         <form aria-label="Cadastrar usuário" noValidate className="space-y-[12px]" onSubmit={form.handleSubmit(onSubmit)}>
           <fieldset>
-            <legend className="mb-[7px] text-[13px] font-semibold leading-4 text-[#19294c]">Perfil *</legend>
-            <div className="flex flex-wrap gap-3 sm:gap-7">
+            <legend className="mb-[7px] text-[12px] font-semibold leading-4 text-[#19294c]">Perfil *</legend>
+            <div className="flex flex-wrap gap-2">
               {profiles.map((option) => {
                 const isSelected = profile === option
-                return <button key={option} type="button" aria-pressed={isSelected} onClick={() => changeProfile(option)} className={`h-[51px] min-w-[117px] rounded-[10px] border border-[#315bbd] px-5 text-[13px] font-semibold ${isSelected ? 'bg-[#2e56b2] text-white' : 'bg-white text-[#19294c]'}`}>{option}</button>
+                return <button key={option} type="button" aria-pressed={isSelected} onClick={() => changeProfile(option)} className={`min-h-[38px] rounded-[8px] border px-4 text-[11px] font-semibold transition-colors ${isSelected ? 'border-[#315bbd] bg-[#315bbd] text-white' : 'border-[#c6cedb] bg-white text-[#19294c]'}`}>{option}</button>
               })}
             </div>
           </fieldset>
 
           {profile === 'Bibliotecário' ? <LibrarianFields /> : <StudentProfessorFields profile={profile} />}
 
-          {form.formState.errors.root?.server?.message && <p role="alert" className="text-[13px] text-[#B42331]">{form.formState.errors.root.server.message}</p>}
-          <div className="flex flex-col gap-4 pt-[19px] sm:flex-row sm:items-center">
-            <p className="flex-1 text-[13px] leading-5 text-[#718096]">O usuário e senha são gerados pelo sistema</p>
-            <div className="flex justify-end gap-3 sm:gap-[23px]">
-              <button type="button" onClick={() => { form.reset(); form.clearErrors() }} className="h-[51px] min-w-[117px] rounded-[10px] border border-[#315bbd] bg-white px-5 text-[13px] font-semibold text-[#19294c]">Cancelar</button>
-              <button type="submit" disabled={form.formState.isSubmitting} className="h-[51px] min-w-[191px] rounded-[10px] bg-[#2e56b2] px-5 text-[13px] font-semibold text-white disabled:opacity-60">{form.formState.isSubmitting ? 'Cadastrando...' : `Cadastrar ${profile.toLocaleLowerCase('pt-BR')}`}</button>
+          {form.formState.errors.root?.server?.message && <p role="alert" className="text-[12px] text-[#B42331]">{form.formState.errors.root.server.message}</p>}
+          <div className="flex flex-col gap-3 border-t border-[#e6e9ef] pt-3 sm:flex-row sm:items-center">
+            <p className="flex-1 text-[11px] leading-4 text-[#718096]">O usuário e senha são gerados pelo sistema</p>
+            <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row">
+              <button type="button" onClick={() => { form.reset(); form.clearErrors() }} className={pageSecondaryButtonClass}>Cancelar</button>
+              <button type="submit" disabled={form.formState.isSubmitting} className={`${pagePrimaryButtonClass} min-w-[160px]`}>{form.formState.isSubmitting ? 'Cadastrando...' : `Cadastrar ${profile.toLocaleLowerCase('pt-BR')}`}</button>
             </div>
           </div>
         </form>

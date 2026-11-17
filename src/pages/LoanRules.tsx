@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { DashboardLayout } from '@/components/DashboardLayout'
+import { pageCardClass, pageContentClass, pageDescriptionClass, pageLabelClass, pagePrimaryButtonClass, pageSecondaryButtonClass, pageSectionTitleClass, pageTitleClass } from '@/lib/pageStyles'
 
 type Profile = 'STUDENT' | 'PROFESSOR'
 type LoanRule = Awaited<ReturnType<typeof window.authAPI.listLoanRules>>[number]
@@ -18,8 +19,8 @@ function valuesFromRule(rule: LoanRule): RuleValues {
 }
 
 function numberInput(value: number, onChange: (value: number) => void, suffix: string, min: number, max: number) {
-  return <div className="flex h-[42px] items-center rounded-[7px] border border-[#cbd1dc] bg-white focus-within:border-[#315bbd] focus-within:ring-2 focus-within:ring-[#315bbd]/15">
-    <input type="number" min={min} max={max} step={1} required value={value} onChange={(event) => onChange(event.target.value === '' ? 0 : Number(event.target.value))} className="h-full min-w-0 flex-1 rounded-[7px] bg-transparent px-[10px] text-[13px] text-[#34415a] outline-none" />
+  return <div className="flex h-[42px] items-center rounded-[8px] border border-[#c6cedb] bg-white focus-within:border-[#315bbd] focus-within:ring-2 focus-within:ring-[#315bbd]/20">
+    <input type="number" min={min} max={max} step={1} required value={value} onChange={(event) => onChange(event.target.value === '' ? 0 : Number(event.target.value))} className="h-full min-w-0 flex-1 rounded-[8px] bg-transparent px-[10px] text-[13px] text-[#19294c] outline-none" />
     <span className="shrink-0 px-[10px] text-[11px] text-[#7b8493]">{suffix}</span>
   </div>
 }
@@ -97,7 +98,7 @@ export default function LoanRules() {
     const previous = rules[profile]?.[key] ?? emptyValues[key]
     const altered = previous !== values[key]
 
-    return <label className="flex min-w-0 flex-col gap-[6px] text-[12px] font-semibold text-[#26344c]">
+    return <label className={pageLabelClass}>
     <span className="flex flex-wrap items-center gap-x-2 gap-y-1">{label} <span aria-hidden="true">*</span>{altered && <span className="rounded bg-[#fff1b8] px-1.5 py-0.5 text-[10px] font-semibold text-[#805b00]">Alterado (antes: {previous})</span>}</span>
     {numberInput(values[key], change(key), suffix, min, max)}
   </label>
@@ -114,20 +115,20 @@ export default function LoanRules() {
   if (savedRule) {
     const savedValues = valuesFromRule(savedRule)
     return <DashboardLayout>
-      <div className="mx-auto w-full max-w-[724px]">
-        <header>
-          <h1 className="text-[22px] font-bold leading-[27px] tracking-[-0.5px] text-[#151515]">Regras atualizadas</h1>
+      <div className={pageContentClass}>
+        <header className="mb-4">
+          <h1 className={pageTitleClass}>Regras atualizadas</h1>
         </header>
-        <section className="mt-[12px] rounded-[9px] bg-white px-5 py-6 shadow-[0_3px_14px_rgba(31,48,79,0.07)] sm:px-[30px] sm:py-[29px]">
-          <h2 className="text-[14px] font-semibold leading-5 text-[#19294c]">Regras salvas com sucesso</h2>
-          <p className="text-[14px] leading-5 text-[#718096]">As novas regras já valem para os próximos empréstimos e devoluções</p>
-          <dl className="mt-5 grid grid-cols-1 gap-x-8 gap-y-3 text-[13px] leading-5 sm:grid-cols-2">
+        <section className={pageCardClass}>
+          <h2 className={pageSectionTitleClass}>Regras salvas com sucesso</h2>
+          <p className={pageDescriptionClass}>As novas regras já valem para os próximos empréstimos e devoluções</p>
+          <dl className="mt-4 grid grid-cols-1 gap-x-6 gap-y-3 text-[12px] leading-[17px] sm:grid-cols-2">
             <div><dt className="text-[#718096]">Perfil</dt><dd className="font-semibold text-[#19294c]">{savedRule.profile === 'STUDENT' ? 'Aluno' : 'Professor'}</dd></div>
             {summaryRows.map(({ label, key, unit }) => <div key={key}><dt className="text-[#718096]">{label}</dt><dd className="font-semibold text-[#19294c]">{savedValues[key]} {unit}</dd></div>)}
           </dl>
-          <p role="status" className="mt-5 rounded-[8px] bg-[#e5f5ee] px-4 py-3 text-[13px] font-semibold text-[#096644]">Regras registradas com sucesso</p>
-          <div className="mt-5 flex justify-end">
-            <button type="button" onClick={() => setSavedRule(null)} className="h-[41px] rounded-[8px] bg-[#2e56b2] px-7 text-[13px] font-semibold text-white">Concluir</button>
+          <p role="status" className="mt-3 rounded-[8px] bg-[#e5f5ee] px-3 py-3 text-[11px] font-semibold text-[#096644]">Regras registradas com sucesso</p>
+          <div className="mt-4 flex justify-end">
+            <button type="button" onClick={() => setSavedRule(null)} className={pagePrimaryButtonClass}>Concluir</button>
           </div>
         </section>
       </div>
@@ -135,18 +136,18 @@ export default function LoanRules() {
   }
 
   return <DashboardLayout>
-    <div className="mx-auto w-full max-w-[724px]">
-      <header>
-        <h1 className="text-[22px] font-bold leading-[27px] tracking-[-0.5px] text-[#1b2945]">Regras de empréstimo</h1>
-        <p className="text-[12px] leading-[17px] text-[#718096]">Cada perfil tem seu próprio conjunto de regras. Todos os campos são obrigatórios.</p>
+    <div className={pageContentClass}>
+      <header className="mb-4">
+        <h1 className={pageTitleClass}>Regras de empréstimo</h1>
+        <p className={pageDescriptionClass}>Cada perfil tem seu próprio conjunto de regras. Todos os campos são obrigatórios.</p>
       </header>
 
-      <section className="mt-[12px] rounded-[11px] bg-white px-5 py-6 shadow-[0_3px_14px_rgba(31,48,79,0.07)] sm:px-[21px] sm:py-[22px]">
-        <form onSubmit={save} className="space-y-[15px]">
+      <section className={pageCardClass}>
+        <form onSubmit={save} className="space-y-3">
           <fieldset disabled={loading || saving}>
-            <legend className="mb-[5px] text-[11px] font-semibold text-[#26344c]">Perfil</legend>
-            <div className="flex gap-[7px]">
-              {(['STUDENT', 'PROFESSOR'] as const).map((item) => <button key={item} type="button" onClick={() => { setValues(rules[item] ? valuesFromRule(rules[item]!) : emptyValues); setProfile(item); setNotice(''); setError('') }} aria-pressed={profile === item} className={`h-[32px] min-w-[66px] rounded-[7px] border px-4 text-[11px] font-semibold transition-colors ${profile === item ? 'border-[#315fca] bg-[#315fca] text-white' : 'border-[#cbd1dc] bg-white text-[#26344c] hover:bg-[#f5f7fb]'}`}>
+            <legend className="mb-[7px] text-[12px] font-semibold leading-4 text-[#19294c]">Perfil</legend>
+            <div className="flex gap-2">
+              {(['STUDENT', 'PROFESSOR'] as const).map((item) => <button key={item} type="button" onClick={() => { setValues(rules[item] ? valuesFromRule(rules[item]!) : emptyValues); setProfile(item); setNotice(''); setError('') }} aria-pressed={profile === item} className={`min-h-[38px] rounded-[8px] border px-4 text-[11px] font-semibold transition-colors ${profile === item ? 'border-[#315bbd] bg-[#315bbd] text-white' : 'border-[#c6cedb] bg-white text-[#19294c] hover:bg-[#f5f7fb]'}`}>
                 {item === 'STUDENT' ? 'Aluno' : 'Professor'}
               </button>)}
             </div>
@@ -155,7 +156,7 @@ export default function LoanRules() {
           {error && <p role="alert" className="rounded-md bg-[#fff0f0] px-3 py-2 text-[12px] text-[#b42332]">{error}</p>}
           {notice && <p role="status" className={`rounded-md px-3 py-2 text-[12px] ${notice.startsWith('Nenhuma alteração') ? 'bg-[#EAF2FF] text-[#2E56B2]' : 'bg-[#eaf7f0] text-[#16734b]'}`}>{notice}</p>}
           {loading ? <p role="status" className="py-8 text-center text-[13px] text-[#718096]">Carregando regras...</p> : <>
-            <div className="grid gap-x-[14px] gap-y-[13px] sm:grid-cols-2">
+            <div className="grid gap-3 sm:grid-cols-2">
               {field('Prazo de empréstimo', 'loanPeriodDays', 'dias', 1, 60)}
               {field('Limite de empréstimos simultâneos', 'maxSimultaneousLoans', 'empréstimos', 1, 5)}
               <div>
@@ -171,9 +172,9 @@ export default function LoanRules() {
 
             <div className="flex flex-col gap-3 pt-[3px] sm:flex-row sm:items-center">
               <p className="flex-1 text-[10px] leading-4 text-[#7b8493]">As alterações valem só para empréstimos e renovações feitos depois de salvar.</p>
-              <div className="flex justify-end gap-[7px]">
-                <button type="button" onClick={discard} className="h-[36px] rounded-[7px] border border-[#cbd1dc] bg-white px-[15px] text-[11px] font-semibold text-[#26344c] hover:bg-[#f5f7fb]">Descartar alterações</button>
-                <button type="submit" disabled={saving} className="h-[36px] rounded-[7px] bg-[#315fca] px-[17px] text-[11px] font-semibold text-white hover:bg-[#284fae] disabled:opacity-60">Salvar alterações</button>
+              <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row">
+                <button type="button" onClick={discard} className={pageSecondaryButtonClass}>Descartar alterações</button>
+                <button type="submit" disabled={saving} className={pagePrimaryButtonClass}>Salvar alterações</button>
               </div>
             </div>
           </>}
@@ -200,8 +201,8 @@ export default function LoanRules() {
         <p className="mt-4 rounded-[7px] bg-[#eaf3fc] px-3 py-[11px] text-[11px] leading-4 text-[#365a7e]">Empréstimos em andamento mantêm o prazo de devolução já definido.</p>
         {error && <p role="alert" className="mt-3 rounded-md bg-[#fff0f0] px-3 py-2 text-[12px] text-[#b42332]">{error}</p>}
         <div className="mt-4 flex flex-col-reverse justify-end gap-2 sm:flex-row">
-          <button type="button" disabled={saving} onClick={() => setConfirmOpen(false)} className="h-[38px] rounded-[7px] border border-[#cbd1dc] bg-white px-4 text-[11px] font-semibold text-[#26344c] hover:bg-[#f5f7fb] disabled:opacity-60">Voltar e revisar</button>
-          <button type="button" disabled={saving} onClick={() => void confirmSave()} className="h-[38px] rounded-[7px] bg-[#315fca] px-4 text-[11px] font-semibold text-white hover:bg-[#284fae] disabled:opacity-60">{saving ? 'Salvando...' : 'Confirmar e salvar'}</button>
+          <button type="button" disabled={saving} onClick={() => setConfirmOpen(false)} className={pageSecondaryButtonClass}>Voltar e revisar</button>
+          <button type="button" disabled={saving} onClick={() => void confirmSave()} className={pagePrimaryButtonClass}>{saving ? 'Salvando...' : 'Confirmar e salvar'}</button>
         </div>
       </section>
     </div>}

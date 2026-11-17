@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
+import { pageCardClass, pageContentClass, pageFieldClass, pageLabelClass, pagePrimaryButtonClass, pageSecondaryButtonClass } from '@/lib/pageStyles'
 
 type Condition = 'NEW' | 'GOOD' | 'FAIR' | 'POOR'
 type BookChoice = { id: string; title: string; isbn: string; authors: { author: { name: string } }[] }
@@ -14,8 +15,8 @@ export type CopyRegistrationResult = {
   copies: { inventoryCode: string; conservationCondition: Condition; shelfLocation: string; observation: string }[]
 }
 
-const fieldClass = 'h-[42px] w-full min-w-0 rounded-[8px] border border-[#c6cedb] bg-white px-[10px] text-[13px] font-medium text-[#19294c] placeholder:text-[#8792a5] focus:outline-none focus:ring-2 focus:ring-[#315bbd]/20'
-const labelClass = 'flex min-w-0 flex-col gap-[7px] text-[12px] font-semibold leading-4 text-[#19294c]'
+const fieldClass = pageFieldClass
+const labelClass = pageLabelClass
 const conditions: { value: Condition; label: string }[] = [
   { value: 'NEW', label: 'Novo' },
   { value: 'GOOD', label: 'Bom' },
@@ -159,7 +160,7 @@ export function CopyRegistrationForm({ onSuccess, onCancel }: { onSuccess: (resu
     }
   }
 
-  return <section className="mx-auto mt-[18px] w-full max-w-[1000px] rounded-[12px] bg-white px-5 py-6 shadow-[0_8px_28px_rgba(24,43,82,0.06)] sm:px-7 lg:px-[30px] lg:py-[28px]">
+  return <section className={`${pageContentClass} ${pageCardClass}`}>
     <form aria-label="Adicionar exemplares" noValidate className="space-y-[17px]" onSubmit={form.handleSubmit(onSubmit, () => form.setError('root.server', { type: 'validation', message: 'Confira os campos obrigatórios dos exemplares.' }))}>
       {form.formState.errors.root?.server?.message && <p role="alert" className="rounded-[7px] bg-[#FDEBEC] px-4 py-3 text-[13px] leading-5 text-[#B42331]">{form.formState.errors.root.server.message}</p>}
       <div className={labelClass}>
@@ -207,11 +208,11 @@ export function CopyRegistrationForm({ onSuccess, onCancel }: { onSuccess: (resu
         <label className={labelClass}><span>Data de aquisição</span><input {...form.register('acquisitionDate')} onChange={(event) => { const value = formatDateInput(event.target.value); event.target.value = value; form.setValue('acquisitionDate', value, { shouldDirty: true }); form.clearErrors('acquisitionDate') }} type="text" inputMode="numeric" autoComplete="off" maxLength={10} placeholder="dd/mm/aaaa" className={fieldClass} aria-invalid={Boolean(form.formState.errors.acquisitionDate)} />{form.formState.errors.acquisitionDate && <span role="alert" className="font-normal text-[#B42331]">{form.formState.errors.acquisitionDate.message}</span>}</label>
         <label className={labelClass}><span>Forma de aquisição</span><input {...form.register('acquisitionMethod', { maxLength: { value: 100, message: 'Use no máximo 100 caracteres.' } })} placeholder="Ex.: compra, doação" className={fieldClass} /></label>
       </div>
-      <div className="flex flex-col gap-4 pt-1 sm:flex-row sm:items-center">
-        <p className="flex-1 text-[11px] leading-5 text-[#718096]">A data e a forma de aquisição valem para todos os exemplares desta operação.</p>
-        <div className="flex flex-col-reverse justify-end gap-3 sm:flex-row sm:gap-[13px]">
-          <button type="button" onClick={onCancel} className="h-[42px] min-w-[110px] rounded-[8px] border border-[#c6cedb] bg-white px-4 text-[12px] font-semibold text-[#19294c]">Cancelar</button>
-          <button type="submit" disabled={form.formState.isSubmitting || !selectedBook} className="h-[42px] min-w-[190px] rounded-[8px] bg-[#315bbd] px-4 text-[12px] font-semibold text-white disabled:opacity-60">{form.formState.isSubmitting ? 'Adicionando...' : 'Adicionar exemplares'}</button>
+      <div className="flex flex-col gap-3 border-t border-[#e6e9ef] pt-3 sm:flex-row sm:items-center">
+        <p className="flex-1 text-[11px] leading-4 text-[#718096]">A data e a forma de aquisição valem para todos os exemplares desta operação.</p>
+        <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row">
+          <button type="button" onClick={onCancel} className={pageSecondaryButtonClass}>Cancelar</button>
+          <button type="submit" disabled={form.formState.isSubmitting || !selectedBook} className={`${pagePrimaryButtonClass} min-w-[165px]`}>{form.formState.isSubmitting ? 'Adicionando...' : 'Adicionar exemplares'}</button>
         </div>
       </div>
     </form>

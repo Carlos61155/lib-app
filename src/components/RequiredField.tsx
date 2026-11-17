@@ -7,6 +7,7 @@ import {
 } from 'react-hook-form'
 import { Field, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { pageFieldClass, pageLabelClass } from '@/lib/pageStyles'
 
 type RequiredFieldProps<TFormValues extends FieldValues> = {
   name: FieldPath<TFormValues>
@@ -49,8 +50,8 @@ export function RequiredField<TFormValues extends FieldValues>({
   const isInvalid = fieldState.invalid || forceInvalid
 
   return (
-    <Field className="gap-1.5">
-      <FieldLabel htmlFor={field.name} className="pl-4 text-[14px] font-semibold text-[#273653]">
+    <Field className="gap-[7px]">
+      <FieldLabel htmlFor={field.name} className={`${pageLabelClass} self-start items-start pl-0 text-left`}>
         {label}
       </FieldLabel>
       <div className="relative">
@@ -63,7 +64,7 @@ export function RequiredField<TFormValues extends FieldValues>({
           placeholder={placeholder}
           aria-invalid={isInvalid}
           aria-describedby={fieldState.error ? errorId : undefined}
-          className={`h-11 rounded-[8px] bg-white px-4 pr-11 text-[14px] font-medium placeholder:text-[#6e7a91] focus-visible:ring-2 ${
+          className={`${pageFieldClass} h-[42px] rounded-[8px] px-4 pr-11 ${
             isInvalid
               ? 'border-[#B42331] focus-visible:border-[#B42331] focus-visible:ring-[#B42331]/20'
               : 'border-[#414141] focus-visible:border-[#2e56b2] focus-visible:ring-[#2e56b2]/20'

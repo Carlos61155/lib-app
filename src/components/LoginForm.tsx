@@ -108,10 +108,10 @@ export function LoginForm() {
       <div className="w-full max-w-[368px]">
         <div className="mb-8 text-center">
           <BookOpen aria-hidden="true" className="mx-auto mb-5 size-11 stroke-[1.35] text-[#2e56b2]" />
-          <h1 className="text-[28px] font-bold leading-tight tracking-tight text-[#171717] sm:text-[29px]">
+          <h1 className="text-[22px] font-bold leading-[27px] tracking-[-0.5px] text-[#19294c]">
             {isLocked ? 'Acesso bloqueado' : mustChangePassword ? 'Defina sua senha' : 'Bem-vindo de volta'}
           </h1>
-          <p className="mt-2 text-[15px] leading-5 text-[#718096]">
+          <p className="mt-1 text-[12px] leading-[17px] text-[#718096]">
             {isLocked
               ? 'O login está temporariamente bloqueado por excesso de tentativas inválidas'
               : mustChangePassword
@@ -190,7 +190,7 @@ export function LoginForm() {
             <Button
               type="submit"
               disabled={form.formState.isSubmitting || isLocked}
-              className="mt-3 h-11 rounded-[7px] bg-[#2e56b2] text-[18px] font-bold text-white hover:bg-[#25499d]"
+              className="mt-3 h-[38px] rounded-[8px] bg-[#315bbd] text-[11px] font-semibold text-white hover:bg-[#294fa9]"
             >
               {form.formState.isSubmitting ? 'Entrando...' : mustChangePassword ? 'Definir senha' : 'Entrar'}
             </Button>
