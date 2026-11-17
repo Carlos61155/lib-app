@@ -28,7 +28,7 @@ const conditionLabels: Record<string, string> = {
   NEW: 'Novo', GOOD: 'Bom', FAIR: 'Regular', POOR: 'Ruim',
 }
 const statusLabels: Record<string, string> = {
-  AVAILABLE: 'Disponível', LOANED: 'Emprestado', BORROWED: 'Emprestado',
+  AVAILABLE: 'Disponível', LOANED: 'Emprestado', BORROWED: 'Emprestado', OVERDUE: 'Em atraso', LATE: 'Em atraso',
 }
 
 const fieldClass = 'h-[42px] w-full min-w-0 rounded-[8px] border border-[#c6cedb] bg-white px-[10px] text-[13px] font-medium text-[#19294c] placeholder:text-[#8792a5] outline-none transition focus:border-[#315bbd] focus:ring-2 focus:ring-[#315bbd]/20 aria-[invalid=true]:border-[#c43d4b] aria-[invalid=true]:focus:ring-[#c43d4b]/20'
@@ -50,6 +50,7 @@ function getStatusLabel(status: CopyStatus) {
 function getStatusClass(status: CopyStatus) {
   if (status === 'AVAILABLE') return 'bg-[#e5f5ee] text-[#096644]'
   if (status === 'LOANED' || status === 'BORROWED') return 'bg-[#fff2d6] text-[#8a5700]'
+  if (status === 'OVERDUE' || status === 'LATE' || status === 'IN_ARREARS') return 'bg-[#fdebec] text-[#b42331]'
   return 'bg-[#eef1f6] text-[#52627f]'
 }
 
@@ -64,6 +65,15 @@ function DetailField({ label, value }: { label: string; value?: string | null })
     <div className="min-w-0">
       <dt className="text-[10px] font-semibold uppercase tracking-[0.04em] text-[#718096]">{label}</dt>
       <dd className="mt-1 break-words text-[12px] font-medium leading-[17px] text-[#19294c]">{value || '—'}</dd>
+    </div>
+  )
+}
+
+function DetailStatusField({ label, value, className }: { label: string; value: string; className: string }) {
+  return (
+    <div className="min-w-0">
+      <dt className="text-[10px] font-semibold uppercase tracking-[0.04em] text-[#718096]">{label}</dt>
+      <dd className="mt-1"><span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-semibold ${className}`}>{value}</span></dd>
     </div>
   )
 }
@@ -123,11 +133,11 @@ function CopyDetailsView({ copyId, searchState }: { copyId: string; searchState?
             <h2 className="text-[14px] font-bold text-[#19294c]">Dados do exemplar</h2>
             <dl className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2 lg:grid-cols-4">
               <DetailField label="Código de tombo" value={copy.inventoryCode} />
-              <DetailField label="Situação" value={getStatusLabel(copy.status)} />
+              <DetailStatusField label="Situação" value={getStatusLabel(copy.status)} className={getStatusClass(copy.status)} />
               <DetailField label="Localização" value={copy.shelfLocation} />
               <DetailField label="Estado de conservação" value={copy.conservationCondition ? conditionLabels[copy.conservationCondition] ?? copy.conservationCondition : undefined} />
               <DetailField label="Data de cadastro" value={formatDate(copy.acquisitionDate)} />
-              <DetailField label="Situação do livro" value={copy.book.isActive ? 'Ativo' : 'Inativo'} />
+              <DetailStatusField label="Situação do livro" value={copy.book.isActive ? 'Ativo' : 'Inativo'} className={copy.book.isActive ? 'bg-[#e5f5ee] text-[#096644]' : 'bg-[#fdebec] text-[#b42331]'} />
             </dl>
           </section>
 
