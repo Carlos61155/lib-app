@@ -47,7 +47,7 @@ export function GenreRegistrationForm({ onSuccess, onCancel }: { onSuccess: (gen
 
       <label className={labelClass}>
         <span>Descrição</span>
-        <textarea {...form.register('description')} maxLength={240} rows={4} placeholder="Escreva uma breve descrição do gênero" className="min-h-[100px] w-full resize-y rounded-[8px] border border-[#c6cedb] bg-white px-[10px] py-[9px] text-[13px] leading-[17px] text-[#19294c] placeholder:text-[#8792a5] focus:outline-none focus:ring-2 focus:ring-[#315bbd]/20" aria-invalid={Boolean(form.formState.errors.description)} />
+        <textarea {...form.register('description')} maxLength={240} rows={4} placeholder="Escreva uma breve descrição do gênero" className="min-h-[100px] w-full resize-y rounded-[8px] border border-[#c6cedb] bg-white px-[10px] py-[9px] text-[13px] font-normal leading-[17px] text-[#19294c] placeholder:text-[#8792a5] focus:outline-none focus:ring-2 focus:ring-[#315bbd]/20" aria-invalid={Boolean(form.formState.errors.description)} />
         {form.formState.errors.description && <span role="alert" className="text-[13px] font-normal text-[#B42331]">{form.formState.errors.description.message}</span>}
         <span aria-live="polite" className="-mt-1 self-end text-[11px] font-normal text-[#69768f]">{description.length}/240 caracteres</span>
       </label>

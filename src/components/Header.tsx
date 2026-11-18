@@ -7,6 +7,7 @@ const pageLabels: Record<string, string[]> = {
   '/authors/register': ['Autores', 'Cadastrar autor'],
   '/genres/register': ['Gêneros', 'Cadastrar gênero'],
   '/books/register': ['Livros', 'Cadastrar livro'],
+  '/books/search': ['Livros', 'Buscar Livro'],
   '/copies/register': ['Exemplares', 'Cadastrar exemplar'],
   '/copies/search': ['Exemplares', 'Buscar exemplar'],
   '/loan-rules': ['Regras de empréstimo'],
@@ -17,6 +18,8 @@ export function Header() {
   const [userName, setUserName] = useState('')
   const breadcrumb = pathname.startsWith('/copies/search/')
     ? ['Exemplares', 'Buscar exemplar', `Exemplar ${pathname.split('/')[pathname.split('/').length - 1]}`]
+    : pathname.startsWith('/books/search/')
+      ? ['Livros', 'Buscar Livro', 'Detalhes do livro']
     : pageLabels[pathname] ?? ['Usuários']
 
   useEffect(() => {

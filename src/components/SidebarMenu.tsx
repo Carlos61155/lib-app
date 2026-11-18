@@ -22,7 +22,10 @@ const navigationItems: NavigationItem[] = [
   { label: 'Usuários', icon: UsersRound, children: [{ label: 'Cadastrar usuário', to: '/users/register' }] },
   { label: 'Autores', icon: UserRound, children: [{ label: 'Cadastrar autor', to: '/authors/register' }] },
   { label: 'Gêneros', icon: Tags, children: [{ label: 'Cadastrar gênero', to: '/genres/register' }] },
-  { label: 'Livros', icon: BookOpen, children: [{ label: 'Cadastrar livro', to: '/books/register' }] },
+  { label: 'Livros', icon: BookOpen, children: [
+    { label: 'Buscar Livro', to: '/books/search' },
+    { label: 'Cadastrar livro', to: '/books/register' },
+  ] },
   {
     label: 'Exemplares',
     icon: BookCopy,
@@ -36,7 +39,7 @@ const navigationItems: NavigationItem[] = [
 
 function getActiveLabel(pathname: string) {
   return navigationItems.find((item) => item.children?.some((child) =>
-    child.to === pathname || (child.to === '/copies/search' && pathname.startsWith('/copies/search/')),
+    child.to === pathname || (child.to === '/copies/search' && pathname.startsWith('/copies/search/')) || (child.to === '/books/search' && pathname.startsWith('/books/search/')),
   ))?.label ?? null
 }
 
@@ -85,7 +88,7 @@ export function SidebarMenu() {
               {children && isExpanded && (
                 <div className="ml-[27px] mt-1 flex flex-col gap-1 border-l border-white/25 pl-3">
                   {children.map((child) => {
-                    const isChildActive = pathname === child.to || (child.to === '/copies/search' && pathname.startsWith('/copies/search/'))
+                    const isChildActive = pathname === child.to || (child.to === '/copies/search' && pathname.startsWith('/copies/search/')) || (child.to === '/books/search' && pathname.startsWith('/books/search/'))
                     return (
                       <Link key={child.label} to={child.to} state={{ expandedMenuItem: label }} aria-current={isChildActive ? 'page' : undefined} className={`flex min-h-[42px] items-center rounded-[8px] px-3 text-[13px] font-medium transition-colors ${isChildActive ? 'bg-[#5983df] text-white' : 'text-white/85 hover:bg-white/10 hover:text-white'}`}>
                         {child.label}

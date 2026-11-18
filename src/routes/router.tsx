@@ -34,6 +34,20 @@ export const router = createHashRouter([
         },
       },
       {
+        path: '/books/search',
+        lazy: async () => {
+          const { default: BookSearch } = await import('../pages/BookSearch')
+          return { Component: BookSearch }
+        },
+      },
+      {
+        path: '/books/search/:bookId',
+        lazy: async () => {
+          const { default: BookSearch } = await import('../pages/BookSearch')
+          return { Component: BookSearch }
+        },
+      },
+      {
         path: '/books/register',
         lazy: async () => {
           const { default: Books } = await import('../pages/Books')

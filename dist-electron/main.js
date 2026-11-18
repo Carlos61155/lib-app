@@ -17284,6 +17284,9 @@ const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
 const MAIN_DIST = path__default.join(process.env.APP_ROOT, "dist-electron");
 const RENDERER_DIST = path__default.join(process.env.APP_ROOT, "dist");
 process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path__default.join(process.env.APP_ROOT, "public") : RENDERER_DIST;
+if (!app.isPackaged) {
+  app.commandLine.appendSwitch("remote-debugging-port", "9222");
+}
 let win;
 function createWindow() {
   win = new BrowserWindow({
