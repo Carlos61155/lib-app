@@ -207,6 +207,7 @@ export type ProfessorWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Professor"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Professor"> | Date | string
   person?: Prisma.XOR<Prisma.PersonScalarRelationFilter, Prisma.PersonWhereInput>
+  loans?: Prisma.LoanListRelationFilter
 }
 
 export type ProfessorOrderByWithRelationInput = {
@@ -219,6 +220,7 @@ export type ProfessorOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   person?: Prisma.PersonOrderByWithRelationInput
+  loans?: Prisma.LoanOrderByRelationAggregateInput
 }
 
 export type ProfessorWhereUniqueInput = Prisma.AtLeast<{
@@ -234,6 +236,7 @@ export type ProfessorWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Professor"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Professor"> | Date | string
   person?: Prisma.XOR<Prisma.PersonScalarRelationFilter, Prisma.PersonWhereInput>
+  loans?: Prisma.LoanListRelationFilter
 }, "id" | "personId" | "registrationNumber">
 
 export type ProfessorOrderByWithAggregationInput = {
@@ -273,6 +276,7 @@ export type ProfessorCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   person: Prisma.PersonCreateNestedOneWithoutProfessorInput
+  loans?: Prisma.LoanCreateNestedManyWithoutProfessorInput
 }
 
 export type ProfessorUncheckedCreateInput = {
@@ -284,6 +288,7 @@ export type ProfessorUncheckedCreateInput = {
   blockedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  loans?: Prisma.LoanUncheckedCreateNestedManyWithoutProfessorInput
 }
 
 export type ProfessorUpdateInput = {
@@ -295,6 +300,7 @@ export type ProfessorUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   person?: Prisma.PersonUpdateOneRequiredWithoutProfessorNestedInput
+  loans?: Prisma.LoanUpdateManyWithoutProfessorNestedInput
 }
 
 export type ProfessorUncheckedUpdateInput = {
@@ -306,6 +312,7 @@ export type ProfessorUncheckedUpdateInput = {
   blockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loans?: Prisma.LoanUncheckedUpdateManyWithoutProfessorNestedInput
 }
 
 export type ProfessorCreateManyInput = {
@@ -410,6 +417,22 @@ export type ProfessorUncheckedUpdateOneWithoutPersonNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProfessorUpdateToOneWithWhereWithoutPersonInput, Prisma.ProfessorUpdateWithoutPersonInput>, Prisma.ProfessorUncheckedUpdateWithoutPersonInput>
 }
 
+export type ProfessorCreateNestedOneWithoutLoansInput = {
+  create?: Prisma.XOR<Prisma.ProfessorCreateWithoutLoansInput, Prisma.ProfessorUncheckedCreateWithoutLoansInput>
+  connectOrCreate?: Prisma.ProfessorCreateOrConnectWithoutLoansInput
+  connect?: Prisma.ProfessorWhereUniqueInput
+}
+
+export type ProfessorUpdateOneWithoutLoansNestedInput = {
+  create?: Prisma.XOR<Prisma.ProfessorCreateWithoutLoansInput, Prisma.ProfessorUncheckedCreateWithoutLoansInput>
+  connectOrCreate?: Prisma.ProfessorCreateOrConnectWithoutLoansInput
+  upsert?: Prisma.ProfessorUpsertWithoutLoansInput
+  disconnect?: Prisma.ProfessorWhereInput | boolean
+  delete?: Prisma.ProfessorWhereInput | boolean
+  connect?: Prisma.ProfessorWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProfessorUpdateToOneWithWhereWithoutLoansInput, Prisma.ProfessorUpdateWithoutLoansInput>, Prisma.ProfessorUncheckedUpdateWithoutLoansInput>
+}
+
 export type ProfessorCreateWithoutPersonInput = {
   id?: string
   department: string
@@ -418,6 +441,7 @@ export type ProfessorCreateWithoutPersonInput = {
   blockedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  loans?: Prisma.LoanCreateNestedManyWithoutProfessorInput
 }
 
 export type ProfessorUncheckedCreateWithoutPersonInput = {
@@ -428,6 +452,7 @@ export type ProfessorUncheckedCreateWithoutPersonInput = {
   blockedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  loans?: Prisma.LoanUncheckedCreateNestedManyWithoutProfessorInput
 }
 
 export type ProfessorCreateOrConnectWithoutPersonInput = {
@@ -454,6 +479,7 @@ export type ProfessorUpdateWithoutPersonInput = {
   blockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loans?: Prisma.LoanUpdateManyWithoutProfessorNestedInput
 }
 
 export type ProfessorUncheckedUpdateWithoutPersonInput = {
@@ -464,8 +490,98 @@ export type ProfessorUncheckedUpdateWithoutPersonInput = {
   blockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loans?: Prisma.LoanUncheckedUpdateManyWithoutProfessorNestedInput
 }
 
+export type ProfessorCreateWithoutLoansInput = {
+  id?: string
+  department: string
+  registrationNumber: string
+  isActive?: boolean
+  blockedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  person: Prisma.PersonCreateNestedOneWithoutProfessorInput
+}
+
+export type ProfessorUncheckedCreateWithoutLoansInput = {
+  id?: string
+  personId: string
+  department: string
+  registrationNumber: string
+  isActive?: boolean
+  blockedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ProfessorCreateOrConnectWithoutLoansInput = {
+  where: Prisma.ProfessorWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProfessorCreateWithoutLoansInput, Prisma.ProfessorUncheckedCreateWithoutLoansInput>
+}
+
+export type ProfessorUpsertWithoutLoansInput = {
+  update: Prisma.XOR<Prisma.ProfessorUpdateWithoutLoansInput, Prisma.ProfessorUncheckedUpdateWithoutLoansInput>
+  create: Prisma.XOR<Prisma.ProfessorCreateWithoutLoansInput, Prisma.ProfessorUncheckedCreateWithoutLoansInput>
+  where?: Prisma.ProfessorWhereInput
+}
+
+export type ProfessorUpdateToOneWithWhereWithoutLoansInput = {
+  where?: Prisma.ProfessorWhereInput
+  data: Prisma.XOR<Prisma.ProfessorUpdateWithoutLoansInput, Prisma.ProfessorUncheckedUpdateWithoutLoansInput>
+}
+
+export type ProfessorUpdateWithoutLoansInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  blockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  person?: Prisma.PersonUpdateOneRequiredWithoutProfessorNestedInput
+}
+
+export type ProfessorUncheckedUpdateWithoutLoansInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  personId?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  blockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type ProfessorCountOutputType
+ */
+
+export type ProfessorCountOutputType = {
+  loans: number
+}
+
+export type ProfessorCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  loans?: boolean | ProfessorCountOutputTypeCountLoansArgs
+}
+
+/**
+ * ProfessorCountOutputType without action
+ */
+export type ProfessorCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProfessorCountOutputType
+   */
+  select?: Prisma.ProfessorCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ProfessorCountOutputType without action
+ */
+export type ProfessorCountOutputTypeCountLoansArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LoanWhereInput
+}
 
 
 export type ProfessorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -478,6 +594,8 @@ export type ProfessorSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   createdAt?: boolean
   updatedAt?: boolean
   person?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  loans?: boolean | Prisma.Professor$loansArgs<ExtArgs>
+  _count?: boolean | Prisma.ProfessorCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["professor"]>
 
 export type ProfessorSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -518,6 +636,8 @@ export type ProfessorSelectScalar = {
 export type ProfessorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "personId" | "department" | "registrationNumber" | "isActive" | "blockedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["professor"]>
 export type ProfessorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   person?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
+  loans?: boolean | Prisma.Professor$loansArgs<ExtArgs>
+  _count?: boolean | Prisma.ProfessorCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProfessorIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   person?: boolean | Prisma.PersonDefaultArgs<ExtArgs>
@@ -530,6 +650,7 @@ export type $ProfessorPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   name: "Professor"
   objects: {
     person: Prisma.$PersonPayload<ExtArgs>
+    loans: Prisma.$LoanPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -935,6 +1056,7 @@ readonly fields: ProfessorFieldRefs;
 export interface Prisma__ProfessorClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   person<T extends Prisma.PersonDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PersonDefaultArgs<ExtArgs>>): Prisma.Prisma__PersonClient<runtime.Types.Result.GetResult<Prisma.$PersonPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  loans<T extends Prisma.Professor$loansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Professor$loansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1368,6 +1490,30 @@ export type ProfessorDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Limit how many Professors to delete.
    */
   limit?: number
+}
+
+/**
+ * Professor.loans
+ */
+export type Professor$loansArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Loan
+   */
+  select?: Prisma.LoanSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Loan
+   */
+  omit?: Prisma.LoanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LoanInclude<ExtArgs> | null
+  where?: Prisma.LoanWhereInput
+  orderBy?: Prisma.LoanOrderByWithRelationInput | Prisma.LoanOrderByWithRelationInput[]
+  cursor?: Prisma.LoanWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LoanScalarFieldEnum | Prisma.LoanScalarFieldEnum[]
 }
 
 /**

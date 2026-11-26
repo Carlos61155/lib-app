@@ -18,6 +18,7 @@ import { registerBookHandlers } from "./ipc/book.handlers";
 import { registerCopyHandlers } from "./ipc/copy.handlers";
 import { deleteSession } from "./session/session-store";
 import { LoanRuleService } from "./loan/loan-rules/loan.rules.service";
+import { LoanService } from "./loan/loan.service";
 import { ensureDefaultLoanRules } from "./loan/loan-rules/loan.rules.seed";
 import { registerLoanHandlers } from "./ipc/loan.handlers";
 import { UserService } from "./user/user.service";
@@ -35,6 +36,7 @@ const genreService = new GenreService();
 const bookService = new BookService();
 const copyService = new CopyService();
 const loanRuleService = new LoanRuleService();
+const loanService = new LoanService();
 const userService = new UserService();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -136,7 +138,7 @@ registerAuthorHandlers(authorService);
 registerGenreHandlers(genreService);
 registerBookHandlers(bookService);
 registerCopyHandlers(copyService);
-registerLoanHandlers(loanRuleService);
+registerLoanHandlers(loanRuleService, loanService);
 registerUserHandlers(userService);
 
 app

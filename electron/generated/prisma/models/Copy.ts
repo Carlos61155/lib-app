@@ -232,6 +232,7 @@ export type CopyWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Copy"> | Date | string
   book?: Prisma.XOR<Prisma.BookScalarRelationFilter, Prisma.BookWhereInput>
   registrationLog?: Prisma.XOR<Prisma.CopyRegistrationLogScalarRelationFilter, Prisma.CopyRegistrationLogWhereInput>
+  loans?: Prisma.LoanListRelationFilter
 }
 
 export type CopyOrderByWithRelationInput = {
@@ -248,6 +249,7 @@ export type CopyOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   book?: Prisma.BookOrderByWithRelationInput
   registrationLog?: Prisma.CopyRegistrationLogOrderByWithRelationInput
+  loans?: Prisma.LoanOrderByRelationAggregateInput
 }
 
 export type CopyWhereUniqueInput = Prisma.AtLeast<{
@@ -267,6 +269,7 @@ export type CopyWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Copy"> | Date | string
   book?: Prisma.XOR<Prisma.BookScalarRelationFilter, Prisma.BookWhereInput>
   registrationLog?: Prisma.XOR<Prisma.CopyRegistrationLogScalarRelationFilter, Prisma.CopyRegistrationLogWhereInput>
+  loans?: Prisma.LoanListRelationFilter
 }, "id" | "inventoryCode">
 
 export type CopyOrderByWithAggregationInput = {
@@ -315,6 +318,7 @@ export type CopyCreateInput = {
   createdAt?: Date | string
   book: Prisma.BookCreateNestedOneWithoutCopiesInput
   registrationLog: Prisma.CopyRegistrationLogCreateNestedOneWithoutCopiesInput
+  loans?: Prisma.LoanCreateNestedManyWithoutCopyInput
 }
 
 export type CopyUncheckedCreateInput = {
@@ -329,6 +333,7 @@ export type CopyUncheckedCreateInput = {
   acquisitionMethod?: string | null
   registrationLogId: string
   createdAt?: Date | string
+  loans?: Prisma.LoanUncheckedCreateNestedManyWithoutCopyInput
 }
 
 export type CopyUpdateInput = {
@@ -343,6 +348,7 @@ export type CopyUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   book?: Prisma.BookUpdateOneRequiredWithoutCopiesNestedInput
   registrationLog?: Prisma.CopyRegistrationLogUpdateOneRequiredWithoutCopiesNestedInput
+  loans?: Prisma.LoanUpdateManyWithoutCopyNestedInput
 }
 
 export type CopyUncheckedUpdateInput = {
@@ -357,6 +363,7 @@ export type CopyUncheckedUpdateInput = {
   acquisitionMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationLogId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loans?: Prisma.LoanUncheckedUpdateManyWithoutCopyNestedInput
 }
 
 export type CopyCreateManyInput = {
@@ -451,6 +458,11 @@ export type CopyMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
+export type CopyScalarRelationFilter = {
+  is?: Prisma.CopyWhereInput
+  isNot?: Prisma.CopyWhereInput
+}
+
 export type CopyCreateNestedManyWithoutBookInput = {
   create?: Prisma.XOR<Prisma.CopyCreateWithoutBookInput, Prisma.CopyUncheckedCreateWithoutBookInput> | Prisma.CopyCreateWithoutBookInput[] | Prisma.CopyUncheckedCreateWithoutBookInput[]
   connectOrCreate?: Prisma.CopyCreateOrConnectWithoutBookInput | Prisma.CopyCreateOrConnectWithoutBookInput[]
@@ -535,6 +547,20 @@ export type CopyUncheckedUpdateManyWithoutRegistrationLogNestedInput = {
   deleteMany?: Prisma.CopyScalarWhereInput | Prisma.CopyScalarWhereInput[]
 }
 
+export type CopyCreateNestedOneWithoutLoansInput = {
+  create?: Prisma.XOR<Prisma.CopyCreateWithoutLoansInput, Prisma.CopyUncheckedCreateWithoutLoansInput>
+  connectOrCreate?: Prisma.CopyCreateOrConnectWithoutLoansInput
+  connect?: Prisma.CopyWhereUniqueInput
+}
+
+export type CopyUpdateOneRequiredWithoutLoansNestedInput = {
+  create?: Prisma.XOR<Prisma.CopyCreateWithoutLoansInput, Prisma.CopyUncheckedCreateWithoutLoansInput>
+  connectOrCreate?: Prisma.CopyCreateOrConnectWithoutLoansInput
+  upsert?: Prisma.CopyUpsertWithoutLoansInput
+  connect?: Prisma.CopyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CopyUpdateToOneWithWhereWithoutLoansInput, Prisma.CopyUpdateWithoutLoansInput>, Prisma.CopyUncheckedUpdateWithoutLoansInput>
+}
+
 export type CopyCreateWithoutBookInput = {
   id?: string
   inventoryCode: string
@@ -546,6 +572,7 @@ export type CopyCreateWithoutBookInput = {
   acquisitionMethod?: string | null
   createdAt?: Date | string
   registrationLog: Prisma.CopyRegistrationLogCreateNestedOneWithoutCopiesInput
+  loans?: Prisma.LoanCreateNestedManyWithoutCopyInput
 }
 
 export type CopyUncheckedCreateWithoutBookInput = {
@@ -559,6 +586,7 @@ export type CopyUncheckedCreateWithoutBookInput = {
   acquisitionMethod?: string | null
   registrationLogId: string
   createdAt?: Date | string
+  loans?: Prisma.LoanUncheckedCreateNestedManyWithoutCopyInput
 }
 
 export type CopyCreateOrConnectWithoutBookInput = {
@@ -614,6 +642,7 @@ export type CopyCreateWithoutRegistrationLogInput = {
   acquisitionMethod?: string | null
   createdAt?: Date | string
   book: Prisma.BookCreateNestedOneWithoutCopiesInput
+  loans?: Prisma.LoanCreateNestedManyWithoutCopyInput
 }
 
 export type CopyUncheckedCreateWithoutRegistrationLogInput = {
@@ -627,6 +656,7 @@ export type CopyUncheckedCreateWithoutRegistrationLogInput = {
   acquisitionDate?: Date | string | null
   acquisitionMethod?: string | null
   createdAt?: Date | string
+  loans?: Prisma.LoanUncheckedCreateNestedManyWithoutCopyInput
 }
 
 export type CopyCreateOrConnectWithoutRegistrationLogInput = {
@@ -654,6 +684,78 @@ export type CopyUpdateManyWithWhereWithoutRegistrationLogInput = {
   data: Prisma.XOR<Prisma.CopyUpdateManyMutationInput, Prisma.CopyUncheckedUpdateManyWithoutRegistrationLogInput>
 }
 
+export type CopyCreateWithoutLoansInput = {
+  id?: string
+  inventoryCode: string
+  status?: string
+  shelfLocation?: string | null
+  conservationCondition?: string | null
+  observation?: string | null
+  acquisitionDate?: Date | string | null
+  acquisitionMethod?: string | null
+  createdAt?: Date | string
+  book: Prisma.BookCreateNestedOneWithoutCopiesInput
+  registrationLog: Prisma.CopyRegistrationLogCreateNestedOneWithoutCopiesInput
+}
+
+export type CopyUncheckedCreateWithoutLoansInput = {
+  id?: string
+  inventoryCode: string
+  bookId: string
+  status?: string
+  shelfLocation?: string | null
+  conservationCondition?: string | null
+  observation?: string | null
+  acquisitionDate?: Date | string | null
+  acquisitionMethod?: string | null
+  registrationLogId: string
+  createdAt?: Date | string
+}
+
+export type CopyCreateOrConnectWithoutLoansInput = {
+  where: Prisma.CopyWhereUniqueInput
+  create: Prisma.XOR<Prisma.CopyCreateWithoutLoansInput, Prisma.CopyUncheckedCreateWithoutLoansInput>
+}
+
+export type CopyUpsertWithoutLoansInput = {
+  update: Prisma.XOR<Prisma.CopyUpdateWithoutLoansInput, Prisma.CopyUncheckedUpdateWithoutLoansInput>
+  create: Prisma.XOR<Prisma.CopyCreateWithoutLoansInput, Prisma.CopyUncheckedCreateWithoutLoansInput>
+  where?: Prisma.CopyWhereInput
+}
+
+export type CopyUpdateToOneWithWhereWithoutLoansInput = {
+  where?: Prisma.CopyWhereInput
+  data: Prisma.XOR<Prisma.CopyUpdateWithoutLoansInput, Prisma.CopyUncheckedUpdateWithoutLoansInput>
+}
+
+export type CopyUpdateWithoutLoansInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  inventoryCode?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  shelfLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conservationCondition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  acquisitionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  acquisitionMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  book?: Prisma.BookUpdateOneRequiredWithoutCopiesNestedInput
+  registrationLog?: Prisma.CopyRegistrationLogUpdateOneRequiredWithoutCopiesNestedInput
+}
+
+export type CopyUncheckedUpdateWithoutLoansInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  inventoryCode?: Prisma.StringFieldUpdateOperationsInput | string
+  bookId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  shelfLocation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  conservationCondition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  observation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  acquisitionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  acquisitionMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationLogId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type CopyCreateManyBookInput = {
   id?: string
   inventoryCode: string
@@ -678,6 +780,7 @@ export type CopyUpdateWithoutBookInput = {
   acquisitionMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrationLog?: Prisma.CopyRegistrationLogUpdateOneRequiredWithoutCopiesNestedInput
+  loans?: Prisma.LoanUpdateManyWithoutCopyNestedInput
 }
 
 export type CopyUncheckedUpdateWithoutBookInput = {
@@ -691,6 +794,7 @@ export type CopyUncheckedUpdateWithoutBookInput = {
   acquisitionMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationLogId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loans?: Prisma.LoanUncheckedUpdateManyWithoutCopyNestedInput
 }
 
 export type CopyUncheckedUpdateManyWithoutBookInput = {
@@ -730,6 +834,7 @@ export type CopyUpdateWithoutRegistrationLogInput = {
   acquisitionMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   book?: Prisma.BookUpdateOneRequiredWithoutCopiesNestedInput
+  loans?: Prisma.LoanUpdateManyWithoutCopyNestedInput
 }
 
 export type CopyUncheckedUpdateWithoutRegistrationLogInput = {
@@ -743,6 +848,7 @@ export type CopyUncheckedUpdateWithoutRegistrationLogInput = {
   acquisitionDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   acquisitionMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  loans?: Prisma.LoanUncheckedUpdateManyWithoutCopyNestedInput
 }
 
 export type CopyUncheckedUpdateManyWithoutRegistrationLogInput = {
@@ -759,6 +865,35 @@ export type CopyUncheckedUpdateManyWithoutRegistrationLogInput = {
 }
 
 
+/**
+ * Count Type CopyCountOutputType
+ */
+
+export type CopyCountOutputType = {
+  loans: number
+}
+
+export type CopyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  loans?: boolean | CopyCountOutputTypeCountLoansArgs
+}
+
+/**
+ * CopyCountOutputType without action
+ */
+export type CopyCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CopyCountOutputType
+   */
+  select?: Prisma.CopyCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * CopyCountOutputType without action
+ */
+export type CopyCountOutputTypeCountLoansArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LoanWhereInput
+}
+
 
 export type CopySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -774,6 +909,8 @@ export type CopySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   book?: boolean | Prisma.BookDefaultArgs<ExtArgs>
   registrationLog?: boolean | Prisma.CopyRegistrationLogDefaultArgs<ExtArgs>
+  loans?: boolean | Prisma.Copy$loansArgs<ExtArgs>
+  _count?: boolean | Prisma.CopyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["copy"]>
 
 export type CopySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -826,6 +963,8 @@ export type CopyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type CopyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   book?: boolean | Prisma.BookDefaultArgs<ExtArgs>
   registrationLog?: boolean | Prisma.CopyRegistrationLogDefaultArgs<ExtArgs>
+  loans?: boolean | Prisma.Copy$loansArgs<ExtArgs>
+  _count?: boolean | Prisma.CopyCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CopyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   book?: boolean | Prisma.BookDefaultArgs<ExtArgs>
@@ -841,6 +980,7 @@ export type $CopyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     book: Prisma.$BookPayload<ExtArgs>
     registrationLog: Prisma.$CopyRegistrationLogPayload<ExtArgs>
+    loans: Prisma.$LoanPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1250,6 +1390,7 @@ export interface Prisma__CopyClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   book<T extends Prisma.BookDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BookDefaultArgs<ExtArgs>>): Prisma.Prisma__BookClient<runtime.Types.Result.GetResult<Prisma.$BookPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   registrationLog<T extends Prisma.CopyRegistrationLogDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CopyRegistrationLogDefaultArgs<ExtArgs>>): Prisma.Prisma__CopyRegistrationLogClient<runtime.Types.Result.GetResult<Prisma.$CopyRegistrationLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  loans<T extends Prisma.Copy$loansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Copy$loansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoanPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1686,6 +1827,30 @@ export type CopyDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Copies to delete.
    */
   limit?: number
+}
+
+/**
+ * Copy.loans
+ */
+export type Copy$loansArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Loan
+   */
+  select?: Prisma.LoanSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Loan
+   */
+  omit?: Prisma.LoanOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LoanInclude<ExtArgs> | null
+  where?: Prisma.LoanWhereInput
+  orderBy?: Prisma.LoanOrderByWithRelationInput | Prisma.LoanOrderByWithRelationInput[]
+  cursor?: Prisma.LoanWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LoanScalarFieldEnum | Prisma.LoanScalarFieldEnum[]
 }
 
 /**

@@ -269,6 +269,18 @@ interface Window {
       updatedAt: Date;
     }>;
 
+    createLoan: (input: {
+      readerId: string;
+      readerType: "STUDENT" | "PROFESSOR";
+      inventoryCode: string;
+    }) => Promise<
+      Awaited<
+        ReturnType<
+          import("./loan/loan.service").LoanService["createLoan"]
+        >
+      >
+    >;
+
     searchCopies: (filters: {
       inventoryCode?: string;
       status?: string;

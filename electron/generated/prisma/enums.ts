@@ -15,3 +15,12 @@ export const LoanProfile = {
 } as const
 
 export type LoanProfile = (typeof LoanProfile)[keyof typeof LoanProfile]
+
+
+export const LoanStatus = {
+  IN_PROGRESS: 'IN_PROGRESS',
+  RETURNED: 'RETURNED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type LoanStatus = (typeof LoanStatus)[keyof typeof LoanStatus]

@@ -45,6 +45,7 @@ model Librarian {
   bookRegistrationsMade   RegistrationBookLog[]   @relation("BookRegistrationCreatedBy")
   copyRegistrationsMade   CopyRegistrationLog[]   @relation("CopyRegistrationCreatedBy")
   loanRuleChangeLogs      LoanRuleChangeLog[]
+  loansMade               Loan[]                  @relation("LoanCreatedBy")
 
   @@map("librarians")
 }
@@ -60,6 +61,7 @@ model Student {
   updatedAt          DateTime @updatedAt @map("updated_at")
 
   person Person @relation(fields: [personId], references: [id], onDelete: Restrict)
+  loans  Loan[]
 
   @@map("students")
 }
@@ -75,6 +77,7 @@ model Professor {
   updatedAt          DateTime @updatedAt @map("updated_at")
 
   person Person @relation(fields: [personId], references: [id], onDelete: Restrict)
+  loans  Loan[]
 
   @@map("professors")
 }
@@ -223,6 +226,7 @@ model Copy {
 
   book            Book                @relation(fields: [bookId], references: [id], onDelete: Restrict)
   registrationLog CopyRegistrationLog @relation(fields: [registrationLogId], references: [id], onDelete: Restrict)
+  loans           Loan[]
 
   @@index([bookId, status])
   @@index([registrationLogId])
@@ -281,6 +285,40 @@ enum LoanProfile {
   PROFESSOR
 
   @@map("loan_profiles")
+}
+
+enum LoanStatus {
+  IN_PROGRESS
+  RETURNED
+  CANCELLED
+
+  @@map("loan_status")
+}
+
+model Loan {
+  id                   String     @id @default(uuid())
+  studentId            String?    @map("student_id")
+  professorId          String?    @map("professor_id")
+  copyId               String     @map("copy_id")
+  librarianId          String     @map("librarian_id")
+  loanDate             DateTime   @map("loan_date")
+  dueDate              DateTime   @map("due_date")
+  returnedAt           DateTime?  @map("returned_at")
+  status               LoanStatus @default(IN_PROGRESS)
+  renewalCount         Int        @default(0) @map("renewal_count")
+  loanPeriodDaysAtLoan Int        @map("loan_period_days_at_loan")
+  createdAt            DateTime   @default(now()) @map("created_at")
+
+  student   Student?   @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  professor Professor? @relation(fields: [professorId], references: [id], onDelete: Restrict)
+  copy      Copy       @relation(fields: [copyId], references: [id], onDelete: Restrict)
+  librarian Librarian  @relation("LoanCreatedBy", fields: [librarianId], references: [id], onDelete: Restrict)
+
+  @@index([studentId, status])
+  @@index([professorId, status])
+  @@index([copyId, status])
+  @@index([librarianId, createdAt])
+  @@map("loans")
 }
 
 model LoanRule {
