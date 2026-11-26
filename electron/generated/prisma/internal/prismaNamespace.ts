@@ -414,6 +414,7 @@ export const ModelName = {
   CopyCodeSequence: 'CopyCodeSequence',
   BookAuthor: 'BookAuthor',
   BookGenre: 'BookGenre',
+  Loan: 'Loan',
   LoanRule: 'LoanRule',
   LoanRuleChangeLog: 'LoanRuleChangeLog'
 } as const
@@ -431,7 +432,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "person" | "librarian" | "student" | "professor" | "accessLog" | "registrationLog" | "author" | "registrationAuthorLog" | "genre" | "registrationGenreLog" | "book" | "registrationBookLog" | "copy" | "copyRegistrationLog" | "copyCodeSequence" | "bookAuthor" | "bookGenre" | "loanRule" | "loanRuleChangeLog"
+    modelProps: "person" | "librarian" | "student" | "professor" | "accessLog" | "registrationLog" | "author" | "registrationAuthorLog" | "genre" | "registrationGenreLog" | "book" | "registrationBookLog" | "copy" | "copyRegistrationLog" | "copyCodeSequence" | "bookAuthor" | "bookGenre" | "loan" | "loanRule" | "loanRuleChangeLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1693,6 +1694,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Loan: {
+      payload: Prisma.$LoanPayload<ExtArgs>
+      fields: Prisma.LoanFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LoanFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LoanFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPayload>
+        }
+        findFirst: {
+          args: Prisma.LoanFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LoanFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPayload>
+        }
+        findMany: {
+          args: Prisma.LoanFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPayload>[]
+        }
+        create: {
+          args: Prisma.LoanCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPayload>
+        }
+        createMany: {
+          args: Prisma.LoanCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LoanCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPayload>[]
+        }
+        delete: {
+          args: Prisma.LoanDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPayload>
+        }
+        update: {
+          args: Prisma.LoanUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPayload>
+        }
+        deleteMany: {
+          args: Prisma.LoanDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LoanUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LoanUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPayload>[]
+        }
+        upsert: {
+          args: Prisma.LoanUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoanPayload>
+        }
+        aggregate: {
+          args: Prisma.LoanAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLoan>
+        }
+        groupBy: {
+          args: Prisma.LoanGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoanGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LoanCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoanCountAggregateOutputType> | number
+        }
+      }
+    }
     LoanRule: {
       payload: Prisma.$LoanRulePayload<ExtArgs>
       fields: Prisma.LoanRuleFieldRefs
@@ -2086,6 +2161,24 @@ export const BookGenreScalarFieldEnum = {
 export type BookGenreScalarFieldEnum = (typeof BookGenreScalarFieldEnum)[keyof typeof BookGenreScalarFieldEnum]
 
 
+export const LoanScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  professorId: 'professorId',
+  copyId: 'copyId',
+  librarianId: 'librarianId',
+  loanDate: 'loanDate',
+  dueDate: 'dueDate',
+  returnedAt: 'returnedAt',
+  status: 'status',
+  renewalCount: 'renewalCount',
+  loanPeriodDaysAtLoan: 'loanPeriodDaysAtLoan',
+  createdAt: 'createdAt'
+} as const
+
+export type LoanScalarFieldEnum = (typeof LoanScalarFieldEnum)[keyof typeof LoanScalarFieldEnum]
+
+
 export const LoanRuleScalarFieldEnum = {
   id: 'id',
   profile: 'profile',
@@ -2160,6 +2253,13 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'LoanStatus'
+ */
+export type EnumLoanStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoanStatus'>
     
 
 
@@ -2344,6 +2444,7 @@ export type GlobalOmitConfig = {
   copyCodeSequence?: Prisma.CopyCodeSequenceOmit
   bookAuthor?: Prisma.BookAuthorOmit
   bookGenre?: Prisma.BookGenreOmit
+  loan?: Prisma.LoanOmit
   loanRule?: Prisma.LoanRuleOmit
   loanRuleChangeLog?: Prisma.LoanRuleChangeLogOmit
 }

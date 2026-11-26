@@ -28,13 +28,7 @@ export const SearchUsersSchema = z
   .strict()
   .refine(
     (filters) =>
-      Boolean(
-        filters.name ||
-        filters.registrationNumber ||
-        filters.cpf ||
-        filters.type ||
-        filters.status,
-      ),
+      Boolean(filters.name || filters.registrationNumber || filters.cpf),
     { message: "USER_SEARCH_CRITERIA_REQUIRED" },
   );
 

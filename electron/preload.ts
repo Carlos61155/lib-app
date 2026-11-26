@@ -64,6 +64,12 @@ type CreateCopiesInput = {
 
 type LoanProfile = "STUDENT" | "PROFESSOR";
 
+type CreateLoanInput = {
+  readerId: string;
+  readerType: LoanProfile;
+  inventoryCode: string;
+};
+
 type UpdateLoanRuleInput = {
   profile: LoanProfile;
   loanPeriodDays: number;
@@ -142,6 +148,9 @@ contextBridge.exposeInMainWorld("authAPI", {
 
   updateLoanRule: (input: UpdateLoanRuleInput) =>
     ipcRenderer.invoke("loan-rules:update", input),
+
+  createLoan: (input: CreateLoanInput) =>
+    ipcRenderer.invoke("loan:create", input),
 
   searchCopies: (filters: {
     inventoryCode?: string;
