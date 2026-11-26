@@ -83,6 +83,14 @@ type SearchBooksFilters = {
   availableOnly?: boolean;
 };
 
+type SearchUsersFilters = {
+  name?: string;
+  registrationNumber?: string;
+  cpf?: string;
+  type?: "STUDENT" | "PROFESSOR";
+  status?: "ACTIVE" | "BLOCKED";
+};
+
 contextBridge.exposeInMainWorld("authAPI", {
   login: (accessCode: string, password: string) =>
     ipcRenderer.invoke("auth:login", { accessCode, password }),
@@ -154,4 +162,7 @@ contextBridge.exposeInMainWorld("authAPI", {
 
   getBookSearchDetails: (bookId: string) =>
     ipcRenderer.invoke("book:search-details", bookId),
+
+  searchUsers: (filters: SearchUsersFilters) =>
+    ipcRenderer.invoke("user:search", filters),
 });

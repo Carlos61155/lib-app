@@ -1,10 +1,6 @@
 import { app, BrowserWindow, dialog, Menu } from "electron";
 import { AuthService } from "./auth/auth.service";
-import {
-  applySqliteMigrations,
-  initializeDatabase,
-  prisma,
-} from "./database";
+import { applySqliteMigrations, initializeDatabase, prisma } from "./database";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
 import path from "node:path";
@@ -24,6 +20,8 @@ import { deleteSession } from "./session/session-store";
 import { LoanRuleService } from "./loan/loan-rules/loan.rules.service";
 import { ensureDefaultLoanRules } from "./loan/loan-rules/loan.rules.seed";
 import { registerLoanHandlers } from "./ipc/loan.handlers";
+import { UserService } from "./user/user.service";
+import { registerUserHandlers } from "./ipc/user.handlers";
 
 const require = createRequire(import.meta.url);
 const { config: loadDotEnv } = require("dotenv") as {
@@ -37,6 +35,7 @@ const genreService = new GenreService();
 const bookService = new BookService();
 const copyService = new CopyService();
 const loanRuleService = new LoanRuleService();
+const userService = new UserService();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -81,7 +80,7 @@ process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL
   : RENDERER_DIST;
 
 if (!app.isPackaged) {
-  app.commandLine.appendSwitch('remote-debugging-port', '9222');
+  app.commandLine.appendSwitch("remote-debugging-port", "9222");
 }
 
 let win: BrowserWindow | null;
@@ -138,6 +137,7 @@ registerGenreHandlers(genreService);
 registerBookHandlers(bookService);
 registerCopyHandlers(copyService);
 registerLoanHandlers(loanRuleService);
+registerUserHandlers(userService);
 
 app
   .whenReady()

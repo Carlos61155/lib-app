@@ -1912,6 +1912,7 @@ export const StudentScalarFieldEnum = {
   registrationNumber: 'registrationNumber',
   course: 'course',
   isActive: 'isActive',
+  blockedAt: 'blockedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1925,6 +1926,7 @@ export const ProfessorScalarFieldEnum = {
   department: 'department',
   registrationNumber: 'registrationNumber',
   isActive: 'isActive',
+  blockedAt: 'blockedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
