@@ -344,5 +344,22 @@ interface Window {
         ReturnType<import("./book/book.service").BookService["getBookDetails"]>
       >
     >;
+
+    searchUsers: (filters: {
+      name?: string;
+      registrationNumber?: string;
+      cpf?: string;
+      type?: "STUDENT" | "PROFESSOR";
+      status?: "ACTIVE" | "BLOCKED";
+    }) => Promise<
+      {
+        id: string;
+        name: string;
+        type: "STUDENT" | "PROFESSOR";
+        registrationNumber: string;
+        status: "ACTIVE" | "BLOCKED";
+        blockedAt: Date | null;
+      }[]
+    >;
   };
 }

@@ -55,6 +55,7 @@ model Student {
   registrationNumber String   @unique @map("registration_number")
   course             String
   isActive           Boolean  @default(true) @map("is_active")
+  blockedAt          DateTime? @map("blocked_at")
   createdAt          DateTime @default(now()) @map("created_at")
   updatedAt          DateTime @updatedAt @map("updated_at")
 
@@ -69,6 +70,7 @@ model Professor {
   department         String
   registrationNumber String   @unique @map("registration_number")
   isActive           Boolean  @default(true) @map("is_active")
+  blockedAt          DateTime? @map("blocked_at")
   createdAt          DateTime @default(now()) @map("created_at")
   updatedAt          DateTime @updatedAt @map("updated_at")
 
